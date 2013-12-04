@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Copyright (C) 2013 OpenMediaVault Plugin Developers
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+CONFIG="/config/services/vdrplugin"
+
+case "$1" in
+    purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+
+	if omv_config_exists $CONFIG; then
+	echo "Deleting Configuration"
+	omv_config_delete $CONFIG;
+    fi
+
+	if ! omv_config_exists $CONFIG; then
+	echo "Configuration Deleted"
+	fi	    
+
+    echo "Removing e-tobi from /etc/apt/sources.d/"
+    rm -rf /etc/apt/sources.list.d/etobi.list
+
+    echo "Removing e-tobi from /etc/apt/preferences.d/"
+    rm -rf /etc/apt/preferences.d/99-etobi
+
+;;
+
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0
