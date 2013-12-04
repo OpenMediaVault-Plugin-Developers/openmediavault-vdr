@@ -16,6 +16,7 @@
 */
 // require("js/omv/WorkspaceManager.js")
 // require("js/omv/workspace/form/Panel.js")
+// require("js/omv/form/field/SharedFolderComboBox.js")
 
 /**
  * @class OMV.module.admin.service.vdrplugin.vdrSettings
