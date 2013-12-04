@@ -15,24 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# VDR plugin Preinstall Script to install VDR on Debian from e-tobi.net packages. 
-# e-tobi.net has newer packages built for different debian releases
-
-# Add e-tobi.net source
-echo deb http://e-tobi.net/vdr-experimental/ squeeze addons vdr-multipatch >> /etc/apt/sources.list.d/etobi.list
-
-
-# Enable e-tobi.net keys
-gpg --keyserver pgp.mit.edu --recv-keys F7180D26AEDAA642
-gpg --armor --export F7180D26AEDAA642 | apt-key add -
-
-# Change APT preferences so that e-tobi.net is used
-echo $'Package: * \nPin: release o=e-tobi.net \nPin-Priority: 995' >> /etc/apt/preferences.d/99-etobi
-
-apt-get update
-
-apt-get -y -qq install vdr vdradmin-am vdr-plugin-xineliboutput vdr-plugin-epgsearch dvb-apps w-scan
-
 # Start and stop VDR inorder to generate the original configuration files
 sleep 2
 VDR_CONFIG_FILE="/etc/default/vdr"

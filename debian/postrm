@@ -26,19 +26,13 @@ case "$1" in
     purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 
 	if omv_config_exists $CONFIG; then
-	echo "Deleting Configuration"
-	omv_config_delete $CONFIG;
+        echo "Deleting Configuration"
+        omv_config_delete $CONFIG;
     fi
 
 	if ! omv_config_exists $CONFIG; then
-	echo "Configuration Deleted"
+        echo "Configuration Deleted"
 	fi	    
-
-    echo "Removing e-tobi from /etc/apt/sources.d/"
-    rm -rf /etc/apt/sources.list.d/etobi.list
-
-    echo "Removing e-tobi from /etc/apt/preferences.d/"
-    rm -rf /etc/apt/preferences.d/99-etobi
 
 ;;
 
