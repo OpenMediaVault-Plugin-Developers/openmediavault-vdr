@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+# Copyright (C) 2013 OpenMediaVault Plugin Developers
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+  set -e
+  
+  . /etc/default/openmediavault
+  . /usr/share/openmediavault/scripts/helper-functions
+
+
+#################################################
+# Shutdown VDR and VDRAdmin-am for the parameter updates
+#################################################
+/etc/init.d/vdr stop
+/etc/init.d/vdradmin-am stop
+
+
+
+#################################################
+# Update /etc/default/vdr
+#################################################
+VDR_CONFIG_FILE="/etc/default/vdr"
+
+vdr_enable=$(omv_config_get "//services/vdrplugin/vdr_enable")
+sed -i '/ENABLED=/c\ENABLED='$vdr_enable $VDR_CONFIG_FILE
+
+#Do not enable shutdown through VDR
+sed -i '/ENABLE_SHUTDOWN=/c\ENABLE_SHUTDOWN=0' $VDR_CONFIG_FILE
+
+
+# recuuid=$(omv_config_get "//services/vdr/vdr_recordingdir")
+# \042 = "
+#VIDEO DIR Parameter exists?
+if ! grep -qs "VIDEO_DIR" $VDR_CONFIG_FILE; then
+echo "VIDEO_DIR" >> $VDR_CONFIG_FILE
+fi
+
+recuuid=$(omv_config_get "//services/vdrplugin/vdr_recordingdir")
+vdr_recordingdir=$(omv_get_sharedfolder_path $recuuid)
+sed -i '/VIDEO_DIR/c\VIDEO_DIR="'$vdr_recordingdir'"' $VDR_CONFIG_FILE
+
+
+vdr_maxfilesize_gb=$(omv_config_get "//services/vdrplugin/vdr_maxfilesize_gb")
+sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '$vdr_maxfilesize_gb'G"' $VDR_CONFIG_FILE
+
+#################################################
+# Update /etc/vdr/setup.conf
+# (linked to /var/lib/vdr/setup.conf (actual file)
+#################################################
+
+VDR_SETUP_CONF="/var/lib/vdr/setup.conf"
+
+vdr_epglanguage=$(omv_config_get "//services/vdrplugin/vdr_epglanguage")
+sed -i "/EPGLanguages/c\EPGLanguages = $vdr_epglanguage" $VDR_SETUP_CONF
+
+vdr_channelupdatemode=$(omv_config_get "//services/vdrplugin/vdr_channelupdatemode")
+sed -i "/UpdateChannels/c\UpdateChannels = "$vdr_channelupdatemode $VDR_SETUP_CONF
+
+# 0 or 1
+vdr_subtitles=$(omv_config_get "//services/vdrplugin/vdr_subtitles")
+sed -i "/DisplaySubtitles/c\DisplaySubtitles = "$vdr_subtitles $VDR_SETUP_CONF
+sed -i "/UseSubtitle/c\UseSubtitle = "$vdr_subtitles $VDR_SETUP_CONF
+
+vdr_subtitle_languages=$(omv_config_get "//services/vdrplugin/vdr_subtitle_languages")
+sed -i "/SubtitleLanguages/c\SubtitleLanguages = $vdr_subtitle_languages" $VDR_SETUP_CONF
+
+#################################################
+# Update /etc/default/vdradmin-am 
+#################################################
+VDRADMIN_AM_CONFIG_FILE="/etc/default/vdradmin-am"
+
+vdradminam_enable=$(omv_config_get "//services/vdrplugin/vdradminam_enable")
+sed -i '/ENABLED=/c\ENABLED='$vdradminam_enable $VDRADMIN_AM_CONFIG_FILE
+
+#################################################
+# Update /etc/default/vdradmin-am 
+#################################################
+VDRADMIN_AM_SETUP_CONF="/var/lib/vdradmin-am/vdradmind.conf"
+vdradminam_port=$(omv_config_get "//services/vdrplugin/vdradminam_port")
+sed -i '/SERVERPORT/c\SERVERPORT = '$vdradminam_port $VDRADMIN_AM_SETUP_CONF
+
+#################################################
+# Restart VDR and VDRAdmin-am after the parameter updates
+#################################################
+
+if [ "$vdr_enable" = "1" ]; then
+    /etc/init.d/vdr start
+fi 
+
+#####################
+if [ "$vdradminam_enable" = "1" ]; then
+/etc/init.d/vdradmin-am start
+fi 
