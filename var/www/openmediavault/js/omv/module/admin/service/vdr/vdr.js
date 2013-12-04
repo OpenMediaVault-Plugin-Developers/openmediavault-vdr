@@ -14,6 +14,13 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+// require("js/omv/WorkspaceManager.js")
+// require("js/omv/workspace/form/Panel.js")
+
+/**
+ * @class OMV.module.admin.service.vdrplugin.vdrSettings
+ * @derived OMV.workspace.form.Panel
+ */
 Ext.define("OMV.module.admin.service.vdrplugin.vdrSettings", { // Define a new class
 	extend: "OMV.workspace.form.Panel", // What is the base type of this class
 
