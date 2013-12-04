@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# Copyright (C) 2013 OpenMediaVault Plugin Developers
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# VDR plugin Preinstall Script to install VDR on Debian from e-tobi.net packages. 
+# e-tobi.net has newer packages built for different debian releases
+
+# Add e-tobi.net source
+echo deb http://e-tobi.net/vdr-experimental/ squeeze addons vdr-multipatch >> /etc/apt/sources.list.d/etobi.list
+
+
+# Enable e-tobi.net keys
+gpg --keyserver pgp.mit.edu --recv-keys F7180D26AEDAA642
+gpg --armor --export F7180D26AEDAA642 | apt-key add -
+
+# Change APT preferences so that e-tobi.net is used
+echo $'Package: * \nPin: release o=e-tobi.net \nPin-Priority: 995' >> /etc/apt/preferences.d/99-etobi
+
+apt-get update
+
+apt-get -y -qq install vdr vdradmin-am vdr-plugin-xineliboutput vdr-plugin-epgsearch dvb-apps w-scan
+
+# Start and stop VDR inorder to generate the original configuration files
+sleep 2
+VDR_CONFIG_FILE="/etc/default/vdr"
+sed -i '/ENABLED=/c\ENABLED=1' $VDR_CONFIG_FILE
+
+/etc/init.d/vdr start
+sleep 2
+/etc/init.d/vdr stop
+/etc/init.d/vdradmin-am stop
+
+sed -i '/ENABLED=/c\ENABLED=0' $VDR_CONFIG_FILE
