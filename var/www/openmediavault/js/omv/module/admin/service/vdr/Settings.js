@@ -22,7 +22,7 @@
 // require("js/omv/form/field/SharedFolderComboBox.js")
 
 /**
- * @class OMV.module.admin.service.vdrplugin.vdrSettings
+ * @class OMV.module.admin.service.vdr.Settings
  * @derived OMV.workspace.form.Panel
  */
 Ext.define("OMV.module.admin.service.vdr.Settings", {
@@ -1432,9 +1432,9 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
 
 // Register the class that is defined above
 OMV.WorkspaceManager.registerPanel({
-    id : "vdrSettings", //Individual id
-    path : "/service/vdrplugin", // Parent folder in the navigation view
+    id : "settings", //Individual id
+    path : "/service/vdr", // Parent folder in the navigation view
     text : _("VDR Settings"), // Text to show on the tab , Shown only if multiple form panels
     position : 10, // Horizontal position of this tab. Use when you have multiple tabs
-    className : "OMV.module.admin.service.vdrplugin.vdrSettings" // Same class name as defined above
+    className : "OMV.module.admin.service.vdr.Settings" // Same class name as defined above
 });

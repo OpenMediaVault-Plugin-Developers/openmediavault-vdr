@@ -17,7 +17,7 @@
 // require("js/omv/WorkspaceManager.js")
 
 OMV.WorkspaceManager.registerNode({
-    id      : "vdrplugin",
+    id      : "vdr",
     path    : "/service",
     text    : _("VDR / VDRAdmin-AM"),
     icon16  : "images/play.png",
