@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 // require("js/omv/WorkspaceManager.js")
 // require("js/omv/workspace/form/Panel.js")
 // require("js/omv/Rpc.js")
@@ -28,11 +29,14 @@
 Ext.define("OMV.module.admin.service.vdr.Settings", {
     extend : "OMV.workspace.form.Panel",
 
-    requires : ["OMV.data.Store", "OMV.data.Model"],
+    requires : [
+        "OMV.data.Store",
+        "OMV.data.Model"
+    ],
 
-    rpcService   : "VDR", // Remote Procedure Call
-    rpcGetMethod : "getSettings", // Remote Procedure Call
-    rpcSetMethod : "setSettings", // Remote Procedure Call
+    rpcService   : "VDR",
+    rpcGetMethod : "getSettings",
+    rpcSetMethod : "setSettings",
 
     plugins : [{
         ptype        : "linkedfields",
@@ -45,10 +49,7 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 "vdr_scanbutton"
             ],
             properties : "disabled"
-        }]
-    },{
-        ptype        : "linkedfields",
-        correlations : [{
+        },{
             conditions : [{
                 name  : "vdr_transpondertype",
                 value : "a"
@@ -57,10 +58,7 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 "atsc_fieldset"
             ],
             properties : "show"
-        }]
-    },{
-        ptype        : "linkedfields",
-        correlations : [{
+        },{
             conditions : [{
                 name  : "vdr_transpondertype",
                 value : "t"
@@ -69,20 +67,14 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 "terrestial_fieldset"
             ],
             properties : "show"
-        }]
-    },{
-        ptype        : "linkedfields",
-        correlations : [{
+        },{
             conditions : [{
                 name  : "vdr_transpondertype",
                 value : "c"
             }],
             name       : ["cable_fieldset"],
             properties : "show"
-        }]
-    },{
-        ptype        : "linkedfields",
-        correlations : [{
+        },{
             conditions : [{
                 name  : "vdr_transpondertype",
                 value : "s"
@@ -94,30 +86,26 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
         }]
     }],
 
-    //*****************************************
-    //*****************************************
-    //*****************************************
-
-    getFormItems : function() {// Generic function for this class that initializes the GUI
+    getFormItems : function() {
         var me = this;
 
         return [{
-            xtype         : "fieldset", // Type of the item
-            title         : _("VDR settings"), // Text that is shown on the top edge of the fieldset
+            xtype         : "fieldset",
+            title         : _("VDR settings"),
             fieldDefaults : {
                 labelSeparator : ""
             },
-            items : [{// These items are inside the fieldset item defined above
-                xtype      : "checkbox", // Type of the item
-                name       : "vdr_enable", // Individual name of the item
-                fieldLabel : _("Enable"), // Text that is shown next to the checkbox. Keep this under 15 characters
-                checked    : false // Default value if no settings have been applied yet, Try to change this to true
+            items : [{
+                xtype      : "checkbox",
+                name       : "vdr_enable",
+                fieldLabel : _("Enable"),
+                checked    : false
             },{
-                xtype      : "combo", // Type of the item
-                name       : "vdr_transpondertype", // Individual name of the item
-                fieldLabel : "Transponder Type", // Text that is shown next to the number field. Keep this under 15 characters
+                xtype      : "combo",
+                name       : "vdr_transpondertype",
+                fieldLabel : "Transponder Type",
                 allowBlank : false,
-                editable    : false,
+                editable   : false,
                 store : [
                     ['a', 'ATSC'],
                     ['t', 'DVB-T (Terrestial)'],
@@ -128,13 +116,13 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 triggerAction : 'all',
                 selectOnFocus : true
             },{
-                xtype         : "fieldset", // Type of the item
+                xtype         : "fieldset",
                 id            : "atsc_fieldset",
-                title         : _("ATSC Transponder settings"), // Text that is shown on the top edge of the fieldset
+                title         : _("ATSC Transponder settings"),
                 fieldDefaults : {
                     labelSeparator : ""
                 },
-                hidden : true, // Visibility enabled by combobox
+                hidden : true,
                 items  : [{
                     xtype      : "checkbox",
                     name       : "vdr_atsc_scan_encrypted",
@@ -156,9 +144,9 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     triggerAction  : 'all',
                     selectOnFocus  : true
                 },{
-                    xtype      : "combo", // Type of the item
-                    name       : "vdr_atsc_type", // Individual name of the item
-                    fieldLabel : "Transponder Type", // Text that is shown next to the number field. Keep this under 15 characters
+                    xtype      : "combo",
+                    name       : "vdr_atsc_type",
+                    fieldLabel : "Transponder Type",
                     allowBlank : false,
                     editable   : false,
                     store : [
@@ -171,14 +159,14 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     selectOnFocus : true
                 }]
             },{
-                xtype         : "fieldset", // Type of the item
+                xtype         : "fieldset",
                 id            : "terrestial_fieldset",
-                title         : _("DVB-T Transponder settings"), // Text that is shown on the top edge of the fieldset
+                title         : _("DVB-T Transponder settings"),
                 fieldDefaults : {
                     labelSeparator : ""
                 },
-                hidden : true, // Visibility enabled by combobox
-                items : [{
+                hidden : true,
+                items  : [{
                     xtype      : "checkbox",
                     name       : "vdr_dvb_t_scan_encrypted",
                     fieldLabel : _("Encrypted Channels"),
@@ -200,159 +188,181 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     selectOnFocus  : true
                 }]
             },{
-                xtype : "fieldset", // Type of the item
-                id : "cable_fieldset",
-                title : _("DVB-C Transponder settings"), // Text that is shown on the top edge of the fieldset
+                xtype         : "fieldset",
+                id            : "cable_fieldset",
+                title         : _("DVB-C Transponder settings"),
                 fieldDefaults : {
                     labelSeparator : ""
                 },
-                hidden : true, // Visibility enabled by combobox
-                items : [{
-                    xtype : "checkbox",
-                    name : "vdr_dvb_c_scan_encrypted",
+                hidden : true,
+                items  : [{
+                    xtype      : "checkbox",
+                    name       : "vdr_dvb_c_scan_encrypted",
                     fieldLabel : _("Encrypted Channels"),
-                    boxLabel : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
-                    checked : false
+                    boxLabel   : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
+                    checked    : false
                 },{
-                    xtype : "combo",
-                    name : "vdr_dvb_c_country",
-                    fieldLabel : "Country",
-                    allowBlank : true,
-                    editable : true,
+                    xtype          : "combo",
+                    name           : "vdr_dvb_c_country",
+                    fieldLabel     : "Country",
+                    allowBlank     : true,
+                    editable       : true,
                     forceSelection : true,
-                    store : "countrycode",
-                    displayField : "country",
-                    valueField : "abbr",
-                    queryMode : 'local',
-                    mode : 'local',
+                    store          : "countrycode",
+                    displayField   : "country",
+                    valueField     : "abbr",
+                    queryMode      : 'local',
+                    mode           : 'local',
+                    triggerAction  : 'all',
+                    selectOnFocus  : true
+                },{
+                    xtype         : "combo",
+                    name          : "vdr_dvb_c_qam",
+                    fieldLabel    : "Modulation",
+                    allowBlank    : true,
+                    editable      : false,
+                    store         : [
+                        [' ', 'Not Used'],
+                        ['0', 'QAM64'],
+                        ['1', 'QAM256'],
+                        ['2', 'QAM128']
+                    ],
+                    mode          : 'local',
                     triggerAction : 'all',
                     selectOnFocus : true
                 },{
-                    xtype : "combo",
-                    name : "vdr_dvb_c_qam",
-                    fieldLabel : "Modulation",
-                    allowBlank : true,
-                    editable : false,
-                    store : [[' ', 'Not Used'], ['0', 'QAM64'], ['1', 'QAM256'], ['2', 'QAM128']],
-                    mode : 'local',
-                    triggerAction : 'all',
-                    selectOnFocus : true
-                },{
-                    xtype : "combo",
-                    name : "vdr_dvb_c_symbolrate",
+                    xtype      : "combo",
+                    name       : "vdr_dvb_c_symbolrate",
                     fieldLabel : "Symbol rate",
                     allowBlank : true,
-                    editable : false,
-                    store : [[' ', 'Not Used'], ['0', '6900'], ['1', '6875'], ['2', '6111'], ['3', '6250'], ['4', '6790'], ['5', '6811'], ['6', '5900'], ['7', '5000'], ['8', '3450'], ['9', '4000'], ['10', '6950'], ['11', '7000'], ['12', '6952'], ['13', '5156'], ['14', '4583']],
-                    mode : 'local',
+                    editable   : false,
+                    store      : [
+                        [' ', 'Not Used'],
+                        ['0', '6900'],
+                        ['1', '6875'],
+                        ['2', '6111'],
+                        ['3', '6250'],
+                        ['4', '6790'],
+                        ['5', '6811'],
+                        ['6', '5900'],
+                        ['7', '5000'],
+                        ['8', '3450'],
+                        ['9', '4000'],
+                        ['10', '6950'],
+                        ['11', '7000'],
+                        ['12', '6952'],
+                        ['13', '5156'],
+                        ['14', '4583']
+                    ],
+                    mode          : 'local',
                     triggerAction : 'all',
                     selectOnFocus : true
                 },{
-                    xtype : "checkbox",
-                    name : "vdr_dvb_c_extended_qam",
+                    xtype      : "checkbox",
+                    name       : "vdr_dvb_c_extended_qam",
                     fieldLabel : _("Extended QAM scan"),
-                    boxLabel : "(Enable QAM128) recommended for Nethterlands and Finland",
-                    checked : false
+                    boxLabel   : "(Enable QAM128) recommended for Nethterlands and Finland",
+                    checked    : false
                 }]
             },{
-                xtype : "fieldset", // Type of the item
-                name : "satellite_fieldset",
-                title : _("DVB-S Transponder settings"), // Text that is shown on the top edge of the fieldset
+                xtype         : "fieldset",
+                name          : "satellite_fieldset",
+                title         : _("DVB-S Transponder settings"),
                 fieldDefaults : {
                     labelSeparator : ""
                 },
-                hidden : true, // Visibility enabled by combobox
-                items : [{
-                    xtype : "checkbox",
-                    name : "vdr_dvb_s_scan_encrypted",
+                hidden : true,
+                items  : [{
+                    xtype      : "checkbox",
+                    name       : "vdr_dvb_s_scan_encrypted",
                     fieldLabel : _("Encrypted Channels"),
-                    boxLabel : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
-                    checked : false
+                    boxLabel   : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
+                    checked    : false
                 },{
-                    xtype : "combo",
-                    name : "vdr_dvb_s_country",
-                    fieldLabel : "Country",
-                    allowBlank : true,
-                    editable : true,
+                    xtype          : "combo",
+                    name           : "vdr_dvb_s_country",
+                    fieldLabel     : "Country",
+                    allowBlank     : true,
+                    editable       : true,
                     forceSelection : true,
-                    store : "countrycode",
-                    displayField : "country",
-                    valueField : "abbr",
-                    queryMode : 'local',
-                    mode : 'local',
-                    triggerAction : 'all',
-                    selectOnFocus : true
+                    store          : "countrycode",
+                    displayField   : "country",
+                    valueField     : "abbr",
+                    queryMode      : 'local',
+                    mode           : 'local',
+                    triggerAction  : 'all',
+                    selectOnFocus  : true
                 },{
-                    xtype : "combo",
-                    name : "vdr_dvb_s_satellite",
-                    fieldLabel : "Satellite",
-                    allowBlank : true,
-                    editable : true,
+                    xtype          : "combo",
+                    name           : "vdr_dvb_s_satellite",
+                    fieldLabel     : "Satellite",
+                    allowBlank     : true,
+                    editable       : true,
                     forceSelection : true,
-                    store : "satellitecode",
-                    displayField : "satellite",
-                    valueField : "abbr",
-                    queryMode : 'local',
-                    mode : 'local',
-                    triggerAction : 'all',
-                    selectOnFocus : true
+                    store          : "satellitecode",
+                    displayField   : "satellite",
+                    valueField     : "abbr",
+                    queryMode      : 'local',
+                    mode           : 'local',
+                    triggerAction  : 'all',
+                    selectOnFocus  : true
                 }]
             },{
-                xtype : "button",
-                name : "vdr_scanbutton",
-                text : _("Scan Channels"),
+                xtype   : "button",
+                name    : "vdr_scanbutton",
+                text    : _("Scan Channels"),
                 handler : Ext.Function.bind(me.onScanButton, me, [me]),
-                scope : me
+                scope   : me
             },{
                 xtype : "text",
-                id : "vdr_initialscan_notdone",
-                text : "NOTE! Disabled VDR to enable scanning.",
+                id    : "vdr_initialscan_notdone",
+                text  : "NOTE! Disabled VDR to enable scanning.",
                 style : {
                     textDecoration : "underline",
-                    fontWeight : "bold",
-                    fontSize : "110%",
-                    paddingBottom : "5px",
-                    paddingLeft : "10px",
-                    paddingRight : "10px"
+                    fontWeight     : "bold",
+                    fontSize       : "110%",
+                    paddingBottom  : "5px",
+                    paddingLeft    : "10px",
+                    paddingRight   : "10px"
                 }
             },{
-                xtype : "button",
-                name : "vdr_scanstatusbutton",
-                text : _("Scan Status"),
+                xtype   : "button",
+                name    : "vdr_scanstatusbutton",
+                text    : _("Scan Status"),
                 handler : Ext.Function.bind(me.onScanStatusButton, me, [me]),
-                scope : me
+                scope   : me
             },{
-                xtype : "sharedfoldercombo",
-                name : "vdr_recordingdir",
+                xtype      : "sharedfoldercombo",
+                name       : "vdr_recordingdir",
                 fieldLabel : "Recording directory",
                 allowBlank : true
             },{
-                xtype : "numberfield",
-                name : "vdr_maxfilesize_gb",
-                fieldLabel : "Maximum filesize in GB",
-                minValue : 1,
+                xtype         : "numberfield",
+                name          : "vdr_maxfilesize_gb",
+                fieldLabel    : "Maximum filesize in GB",
+                minValue      : 1,
                 allowDecimals : false,
-                allowBlank : false
+                allowBlank    : false
             },{
-                xtype : "checkbox",
-                name : "vdr_subtitles",
+                xtype      : "checkbox",
+                name       : "vdr_subtitles",
                 fieldLabel : _("Use Subtitles"),
-                checked : false
+                checked    : false
             },{
-                xtype : "textfield",
-                name : "vdr_subtitle_languages",
+                xtype      : "textfield",
+                name       : "vdr_subtitle_languages",
                 fieldLabel : "Subtitle language(s)"
             },{
-                xtype : "textfield",
-                name : "vdr_epglanguage",
+                xtype      : "textfield",
+                name       : "vdr_epglanguage",
                 fieldLabel : "EPG language"
             },{
-                xtype : "combo", // Type of the item
-                name : "vdr_channelupdatemode", // Individual name of the item
-                fieldLabel : "Channel Update Mode", // Text that is shown next to the number field. Keep this under 15 characters
+                xtype      : "combo",
+                name       : "vdr_channelupdatemode",
+                fieldLabel : "Channel Update Mode",
                 allowBlank : false,
-                editable : false,
-                store : [
+                editable   : false,
+                store      : [
                     ['0', '0 No update'],
                     ['1', '1 Only Channel Names'],
                     ['2', '2 Only Channel PIDs'],
@@ -360,28 +370,28 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     ['4', '4 All updates and add newly found channels'],
                     ['5', '5 All updates, new channels and add new transponders']
                 ],
-                mode : 'local',
+                mode          : 'local',
                 triggerAction : 'all',
                 selectOnFocus : true
             }]
         },{
-            xtype : "fieldset", // Type of the item
-            title : _("VDRAdmin-AM settings"), // Text that is shown on the top edge of the fieldset
+            xtype         : "fieldset",
+            title         : _("VDRAdmin-AM settings"),
             fieldDefaults : {
                 labelSeparator : ""
             },
-            items : [{// These items are inside the fieldset item defined above
-                xtype : "checkbox", // Type of the item
-                name : "vdradminam_enable", // Individual name of the item
-                fieldLabel : _("Enable"), // Text that is shown next to the checkbox. Keep this under 15 characters
-                checked : false // Default value if no settings have been applied yet, Try to change this to true
+            items : [{
+                xtype      : "checkbox",
+                name       : "vdradminam_enable",
+                fieldLabel : _("Enable"),
+                checked    : false
             },{
-                xtype : "numberfield", // Type of the item
-                name : "vdradminam_port", // Individual name of the item
-                fieldLabel : "Port Number", // Text that is shown next to the number field. Keep this under 15 characters
-                minValue : 0, // Self explanatory
-                allowDecimals : false, // Self explanatory
-                allowBlank : true // Self explanatory
+                xtype         : "numberfield",
+                name          : "vdradminam_port",
+                fieldLabel    : "Port Number",
+                minValue      : 0,
+                allowDecimals : false,
+                allowBlank    : true
             }]
         }];
     },
@@ -390,11 +400,11 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
         var me = this;
 
         OMV.Rpc.request({
-            scope : me,
+            scope   : me,
             rpcData : {
                 service : "VDR",
-                method : "scanChannels",
-                params : {
+                method  : "scanChannels",
+                params  : {
                     vdr_transpondertype : me.getForm().findField("vdr_transpondertype").getValue(),
                     vdr_atsc_country : me.getForm().findField("vdr_atsc_country").getValue(),
                     vdr_atsc_type : me.getForm().findField("vdr_atsc_type").getValue(),
@@ -412,22 +422,26 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 }
             }
         });
+
         var msg = 'Channel Scan Started. Scanning can take over 30 minutes. There is no feedback when the scan is complete. Use the "Scan Status" button to check when you can enable VDR.';
+
         me.fireEvent("exception", me, msg);
         OMV.MessageBox.info(null, msg);
     },
 
     onScanStatusButton : function() {
         var me = this;
+
         OMV.Rpc.request({
-            scope : me,
+            scope    : me,
             callback : me.onScanStatus,
-            rpcData : {
+            rpcData  : {
                 service : "VDR",
-                method : "scanStatus"
+                method  : "scanStatus"
             }
         });
     },
+
     onScanStatus : function(id, success, response) {
         var me = this;
 
@@ -435,20 +449,18 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
             me.fireEvent("exception", me, response);
             OMV.MessageBox.error(null, response);
         } else {
-            var msg = "";
+            var msg;
+
             if (response == "0") {
                 msg = "Channel scan is still running.";
             } else if (response == "1") {
                 msg = "Channel Scan is not active.";
             }
+
             me.fireEvent("exception", me, msg);
             OMV.MessageBox.info(null, msg);
         }
     },
-
-    //*****************************************
-    //*****************************************
-    //*****************************************
 
     initComponent : function() {
         var me = this;
@@ -457,10 +469,10 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
         Ext.apply(me, {
             store : Ext.create("OMV.data.Store", {
                 autoLoad : true,
-                storeId : "countrycode",
-                model : OMV.data.Model.createImplicit({
+                storeId  : "countrycode",
+                model    : OMV.data.Model.createImplicit({
                     idProperty : "name",
-                    fields : [{
+                    fields     : [{
                         name : "abbr",
                         type : "string"
                     },{
@@ -469,756 +481,755 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     }]
                 }),
                 data : [{
-                    abbr : ' ',
+                    abbr    : ' ',
                     country : 'Not Used'
                 },{
-                    abbr : 'AF',
+                    abbr    : 'AF',
                     country : 'AFGHANISTAN'
                 },{
-                    abbr : 'AX',
+                    abbr    : 'AX',
                     country : 'ÅLAND ISLANDS'
                 },{
-                    abbr : 'AL',
+                    abbr    : 'AL',
                     country : 'ALBANIA'
                 },{
-                    abbr : 'DZ',
+                    abbr    : 'DZ',
                     country : 'ALGERIA'
                 },{
-                    abbr : 'AS',
+                    abbr    : 'AS',
                     country : 'AMERICAN SAMOA'
                 },{
-                    abbr : 'AD',
+                    abbr    : 'AD',
                     country : 'ANDORRA'
                 },{
-                    abbr : 'AO',
+                    abbr    : 'AO',
                     country : 'ANGOLA'
                 },{
-                    abbr : 'AI',
+                    abbr    : 'AI',
                     country : 'ANGUILLA'
                 },{
-                    abbr : 'AQ',
+                    abbr    : 'AQ',
                     country : 'ANTARCTICA'
                 },{
-                    abbr : 'AG',
+                    abbr    : 'AG',
                     country : 'ANTIGUA AND BARBUDA'
                 },{
-                    abbr : 'AR',
+                    abbr    : 'AR',
                     country : 'ARGENTINA'
                 },{
-                    abbr : 'AM',
+                    abbr    : 'AM',
                     country : 'ARMENIA'
                 },{
-                    abbr : 'AW',
+                    abbr    : 'AW',
                     country : 'ARUBA'
                 },{
-                    abbr : 'AU',
+                    abbr    : 'AU',
                     country : 'AUSTRALIA'
                 },{
-                    abbr : 'AT',
+                    abbr    : 'AT',
                     country : 'AUSTRIA'
                 },{
-                    abbr : 'AZ',
+                    abbr    : 'AZ',
                     country : 'AZERBAIJAN'
                 },{
-                    abbr : 'BS',
+                    abbr    : 'BS',
                     country : 'BAHAMAS'
                 },{
-                    abbr : 'BH',
+                    abbr    : 'BH',
                     country : 'BAHRAIN'
                 },{
-                    abbr : 'BD',
+                    abbr    : 'BD',
                     country : 'BANGLADESH'
                 },{
-                    abbr : 'BB',
+                    abbr    : 'BB',
                     country : 'BARBADOS'
                 },{
-                    abbr : 'BY',
+                    abbr    : 'BY',
                     country : 'BELARUS'
                 },{
-                    abbr : 'BE',
+                    abbr    : 'BE',
                     country : 'BELGIUM'
                 },{
-                    abbr : 'BZ',
+                    abbr    : 'BZ',
                     country : 'BELIZE'
                 },{
-                    abbr : 'BJ',
+                    abbr    : 'BJ',
                     country : 'BENIN'
                 },{
-                    abbr : 'BM',
+                    abbr    : 'BM',
                     country : 'BERMUDA'
                 },{
-                    abbr : 'BT',
+                    abbr    : 'BT',
                     country : 'BHUTAN'
                 },{
-                    abbr : 'BO',
+                    abbr    : 'BO',
                     country : 'BOLIVIA'
                 },{
-                    abbr : 'BA',
+                    abbr    : 'BA',
                     country : 'BOSNIA AND HERZEGOVINA'
                 },{
-                    abbr : 'BW',
+                    abbr    : 'BW',
                     country : 'BOTSWANA'
                 },{
-                    abbr : 'BV',
+                    abbr    : 'BV',
                     country : 'BOUVET ISLAND'
                 },{
-                    abbr : 'BR',
+                    abbr    : 'BR',
                     country : 'BRAZIL'
                 },{
-                    abbr : 'IO',
+                    abbr    : 'IO',
                     country : 'BRITISH INDIAN OCEAN TERRITORY'
                 },{
-                    abbr : 'BN',
+                    abbr    : 'BN',
                     country : 'BRUNEI DARUSSALAM'
                 },{
-                    abbr : 'BG',
+                    abbr    : 'BG',
                     country : 'BULGARIA'
                 },{
-                    abbr : 'BF',
+                    abbr    : 'BF',
                     country : 'BURKINA FASO'
                 },{
-                    abbr : 'BI',
+                    abbr    : 'BI',
                     country : 'BURUNDI'
                 },{
-                    abbr : 'KH',
+                    abbr    : 'KH',
                     country : 'CAMBODIA'
                 },{
-                    abbr : 'CM',
+                    abbr    : 'CM',
                     country : 'CAMEROON'
                 },{
-                    abbr : 'CA',
+                    abbr    : 'CA',
                     country : 'CANADA'
                 },{
-                    abbr : 'CV',
+                    abbr    : 'CV',
                     country : 'CAPE VERDE'
                 },{
-                    abbr : 'KY',
+                    abbr    : 'KY',
                     country : 'CAYMAN ISLANDS'
                 },{
-                    abbr : 'CF',
+                    abbr    : 'CF',
                     country : 'CENTRAL AFRICAN REPUBLIC'
                 },{
-                    abbr : 'TD',
+                    abbr    : 'TD',
                     country : 'CHAD'
                 },{
-                    abbr : 'CL',
+                    abbr    : 'CL',
                     country : 'CHILE'
                 },{
-                    abbr : 'CN',
+                    abbr    : 'CN',
                     country : 'CHINA'
                 },{
-                    abbr : 'CX',
+                    abbr    : 'CX',
                     country : 'CHRISTMAS ISLAND'
                 },{
-                    abbr : 'CC',
+                    abbr    : 'CC',
                     country : 'COCOS (KEELING) ISLANDS'
                 },{
-                    abbr : 'CO',
+                    abbr    : 'CO',
                     country : 'COLOMBIA'
                 },{
-                    abbr : 'KM',
+                    abbr    : 'KM',
                     country : 'COMOROS'
                 },{
-                    abbr : 'CG',
+                    abbr    : 'CG',
                     country : 'CONGO'
                 },{
-                    abbr : 'CD',
+                    abbr    : 'CD',
                     country : 'CONGO, THE DEMOCRATIC REPUBLIC OF THE'
                 },{
-                    abbr : 'CK',
+                    abbr    : 'CK',
                     country : 'COOK ISLANDS'
                 },{
-                    abbr : 'CR',
+                    abbr    : 'CR',
                     country : 'COSTA RICA'
                 },{
-                    abbr : 'CI',
+                    abbr    : 'CI',
                     country : 'C�TE D IVOIRE'
                 },{
-                    abbr : 'HR',
+                    abbr    : 'HR',
                     country : 'CROATIA'
                 },{
-                    abbr : 'CU',
+                    abbr    : 'CU',
                     country : 'CUBA'
                 },{
-                    abbr : 'CY',
+                    abbr    : 'CY',
                     country : 'CYPRUS'
                 },{
-                    abbr : 'CZ',
+                    abbr    : 'CZ',
                     country : 'CZECH REPUBLIC'
                 },{
-                    abbr : 'DK',
+                    abbr    : 'DK',
                     country : 'DENMARK'
                 },{
-                    abbr : 'DJ',
+                    abbr    : 'DJ',
                     country : 'DJIBOUTI'
                 },{
-                    abbr : 'DM',
+                    abbr    : 'DM',
                     country : 'DOMINICA'
                 },{
-                    abbr : 'DO',
+                    abbr    : 'DO',
                     country : 'DOMINICAN REPUBLIC'
                 },{
-                    abbr : 'EC',
+                    abbr    : 'EC',
                     country : 'ECUADOR'
                 },{
-                    abbr : 'EG',
+                    abbr    : 'EG',
                     country : 'EGYPT'
                 },{
-                    abbr : 'SV',
+                    abbr    : 'SV',
                     country : 'EL SALVADOR'
                 },{
-                    abbr : 'GQ',
+                    abbr    : 'GQ',
                     country : 'EQUATORIAL GUINEA'
                 },{
-                    abbr : 'ER',
+                    abbr    : 'ER',
                     country : 'ERITREA'
                 },{
-                    abbr : 'EE',
+                    abbr    : 'EE',
                     country : 'ESTONIA'
                 },{
-                    abbr : 'ET',
+                    abbr    : 'ET',
                     country : 'ETHIOPIA'
                 },{
-                    abbr : 'FK',
+                    abbr    : 'FK',
                     country : 'FALKLAND ISLANDS (MALVINAS)'
                 },{
-                    abbr : 'FO',
+                    abbr    : 'FO',
                     country : 'FAROE ISLANDS'
                 },{
-                    abbr : 'FJ',
+                    abbr    : 'FJ',
                     country : 'FIJI'
                 },{
-                    abbr : 'FI',
+                    abbr    : 'FI',
                     country : 'FINLAND'
                 },{
-                    abbr : 'FR',
+                    abbr    : 'FR',
                     country : 'FRANCE'
                 },{
-                    abbr : 'GF',
+                    abbr    : 'GF',
                     country : 'FRENCH GUIANA'
                 },{
-                    abbr : 'PF',
+                    abbr    : 'PF',
                     country : 'FRENCH POLYNESIA'
                 },{
-                    abbr : 'TF',
+                    abbr    : 'TF',
                     country : 'FRENCH SOUTHERN TERRITORIES'
                 },{
-                    abbr : 'GA',
+                    abbr    : 'GA',
                     country : 'GABON'
                 },{
-                    abbr : 'GM',
+                    abbr    : 'GM',
                     country : 'GAMBIA'
                 },{
-                    abbr : 'GE',
+                    abbr    : 'GE',
                     country : 'GEORGIA'
                 },{
-                    abbr : 'DE',
+                    abbr    : 'DE',
                     country : 'GERMANY'
                 },{
-                    abbr : 'GH',
+                    abbr    : 'GH',
                     country : 'GHANA'
                 },{
-                    abbr : 'GI',
+                    abbr    : 'GI',
                     country : 'GIBRALTAR'
                 },{
-                    abbr : 'GR',
+                    abbr    : 'GR',
                     country : 'GREECE'
                 },{
-                    abbr : 'GL',
+                    abbr    : 'GL',
                     country : 'GREENLAND'
                 },{
-                    abbr : 'GD',
+                    abbr    : 'GD',
                     country : 'GRENADA'
                 },{
-                    abbr : 'GP',
+                    abbr    : 'GP',
                     country : 'GUADELOUPE'
                 },{
-                    abbr : 'GU',
+                    abbr    : 'GU',
                     country : 'GUAM'
                 },{
-                    abbr : 'GT',
+                    abbr    : 'GT',
                     country : 'GUATEMALA'
                 },{
-                    abbr : 'GG',
+                    abbr    : 'GG',
                     country : 'GUERNSEY'
                 },{
-                    abbr : 'GN',
+                    abbr    : 'GN',
                     country : 'GUINEA'
                 },{
-                    abbr : 'GW',
+                    abbr    : 'GW',
                     country : 'GUINEA-BISSAU'
                 },{
-                    abbr : 'GY',
+                    abbr    : 'GY',
                     country : 'GUYANA'
                 },{
-                    abbr : 'HT',
+                    abbr    : 'HT',
                     country : 'HAITI'
                 },{
-                    abbr : 'HM',
+                    abbr    : 'HM',
                     country : 'HEARD ISLAND AND MCDONALD ISLANDS'
                 },{
-                    abbr : 'VA',
+                    abbr    : 'VA',
                     country : 'HOLY SEE (VATICAN CITY STATE)'
                 },{
-                    abbr : 'HN',
+                    abbr    : 'HN',
                     country : 'HONDURAS'
                 },{
-                    abbr : 'HK',
+                    abbr    : 'HK',
                     country : 'HONG KONG'
                 },{
-                    abbr : 'HU',
+                    abbr    : 'HU',
                     country : 'HUNGARY'
                 },{
-                    abbr : 'IS',
+                    abbr    : 'IS',
                     country : 'ICELAND'
                 },{
-                    abbr : 'IN',
+                    abbr    : 'IN',
                     country : 'INDIA'
                 },{
-                    abbr : 'ID',
+                    abbr    : 'ID',
                     country : 'INDONESIA'
                 },{
-                    abbr : 'IR',
+                    abbr    : 'IR',
                     country : 'IRAN, ISLAMIC REPUBLIC OF'
                 },{
-                    abbr : 'IQ',
+                    abbr    : 'IQ',
                     country : 'IRAQ'
                 },{
-                    abbr : 'IE',
+                    abbr    : 'IE',
                     country : 'IRELAND'
                 },{
-                    abbr : 'IM',
+                    abbr    : 'IM',
                     country : 'ISLE OF MAN'
                 },{
-                    abbr : 'IL',
+                    abbr    : 'IL',
                     country : 'ISRAEL'
                 },{
-                    abbr : 'IT',
+                    abbr    : 'IT',
                     country : 'ITALY'
                 },{
-                    abbr : 'JM',
+                    abbr    : 'JM',
                     country : 'JAMAICA'
                 },{
-                    abbr : 'JP',
+                    abbr    : 'JP',
                     country : 'JAPAN'
                 },{
-                    abbr : 'JE',
+                    abbr    : 'JE',
                     country : 'JERSEY'
                 },{
-                    abbr : 'JO',
+                    abbr    : 'JO',
                     country : 'JORDAN'
                 },{
-                    abbr : 'KZ',
+                    abbr    : 'KZ',
                     country : 'KAZAKHSTAN'
                 },{
-                    abbr : 'KE',
+                    abbr    : 'KE',
                     country : 'KENYA'
                 },{
-                    abbr : 'KI',
+                    abbr    : 'KI',
                     country : 'KIRIBATI'
                 },{
-                    abbr : 'KP',
+                    abbr    : 'KP',
                     country : 'KOREA, DEMOCRATIC PEOPLE S REPUBLIC OF'
                 },{
-                    abbr : 'KR',
+                    abbr    : 'KR',
                     country : 'KOREA, REPUBLIC OF'
                 },{
-                    abbr : 'KW',
+                    abbr    : 'KW',
                     country : 'KUWAIT'
                 },{
-                    abbr : 'KG',
+                    abbr    : 'KG',
                     country : 'KYRGYZSTAN'
                 },{
-                    abbr : 'LA',
+                    abbr    : 'LA',
                     country : 'LAO PEOPLE S DEMOCRATIC REPUBLIC'
                 },{
-                    abbr : 'LV',
+                    abbr    : 'LV',
                     country : 'LATVIA'
                 },{
-                    abbr : 'LB',
+                    abbr    : 'LB',
                     country : 'LEBANON'
                 },{
-                    abbr : 'LS',
+                    abbr    : 'LS',
                     country : 'LESOTHO'
                 },{
-                    abbr : 'LR',
+                    abbr    : 'LR',
                     country : 'LIBERIA'
                 },{
-                    abbr : 'LY',
+                    abbr    : 'LY',
                     country : 'LIBYAN ARAB JAMAHIRIYA'
                 },{
-                    abbr : 'LI',
+                    abbr    : 'LI',
                     country : 'LIECHTENSTEIN'
                 },{
-                    abbr : 'LT',
+                    abbr    : 'LT',
                     country : 'LITHUANIA'
                 },{
-                    abbr : 'LU',
+                    abbr    : 'LU',
                     country : 'LUXEMBOURG'
                 },{
-                    abbr : 'MO',
+                    abbr    : 'MO',
                     country : 'MACAO'
                 },{
-                    abbr : 'MK',
+                    abbr    : 'MK',
                     country : 'MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF'
                 },{
-                    abbr : 'MG',
+                    abbr    : 'MG',
                     country : 'MADAGASCAR'
                 },{
-                    abbr : 'MW',
+                    abbr    : 'MW',
                     country : 'MALAWI'
                 },{
-                    abbr : 'MY',
+                    abbr    : 'MY',
                     country : 'MALAYSIA'
                 },{
-                    abbr : 'MV',
+                    abbr    : 'MV',
                     country : 'MALDIVES'
                 },{
-                    abbr : 'ML',
+                    abbr    : 'ML',
                     country : 'MALI'
                 },{
-                    abbr : 'MT',
+                    abbr    : 'MT',
                     country : 'MALTA'
                 },{
-                    abbr : 'MH',
+                    abbr    : 'MH',
                     country : 'MARSHALL ISLANDS'
                 },{
-                    abbr : 'MQ',
+                    abbr    : 'MQ',
                     country : 'MARTINIQUE'
                 },{
-                    abbr : 'MR',
+                    abbr    : 'MR',
                     country : 'MAURITANIA'
                 },{
-                    abbr : 'MU',
+                    abbr    : 'MU',
                     country : 'MAURITIUS'
                 },{
-                    abbr : 'YT',
+                    abbr    : 'YT',
                     country : 'MAYOTTE'
                 },{
-                    abbr : 'MX',
+                    abbr    : 'MX',
                     country : 'MEXICO'
                 },{
-                    abbr : 'FM',
+                    abbr    : 'FM',
                     country : 'MICRONESIA, FEDERATED STATES OF'
                 },{
-                    abbr : 'MD',
+                    abbr    : 'MD',
                     country : 'MOLDOVA'
                 },{
-                    abbr : 'MC',
+                    abbr    : 'MC',
                     country : 'MONACO'
                 },{
-                    abbr : 'MN',
+                    abbr    : 'MN',
                     country : 'MONGOLIA'
                 },{
-                    abbr : 'ME',
+                    abbr    : 'ME',
                     country : 'MONTENEGRO'
                 },{
-                    abbr : 'MS',
+                    abbr    : 'MS',
                     country : 'MONTSERRAT'
                 },{
-                    abbr : 'MA',
+                    abbr    : 'MA',
                     country : 'MOROCCO'
                 },{
-                    abbr : 'MZ',
+                    abbr    : 'MZ',
                     country : 'MOZAMBIQUE'
                 },{
-                    abbr : 'MM',
+                    abbr    : 'MM',
                     country : 'MYANMAR'
                 },{
-                    abbr : 'NA',
+                    abbr    : 'NA',
                     country : 'NAMIBIA'
                 },{
-                    abbr : 'NR',
+                    abbr    : 'NR',
                     country : 'NAURU'
                 },{
-                    abbr : 'NP',
+                    abbr    : 'NP',
                     country : 'NEPAL'
                 },{
-                    abbr : 'NL',
+                    abbr    : 'NL',
                     country : 'NETHERLANDS'
                 },{
-                    abbr : 'AN',
+                    abbr    : 'AN',
                     country : 'NETHERLANDS ANTILLES'
                 },{
-                    abbr : 'NC',
+                    abbr    : 'NC',
                     country : 'NEW CALEDONIA'
                 },{
-                    abbr : 'NZ',
+                    abbr    : 'NZ',
                     country : 'NEW ZEALAND'
                 },{
-                    abbr : 'NI',
+                    abbr    : 'NI',
                     country : 'NICARAGUA'
                 },{
-                    abbr : 'NE',
+                    abbr    : 'NE',
                     country : 'NIGER'
                 },{
-                    abbr : 'NG',
+                    abbr    : 'NG',
                     country : 'NIGERIA'
                 },{
-                    abbr : 'NU',
+                    abbr    : 'NU',
                     country : 'NIUE'
                 },{
-                    abbr : 'NF',
+                    abbr    : 'NF',
                     country : 'NORFOLK ISLAND'
                 },{
-                    abbr : 'MP',
+                    abbr    : 'MP',
                     country : 'NORTHERN MARIANA ISLANDS'
                 },{
-                    abbr : 'NO',
+                    abbr    : 'NO',
                     country : 'NORWAY'
                 },{
-                    abbr : 'OM',
+                    abbr    : 'OM',
                     country : 'OMAN'
                 },{
-                    abbr : 'PK',
+                    abbr    : 'PK',
                     country : 'PAKISTAN'
                 },{
-                    abbr : 'PW',
+                    abbr    : 'PW',
                     country : 'PALAU'
                 },{
-                    abbr : 'PS',
+                    abbr    : 'PS',
                     country : 'PALESTINIAN TERRITORY, OCCUPIED'
                 },{
-                    abbr : 'PA',
+                    abbr    : 'PA',
                     country : 'PANAMA'
                 },{
-                    abbr : 'PG',
+                    abbr    : 'PG',
                     country : 'PAPUA NEW GUINEA'
                 },{
-                    abbr : 'PY',
+                    abbr    : 'PY',
                     country : 'PARAGUAY'
                 },{
-                    abbr : 'PE',
+                    abbr    : 'PE',
                     country : 'PERU'
                 },{
-                    abbr : 'PH',
+                    abbr    : 'PH',
                     country : 'PHILIPPINES'
                 },{
-                    abbr : 'PN',
+                    abbr    : 'PN',
                     country : 'PITCAIRN'
                 },{
-                    abbr : 'PL',
+                    abbr    : 'PL',
                     country : 'POLAND'
                 },{
-                    abbr : 'PT',
+                    abbr    : 'PT',
                     country : 'PORTUGAL'
                 },{
-                    abbr : 'PR',
+                    abbr    : 'PR',
                     country : 'PUERTO RICO'
                 },{
-                    abbr : 'QA',
+                    abbr    : 'QA',
                     country : 'QATA'
                 },{
-                    abbr : 'RE',
+                    abbr    : 'RE',
                     country : 'R�UNION'
                 },{
-                    abbr : 'RO',
+                    abbr    : 'RO',
                     country : 'ROMANIA'
                 },{
-                    abbr : 'RU',
+                    abbr    : 'RU',
                     country : 'RUSSIAN FEDERATION'
                 },{
-                    abbr : 'RW',
+                    abbr    : 'RW',
                     country : 'RWANDA'
                 },{
-                    abbr : 'BL',
+                    abbr    : 'BL',
                     country : 'SAINT BARTH�LEMY'
                 },{
-                    abbr : 'SH',
+                    abbr    : 'SH',
                     country : 'SAINT HELENA'
                 },{
-                    abbr : 'KN',
+                    abbr    : 'KN',
                     country : 'SAINT KITTS AND NEVIS'
                 },{
-                    abbr : 'LC',
+                    abbr    : 'LC',
                     country : 'SAINT LUCIA'
                 },{
-                    abbr : 'MF',
+                    abbr    : 'MF',
                     country : 'SAINT MARTIN'
                 },{
-                    abbr : 'PM',
+                    abbr    : 'PM',
                     country : 'SAINT PIERRE AND MIQUELON'
                 },{
-                    abbr : 'VC',
+                    abbr    : 'VC',
                     country : 'SAINT VINCENT AND THE GRENADINES'
                 },{
-                    abbr : 'WS',
+                    abbr    : 'WS',
                     country : 'SAMOA'
                 },{
-                    abbr : 'SM',
+                    abbr    : 'SM',
                     country : 'SAN MARINO'
                 },{
-                    abbr : 'ST',
+                    abbr    : 'ST',
                     country : 'SAO TOME AND PRINCIPE'
                 },{
-                    abbr : 'SA',
+                    abbr    : 'SA',
                     country : 'SAUDI ARABIA'
                 },{
-                    abbr : 'SN',
+                    abbr    : 'SN',
                     country : 'SENEGAL'
                 },{
-                    abbr : 'RS',
+                    abbr    : 'RS',
                     country : 'SERBIA'
                 },{
-                    abbr : 'SC',
+                    abbr    : 'SC',
                     country : 'SEYCHELLES'
                 },{
-                    abbr : 'SL',
+                    abbr    : 'SL',
                     country : 'SIERRA LEONE'
                 },{
-                    abbr : 'SG',
+                    abbr    : 'SG',
                     country : 'SINGAPORE'
                 },{
-                    abbr : 'SK',
+                    abbr    : 'SK',
                     country : 'SLOVAKIA'
                 },{
-                    abbr : 'SI',
+                    abbr    : 'SI',
                     country : 'SLOVENIA'
                 },{
-                    abbr : 'SB',
+                    abbr    : 'SB',
                     country : 'SOLOMON ISLANDS'
                 },{
-                    abbr : 'SO',
+                    abbr    : 'SO',
                     country : 'SOMALIA'
                 },{
-                    abbr : 'ZA',
+                    abbr    : 'ZA',
                     country : 'SOUTH AFRICA'
                 },{
-                    abbr : 'GS',
+                    abbr    : 'GS',
                     country : 'SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS'
                 },{
-                    abbr : 'ES',
+                    abbr    : 'ES',
                     country : 'SPAIN'
                 },{
-                    abbr : 'LK',
+                    abbr    : 'LK',
                     country : 'SRI LANKA'
                 },{
-                    abbr : 'SD',
+                    abbr    : 'SD',
                     country : 'SUDAN'
                 },{
-                    abbr : 'SR',
+                    abbr    : 'SR',
                     country : 'SURINAME'
                 },{
-                    abbr : 'SJ',
+                    abbr    : 'SJ',
                     country : 'SVALBARD AND JAN MAYEN'
                 },{
-                    abbr : 'SZ',
+                    abbr    : 'SZ',
                     country : 'SWAZILAND'
                 },{
-                    abbr : 'SE',
+                    abbr    : 'SE',
                     country : 'SWEDEN'
                 },{
-                    abbr : 'CH',
+                    abbr    : 'CH',
                     country : 'SWITZERLAND'
                 },{
-                    abbr : 'SY',
+                    abbr    : 'SY',
                     country : 'SYRIAN ARAB REPUBLIC'
                 },{
-                    abbr : 'TW',
+                    abbr    : 'TW',
                     country : 'TAIWAN'
                 },{
-                    abbr : 'TJ',
+                    abbr    : 'TJ',
                     country : 'TAJIKISTAN'
                 },{
-                    abbr : 'TZ',
+                    abbr    : 'TZ',
                     country : 'TANZANIA, UNITED REPUBLIC OF'
                 },{
-                    abbr : 'TH',
+                    abbr    : 'TH',
                     country : 'THAILAND'
                 },{
-                    abbr : 'TL',
+                    abbr    : 'TL',
                     country : 'TIMOR-LESTE'
                 },{
-                    abbr : 'TG',
+                    abbr    : 'TG',
                     country : 'TOGO'
                 },{
-                    abbr : 'TK',
+                    abbr    : 'TK',
                     country : 'TOKELAU'
                 },{
-                    abbr : 'TO',
+                    abbr    : 'TO',
                     country : 'TONGA'
                 },{
-                    abbr : 'TT',
+                    abbr    : 'TT',
                     country : 'TRINIDAD AND TOBAGO'
                 },{
-                    abbr : 'TN',
+                    abbr    : 'TN',
                     country : 'TUNISIA'
                 },{
-                    abbr : 'TR',
+                    abbr    : 'TR',
                     country : 'TURKEY'
                 },{
-                    abbr : 'TM',
+                    abbr    : 'TM',
                     country : 'TURKMENISTAN'
                 },{
-                    abbr : 'TC',
+                    abbr    : 'TC',
                     country : 'TURKS AND CAICOS ISLANDS'
                 },{
-                    abbr : 'TV',
+                    abbr    : 'TV',
                     country : 'TUVALU'
                 },{
-                    abbr : 'UG',
+                    abbr    : 'UG',
                     country : 'UGANDA'
                 },{
-                    abbr : 'UA',
+                    abbr    : 'UA',
                     country : 'UKRAINE'
                 },{
-                    abbr : 'AE',
+                    abbr    : 'AE',
                     country : 'UNITED ARAB EMIRATES'
                 },{
-                    abbr : 'GB',
+                    abbr    : 'GB',
                     country : 'UNITED KINGDOM'
                 },{
-                    abbr : 'US',
+                    abbr    : 'US',
                     country : 'UNITED STATES'
                 },{
-                    abbr : 'UM',
+                    abbr    : 'UM',
                     country : 'UNITED STATES MINOR OUTLYING ISLANDS'
                 },{
-                    abbr : 'UY',
+                    abbr    : 'UY',
                     country : 'URUGUAY'
                 },{
-                    abbr : 'UZ',
+                    abbr    : 'UZ',
                     country : 'UZBEKISTAN'
                 },{
-                    abbr : 'VU',
+                    abbr    : 'VU',
                     country : 'VANUATU'
                 },{
-                    abbr : 'VE',
+                    abbr    : 'VE',
                     country : 'VENEZUELA'
                 },{
-                    abbr : 'VN',
+                    abbr    : 'VN',
                     country : 'VIET NAM'
                 },{
-                    abbr : 'VG',
+                    abbr    : 'VG',
                     country : 'VIRGIN ISLANDS, BRITISH'
                 },{
-                    abbr : 'VI',
+                    abbr    : 'VI',
                     country : 'VIRGIN ISLANDS, U.S.'
                 },{
-                    abbr : 'WF',
+                    abbr    : 'WF',
                     country : 'WALLIS AND FUTUNA'
                 },{
-                    abbr : 'EH',
+                    abbr    : 'EH',
                     country : 'WESTERN SAHARA'
                 },{
-                    abbr : 'YE',
+                    abbr    : 'YE',
                     country : 'YEMEN'
                 },{
-                    abbr : 'ZM',
+                    abbr    : 'ZM',
                     country : 'ZAMBIA'
                 }]
-
             })
         });
-        //****************************************
+
         // Satellite Codes
         Ext.apply(me, {
             store : Ext.create("OMV.data.Store", {
                 autoLoad : true,
-                storeId : "satellitecode",
-                model : OMV.data.Model.createImplicit({
+                storeId  : "satellitecode",
+                model    : OMV.data.Model.createImplicit({
                     idProperty : "name",
-                    fields : [{
+                    fields     : [{
                         name : "abbr",
                         type : "string"
                     },{
@@ -1227,199 +1238,199 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     }]
                 }),
                 data : [{
-                    abbr : 'S4E8',
+                    abbr      : 'S4E8',
                     satellite : '4.8 east Sirius'
                 },{
-                    abbr : 'S7E0',
+                    abbr      : 'S7E0',
                     satellite : '7.0 east Eutelsat W3A'
                 },{
-                    abbr : 'S9E0',
+                    abbr      : 'S9E0',
                     satellite : '9.0 east Eurobird 9'
                 },{
-                    abbr : 'S10E0',
+                    abbr      : 'S10E0',
                     satellite : '10.0 east Eutelsat W1'
                 },{
-                    abbr : 'S13E0',
+                    abbr      : 'S13E0',
                     satellite : '13.0 east Hotbird 6/7A/8'
                 },{
-                    abbr : 'S16E0',
+                    abbr      : 'S16E0',
                     satellite : '16.0 east Eutelsat W2'
                 },{
-                    abbr : 'S19E2',
+                    abbr      : 'S19E2',
                     satellite : '19.2 east Astra 1F/1G/1H/1KR/1L'
                 },{
-                    abbr : 'S21E6',
+                    abbr      : 'S21E6',
                     satellite : '21.6 east Eutelsat W6'
                 },{
-                    abbr : 'S23E5',
+                    abbr      : 'S23E5',
                     satellite : '23.5 east Astra 1E/3A'
                 },{
-                    abbr : 'S25E5',
+                    abbr      : 'S25E5',
                     satellite : '25.5 east Eurobird 2'
                 },{
-                    abbr : 'S26EX',
+                    abbr      : 'S26EX',
                     satellite : '26.X east Badr C/3/4/6'
                 },{
-                    abbr : 'S28E2',
+                    abbr      : 'S28E2',
                     satellite : '28.2 east Astra 2A/2B/2C/2D'
                 },{
-                    abbr : 'S28E5',
+                    abbr      : 'S28E5',
                     satellite : '28.5 east EuroBird 1'
                 },{
-                    abbr : 'S31E5',
+                    abbr      : 'S31E5',
                     satellite : '31.5 east Astra 5A/1D'
                 },{
-                    abbr : 'S32E9',
+                    abbr      : 'S32E9',
                     satellite : '32.9 east Intelsat 802'
                 },{
-                    abbr : 'S33E0',
+                    abbr      : 'S33E0',
                     satellite : '33.0 east Eurobird 3'
                 },{
-                    abbr : 'S35E9',
+                    abbr      : 'S35E9',
                     satellite : '35.9 east Eutelsat W4'
                 },{
-                    abbr : 'S36E0',
+                    abbr      : 'S36E0',
                     satellite : '36.0 east Eutelsat Sesat'
                 },{
-                    abbr : 'S38E0',
+                    abbr      : 'S38E0',
                     satellite : '38.0 east Paksat 1'
                 },{
-                    abbr : 'S39E0',
+                    abbr      : 'S39E0',
                     satellite : '39.0 east Hellas Sat 2'
                 },{
-                    abbr : 'S40EX',
+                    abbr      : 'S40EX',
                     satellite : '40.X east Express AM1'
                 },{
-                    abbr : 'S41E9',
+                    abbr      : 'S41E9',
                     satellite : '41.9 east Turksat 2A/3A'
                 },{
-                    abbr : 'S45E0',
+                    abbr      : 'S45E0',
                     satellite : '45.0 east Intelsat 12'
                 },{
-                    abbr : 'S49E0',
+                    abbr      : 'S49E0',
                     satellite : '49.0 east Yamal 202'
                 },{
-                    abbr : 'S53E0',
+                    abbr      : 'S53E0',
                     satellite : '53.0 east Express AM22'
                 },{
-                    abbr : 'S57E0',
+                    abbr      : 'S57E0',
                     satellite : '57.0 east Bonum 1'
                 },{
-                    abbr : 'S57EX',
+                    abbr      : 'S57EX',
                     satellite : '57.X east NSS 703'
                 },{
-                    abbr : 'S60EX',
+                    abbr      : 'S60EX',
                     satellite : '60.X east Intelsat 904'
                 },{
-                    abbr : 'S62EX',
+                    abbr      : 'S62EX',
                     satellite : '62.X east Intelsat 902'
                 },{
-                    abbr : 'S64E2',
+                    abbr      : 'S64E2',
                     satellite : '64.2 east Intelsat 906'
                 },{
-                    abbr : 'S68EX',
+                    abbr      : 'S68EX',
                     satellite : '68.X east Intelsat 7/10'
                 },{
-                    abbr : 'S70E5',
+                    abbr      : 'S70E5',
                     satellite : '70.5 east Eutelsat W5'
                 },{
-                    abbr : 'S72EX',
+                    abbr      : 'S72EX',
                     satellite : '72.X east Intelsat 4'
                 },{
-                    abbr : 'S75EX',
+                    abbr      : 'S75EX',
                     satellite : '75.X east ABS 1'
                 },{
-                    abbr : 'S76EX',
+                    abbr      : 'S76EX',
                     satellite : '76.X east Telstar 10'
                 },{
-                    abbr : 'S78E5',
+                    abbr      : 'S78E5',
                     satellite : '78.5 east Thaicom 2/5'
                 },{
-                    abbr : 'S80EX',
+                    abbr      : 'S80EX',
                     satellite : '80.X east Express AM2'
                 },{
-                    abbr : 'S83EX',
+                    abbr      : 'S83EX',
                     satellite : '83.X east Insat 2E/3B/4A'
                 },{
-                    abbr : 'S87E5',
+                    abbr      : 'S87E5',
                     satellite : '87.5 east ChinaStar 1'
                 },{
-                    abbr : 'S88EX',
+                    abbr      : 'S88EX',
                     satellite : '88.X east ST 1'
                 },{
-                    abbr : 'S90EX',
+                    abbr      : 'S90EX',
                     satellite : '90.X east Yamal 201'
                 },{
-                    abbr : 'S91E5',
+                    abbr      : 'S91E5',
                     satellite : '91.5 east Measat 3'
                 },{
-                    abbr : 'S93E5',
+                    abbr      : 'S93E5',
                     satellite : '93.5 east Insat 3A/4B'
                 },{
-                    abbr : 'S95E0',
+                    abbr      : 'S95E0',
                     satellite : '95.0 east NSS 6'
                 },{
-                    abbr : 'S96EX',
+                    abbr      : 'S96EX',
                     satellite : '96.X east Express AM33'
                 },{
-                    abbr : 'S100EX',
+                    abbr      : 'S100EX',
                     satellite : '100.X east AsiaSat 2'
                 },{
-                    abbr : 'S105EX',
+                    abbr      : 'S105EX',
                     satellite : '105.X east AsiaSat 3S'
                 },{
-                    abbr : 'S108EX',
+                    abbr      : 'S108EX',
                     satellite : '108.X east Telkom 1 & NSS 11'
                 },{
-                    abbr : 'S140EX',
+                    abbr      : 'S140EX',
                     satellite : '140.X east Express AM3'
                 },{
-                    abbr : 'S160E0',
+                    abbr      : 'S160E0',
                     satellite : '160.0 east Optus D1'
                 },{
-                    abbr : 'S0W8',
+                    abbr      : 'S0W8',
                     satellite : '0.8 west Thor 3/5 & Intelsat 10-02'
                 },{
-                    abbr : 'S4W0',
+                    abbr      : 'S4W0',
                     satellite : '4.0 west Amos 1/2/3'
                 },{
-                    abbr : 'S5WX',
+                    abbr      : 'S5WX',
                     satellite : '5.X west Atlantic Bird 3'
                 },{
-                    abbr : 'S7W0',
+                    abbr      : 'S7W0',
                     satellite : '7.0 west Nilesat 101/102 & Atlantic Bird 4'
                 },{
-                    abbr : 'S8W0',
+                    abbr      : 'S8W0',
                     satellite : '8.0 west Atlantic Bird 2'
                 },{
-                    abbr : 'S11WX',
+                    abbr      : 'S11WX',
                     satellite : '11.X west Express A3'
                 },{
-                    abbr : 'S12W5',
+                    abbr      : 'S12W5',
                     satellite : '12.5 west Atlantic Bird 1'
                 },{
-                    abbr : 'S14W0',
+                    abbr      : 'S14W0',
                     satellite : '14.0 west Express A4'
                 },{
-                    abbr : 'S15W0',
+                    abbr      : 'S15W0',
                     satellite : '15.0 west Telstar 12'
                 },{
-                    abbr : 'S18WX',
+                    abbr      : 'S18WX',
                     satellite : '18.X west Intelsat 901'
                 },{
-                    abbr : 'S22WX',
+                    abbr      : 'S22WX',
                     satellite : '22.X west NSS 7'
                 },{
-                    abbr : 'S24WX',
+                    abbr      : 'S24WX',
                     satellite : '24.X west Intelsat 905'
                 },{
-                    abbr : 'S27WX',
+                    abbr      : 'S27WX',
                     satellite : '27.X west Intelsat 907'
                 },{
-                    abbr : 'S30W0',
+                    abbr      : 'S30W0',
                     satellite : '30.0 west Hispasat 1C/1D'
                 },{
-                    abbr : 'S97W0',
+                    abbr      : 'S97W0',
                     satellite : '97.0 west Telstar 5'
                 }]
 
@@ -1430,11 +1441,10 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
     }
 });
 
-// Register the class that is defined above
 OMV.WorkspaceManager.registerPanel({
-    id : "settings", //Individual id
-    path : "/service/vdr", // Parent folder in the navigation view
-    text : _("VDR Settings"), // Text to show on the tab , Shown only if multiple form panels
-    position : 10, // Horizontal position of this tab. Use when you have multiple tabs
-    className : "OMV.module.admin.service.vdr.Settings" // Same class name as defined above
+    id        : "settings",
+    path      : "/service/vdr",
+    text      : _("VDR Settings"),
+    position  : 10,
+    className : "OMV.module.admin.service.vdr.Settings"
 });
