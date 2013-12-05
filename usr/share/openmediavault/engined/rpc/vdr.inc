@@ -16,45 +16,46 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once("openmediavault/object.inc");
-require_once("openmediavault/config.inc");
-require_once("openmediavault/error.inc");
-require_once("openmediavault/util.inc");
-require_once("openmediavault/rpcservice.inc");
-require_once("openmediavault/notify.inc");
+require_once ("openmediavault/object.inc");
+require_once ("openmediavault/config.inc");
+require_once ("openmediavault/error.inc");
+require_once ("openmediavault/util.inc");
+require_once ("openmediavault/rpcservice.inc");
+require_once ("openmediavault/notify.inc");
 
-class OMVRpcServiceVDRPlugin extends OMVRpcServiceAbstract {
-    public function getName() { return "VDR";} // RPC Service name. Same as in .js files
+class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
+{
+    private function getXPath()
+    {
+        return '//services/vdr';
+    }
 
-    /* Initialize the RPC service. Different methods of the RPC service are declared here*/
-    public function initialize() {
-		$this->registerMethod("getSettings"); // Method name. Same as in .js files
-		$this->registerMethod("setSettings"); // Method name. Same as in .js files
-        $this->registerMethod("scanChannels"); // Method name. Same as in .js files
-        $this->registerMethod("scanStatus"); // Method name. Same as in .js files
-     	}
+    public function getName()
+    {
+        return "VDR";
+    }
 
-    public function getSettings($params, $context) {
 
-        // Reference to the global declaration of the variable $xmlConfig (Needed always)
-		global $xmlConfig; 
+    public function initialize()
+    {
+        $this->registerMethod("getSettings");
+        $this->registerMethod("setSettings");
+        $this->registerMethod("scanChannels");
+        $this->registerMethod("scanStatus");
+    }
+
+    public function getSettings($params, $context)
+    {
+        global $xmlConfig;
 
         // Validate the RPC caller context.
-        // This is used to check that only the admin can use this function 
-        // Extra security as usermanagement is also done in the web interface
-        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR)); 
-        // The $context contains the fields username and role
-        // Role can also be "OMV_ROLE_USER" or "OMV_ROLE_EVERYONE" (user and admin)
-
+        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
 
         // Get the configuration object.
-        $xpath = "//services/vdrplugin"; // Structure of the xml schema
-        $object = $xmlConfig->get($xpath); // Read data from the xmlConfig file 
-        // If no data is found then create an error
-        if(is_null($object)) {
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,$xpath);
-        }
+        $object = $xmlConfig->get($this->getXPath());
 
+        if (is_null($object))
+            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getXPath());
 
         // Modify the result object. (Change characters to values)
         $object['vdr_enable'] = boolval($object['vdr_enable']);
@@ -84,22 +85,20 @@ class OMVRpcServiceVDRPlugin extends OMVRpcServiceAbstract {
         $object['vdradminam_port'] = intval($object['vdradminam_port']);
 
         return $object;
-	}
+    }
 
-//*****************************************************************    
-//*****************************************************************
-//*****************************************************************
+    public function setSettings($params, $context)
+    {
+        global $xmlConfig;
 
-    public function setSettings($params, $context) {
-		// Check comments from getSettings
-		global $xmlConfig; 
-        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR)); 
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
 
         $this->validateMethodParams($params, '{
             "type":"object",
             "properties":{
                 "vdr_enable":{"type":"boolean"},
-                "vdr_transpondertype":{"type":"string"},  
+                "vdr_transpondertype":{"type":"string"},
                 "vdr_atsc_country":{"type":"string"},
                 "vdr_atsc_type":{"type":"number"},
                 "vdr_atsc_scan_encrypted":{"type":"boolean"},
@@ -121,21 +120,16 @@ class OMVRpcServiceVDRPlugin extends OMVRpcServiceAbstract {
                 "vdr_channelupdatemode":{"type":"number","minimum":0,"maximum":6},
                 "vdradminam_enable":{"type":"boolean"},
                 "vdradminam_port":{"type":"integer","minimum":1,"maximum":65535}
-                }
-            }'
-        );
+            }
+        }');
 
         // Get the existing configuration object.
-        $xpath = "//services/vdrplugin"; // Structure of the xml schema
-        $oldObject = $xmlConfig->get($xpath); // Read data from the xmlConfig file
-        // If no data is found then create an error
-        if(is_null($oldObject)) {
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,$xpath);
-        }
-      
+        $oldObject = $xmlConfig->get($this->getXPath());
 
+        if (is_null($oldObject))
+            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getXPath());
 
-        // Update the configuration object. 
+        // Update the configuration object.
         $object = array(
             "vdr_enable" => array_boolval($params, 'vdr_enable'),
             "vdr_transpondertype" => $params['vdr_transpondertype'],
@@ -163,9 +157,8 @@ class OMVRpcServiceVDRPlugin extends OMVRpcServiceAbstract {
         );
 
         // Update the xmlConfig file. If it fails then generate an error
-        if(FALSE === $xmlConfig->replace("//services/vdrplugin", $object)) {
+        if (FALSE === $xmlConfig->replace($this->getXPath(), $object))
             throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
-        }
 
         // Notify configuration changes.
         $dispatcher = &OMVNotifyDispatcher::getInstance();
@@ -175,12 +168,8 @@ class OMVRpcServiceVDRPlugin extends OMVRpcServiceAbstract {
         return $object;
     }
 
-//*****************************************************************    
-//*****************************************************************
-//*****************************************************************
-
-    public function scanChannels($params, $context) {
-
+    public function scanChannels($params, $context)
+    {
         // Check if scan is active
         // If active or checking failed return
         $scanStatusRet = $this->scanStatus();
@@ -188,118 +177,148 @@ class OMVRpcServiceVDRPlugin extends OMVRpcServiceAbstract {
             return $scanStatusRet;
         }
 
-        // temporary file      
+        // Temporary file
         $channelFile = "/tmp/channels.conf";
-        $ouputMode = " -o 7 "; // Output file type is for VDR 1.7
+        $ouputMode = " -o 7 ";
+        // Output file type is for VDR 1.7
 
         // Parse script based on transponder settings
         $transpoderType = $params['vdr_transpondertype'];
 
         switch ($transpoderType) {
-            case a: if (boolval($params['vdr_atsc_scan_encrypted']) == false) {
-                        $vdr_atsc_scan_encrypted = " -E 0";
-                    }
-                    else {
-                        $vdr_atsc_scan_encrypted = "";
-                    }
+            case a:
+                if (boolval($params['vdr_atsc_scan_encrypted']) == false) {
+                    $vdr_atsc_scan_encrypted = " -E 0";
+                } else {
+                    $vdr_atsc_scan_encrypted = "";
+                }
 
-                    $str = " -c " . $params['vdr_atsc_country'] . " -A " . $params['vdr_atsc_type'] . $vdr_atsc_scan_encrypted;
-                    $cmd = "w_scan -fa" . $str . $outputMode . " >> ". $channelFile;
-                    break;
-            
-            case c: if ($params['vdr_dvb_c_qam'] == " ") {
-                        $vdr_dvb_c_qam = "";
-                    }
-                    else {
-                        $vdr_dvb_c_qam = " -Q " . $params['vdr_dvb_c_qam'];
-                    }
-                    
-                    if ($params['vdr_dvb_c_symbolrate'] == " ") {
-                        $vdr_dvb_c_symbolrate = "";
-                    }
-                    else {
-                        $vdr_dvb_c_symbolrate = " -S " . $params['vdr_dvb_c_symbolrate'];
-                    }
+                $str = " -c "
+                     . $params['vdr_atsc_country']
+                     . " -A "
+                     . $params['vdr_atsc_type']
+                     . $vdr_atsc_scan_encrypted;
 
-                    if (boolval($params['vdr_dvb_c_extended_qam']) == false) {
-                        $vdr_dvb_c_extended_qam = "";
-                    }
-                    else {
-                        $vdr_dvb_c_extended_qam = " -e 2";
-                    }
+                $cmd = "w_scan -fa"
+                     . $str
+                     . $outputMode
+                     . " >> "
+                     . $channelFile;
 
-                    if (boolval($params['vdr_dvb_c_scan_encrypted']) == false) {
-                        $vdr_dvb_c_scan_encrypted = " -E 0";
-                    }
-                    else {
-                        $vdr_dvb_c_scan_encrypted = "";
-                    }
+                break;
 
-                    $str = " -c " . $params['vdr_dvb_c_country'] . $vdr_dvb_c_qam . $vdr_dvb_c_symbolrate . $vdr_dvb_c_extended_qam . $vdr_dvb_c_scan_encrypted;
-                    $cmd = "w_scan -fc" . $str . $outputMode . " >> ". $channelFile;
-                    break;
+            case c:
+                if ($params['vdr_dvb_c_qam'] == " ") {
+                    $vdr_dvb_c_qam = "";
+                } else {
+                    $vdr_dvb_c_qam = " -Q " . $params['vdr_dvb_c_qam'];
+                }
 
-            case t: if (boolval($params['vdr_dvb_t_scan_encrypted']) == false) {
-                        $vdr_dvb_t_scan_encrypted = " -E 0";
-                    }
-                    else {
-                        $vdr_dvb_t_scan_encrypted = "";
-                    }
+                if ($params['vdr_dvb_c_symbolrate'] == " ") {
+                    $vdr_dvb_c_symbolrate = "";
+                } else {
+                    $vdr_dvb_c_symbolrate = " -S " . $params['vdr_dvb_c_symbolrate'];
+                }
 
-                    $str = " -c " . $params['vdr_dvb_t_country'] . $vdr_dvb_t_scan_encrypted;
-                    $cmd = "w_scan -ft" . $str . $outputMode . " >> ". $channelFile;
-                    break;
-            
-            case s: if (boolval($params['vdr_dvb_s_scan_encrypted']) == false) {
-                        $vdr_dvb_s_scan_encrypted = " -E 0";
-                    }
-                    else {
-                        $vdr_dvb_s_scan_encrypted = "";
-                    }
+                if (boolval($params['vdr_dvb_c_extended_qam']) == false) {
+                    $vdr_dvb_c_extended_qam = "";
+                } else {
+                    $vdr_dvb_c_extended_qam = " -e 2";
+                }
 
-                    $str = " -c " . $params['vdr_dvb_s_country'] . " -s " . $params['vdr_dvb_s_satellite'] . $vdr_dvb_s_scan_encrypted;
-                    $cmd = "w_scan -fs" . $str . $outputMode . " >> ". $channelFile;
-                    break;
+                if (boolval($params['vdr_dvb_c_scan_encrypted']) == false) {
+                    $vdr_dvb_c_scan_encrypted = " -E 0";
+                } else {
+                    $vdr_dvb_c_scan_encrypted = "";
+                }
+
+                $str = " -c " . $params['vdr_dvb_c_country']
+                     . $vdr_dvb_c_qam . $vdr_dvb_c_symbolrate
+                     . $vdr_dvb_c_extended_qam
+                     . $vdr_dvb_c_scan_encrypted;
+
+                $cmd = "w_scan -fc"
+                     . $str
+                     . $outputMode
+                     . " >> "
+                     . $channelFile;
+
+                break;
+
+            case t:
+                if (boolval($params['vdr_dvb_t_scan_encrypted']) == false) {
+                    $vdr_dvb_t_scan_encrypted = " -E 0";
+                } else {
+                    $vdr_dvb_t_scan_encrypted = "";
+                }
+
+                $str = " -c "
+                     . $params['vdr_dvb_t_country']
+                     . $vdr_dvb_t_scan_encrypted;
+                $cmd = "w_scan -ft"
+                     . $str
+                     . $outputMode
+                     . " >> "
+                     . $channelFile;
+
+                break;
+
+            case s:
+                if (boolval($params['vdr_dvb_s_scan_encrypted']) == false) {
+                    $vdr_dvb_s_scan_encrypted = " -E 0";
+                } else {
+                    $vdr_dvb_s_scan_encrypted = "";
+                }
+
+                $str = " -c "
+                     . $params['vdr_dvb_s_country']
+                     . " -s "
+                     . $params['vdr_dvb_s_satellite']
+                     . $vdr_dvb_s_scan_encrypted;
+
+                $cmd = "w_scan -fs"
+                     . $str
+                     . $outputMode
+                     . " >> "
+                     . $channelFile;
+
+                break;
         }
-        
 
-        $cmd = $cmd . ";" . "cat " . $channelFile . " > /etc/vdr/channels.conf;" . "rm " . $channelFile . ";";
+        $cmd = sprintf("%1$s; cat %2$s > /etc/vdr/channels.conf; rm %2$s;",
+            $cmd, $channelFile);
+
         // If script fails to execute then create an error
-        if(0 !== $this->exec($cmd, $output)) {
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
-            return "-1";
-        }
-    
-        return "1"; // Channel Scan Complete
+        if (0 !== $this->exec($cmd, $output))
+            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+                $cmd, implode("\n", $output));
+
+        return "1";
     }
 
-//*****************************************************************    
-//*****************************************************************
-//*****************************************************************
-
-    public function scanStatus($params, $context) {
-        // Function to check if w_scan is still active;
-
+    // Function to check if w_scan is still active;
+    public function scanStatus($params, $context)
+    {
+        $retMessage = null;
         $cmd = "pgrep -n w_scan 2>&1";
-
         $pgrepReturn = $this->exec($cmd, $output);
-        
-        if($pgrepReturn == 0) {
-             $retMessage = "0"; //"Channel scan is still running"
-        }
-        elseif($pgrepReturn == 1)  {
-            $retMessage = "1"; //"Channel Scan is not active"
-        }
-        else {
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
+
+        if ($pgrepReturn == 0) {
+            //"Channel scan is still running"
+            $retMessage = "0";
+        } elseif ($pgrepReturn == 1) {
+            //"Channel Scan is not active"
+            $retMessage = "1";
+        } else {
+            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+                $cmd, implode("\n", $output));
         }
 
         return $retMessage;
-
     }
 
 }
+
 // Register the RPC service.
-$rpcServiceMgr = &OMVRpcServiceMgr::getInstance(); // Get the "root" instance for the Services 
-$rpcServiceMgr->registerService(new OMVRpcServiceVDRPlugin()); // Register a new instance of the RPC service described above
-?>
+$rpcServiceMgr = &OMVRpcServiceMgr::getInstance();
+$rpcServiceMgr->registerService(new OMVRpcServiceVdrPlugin());
