@@ -285,7 +285,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
                 break;
         }
 
-        $cmd = sprintf("%1$s; cat %2$s > /etc/vdr/channels.conf; rm %2$s;",
+        $cmd = sprintf('%1$s; cat %2$s > /etc/vdr/channels.conf; rm %2$s;',
             $cmd, $channelFile);
 
         // If script fails to execute then create an error
