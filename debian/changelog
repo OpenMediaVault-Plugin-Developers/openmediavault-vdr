@@ -6,8 +6,8 @@ openmediavault-vdr (0.5.2) stable; urgency=low
   * Fix postinst script so that vdr is not left running after installation
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 07 Dec 2013 00:13:00 +0200
- 
- openmediavault-vdr (0.5.1) stable; urgency=low
+
+openmediavault-vdr (0.5.1) stable; urgency=low
 
   * Fix .deb files
 
