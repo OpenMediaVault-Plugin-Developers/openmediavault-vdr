@@ -170,6 +170,8 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
 
     public function scanChannels($params, $context)
     {
+        $cmd = "";
+
         // Check if scan is active
         // If active or checking failed return
         $scanStatusRet = $this->scanStatus();
@@ -179,14 +181,14 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
 
         // Temporary file
         $channelFile = "/tmp/channels.conf";
-        $ouputMode = " -o 7 ";
         // Output file type is for VDR 1.7
+        $ouputMode = " -o 7 ";
 
         // Parse script based on transponder settings
         $transpoderType = $params['vdr_transpondertype'];
 
         switch ($transpoderType) {
-            case a:
+            case "a":
                 if (boolval($params['vdr_atsc_scan_encrypted']) == false) {
                     $vdr_atsc_scan_encrypted = " -E 0";
                 } else {
@@ -207,7 +209,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
 
                 break;
 
-            case c:
+            case "c":
                 if ($params['vdr_dvb_c_qam'] == " ") {
                     $vdr_dvb_c_qam = "";
                 } else {
@@ -245,7 +247,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
 
                 break;
 
-            case t:
+            case "t":
                 if (boolval($params['vdr_dvb_t_scan_encrypted']) == false) {
                     $vdr_dvb_t_scan_encrypted = " -E 0";
                 } else {
@@ -263,7 +265,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
 
                 break;
 
-            case s:
+            case "s":
                 if (boolval($params['vdr_dvb_s_scan_encrypted']) == false) {
                     $vdr_dvb_s_scan_encrypted = " -E 0";
                 } else {
@@ -285,15 +287,13 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
                 break;
         }
 
-        $cmd = sprintf('%1$s; cat %2$s > /etc/vdr/channels.conf; rm %2$s;',
+        $cmd = sprintf("%1\$s; cat %2\$s > /etc/vdr/channels.conf; rm %2\$s;",
             $cmd, $channelFile);
 
         // If script fails to execute then create an error
         if (0 !== $this->exec($cmd, $output))
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
                 $cmd, implode("\n", $output));
-
-        return "1";
     }
 
     // Function to check if w_scan is still active;
