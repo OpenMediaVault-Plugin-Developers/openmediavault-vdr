@@ -4,7 +4,7 @@ openmediavault-vdr (0.5.2) stable; urgency=low
   * Fix module file so that Services Overview works
   * Fix mkconf script so parameters are read from the correct location
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 06 Dec 2013 22:51:00 +0200
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 06 Dec 2013 23:23:00 +0200
  
  openmediavault-vdr (0.5.1) stable; urgency=low
 
