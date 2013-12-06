@@ -34,26 +34,24 @@
 #################################################
 VDR_CONFIG_FILE="/etc/default/vdr"
 
-vdr_enable=$(omv_config_get "//services/vdrplugin/vdr_enable")
+vdr_enable=$(omv_config_get "//services/vdr/vdr_enable")
 sed -i '/ENABLED=/c\ENABLED='$vdr_enable $VDR_CONFIG_FILE
 
 #Do not enable shutdown through VDR
 sed -i '/ENABLE_SHUTDOWN=/c\ENABLE_SHUTDOWN=0' $VDR_CONFIG_FILE
 
 
-# recuuid=$(omv_config_get "//services/vdr/vdr_recordingdir")
-# \042 = "
 #VIDEO DIR Parameter exists?
 if ! grep -qs "VIDEO_DIR" $VDR_CONFIG_FILE; then
 echo "VIDEO_DIR" >> $VDR_CONFIG_FILE
 fi
 
-recuuid=$(omv_config_get "//services/vdrplugin/vdr_recordingdir")
+recuuid=$(omv_config_get "//services/vdr/vdr_recordingdir")
 vdr_recordingdir=$(omv_get_sharedfolder_path $recuuid)
 sed -i '/VIDEO_DIR/c\VIDEO_DIR="'$vdr_recordingdir'"' $VDR_CONFIG_FILE
 
 
-vdr_maxfilesize_gb=$(omv_config_get "//services/vdrplugin/vdr_maxfilesize_gb")
+vdr_maxfilesize_gb=$(omv_config_get "//services/vdr/vdr_maxfilesize_gb")
 sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '$vdr_maxfilesize_gb'G"' $VDR_CONFIG_FILE
 
 #################################################
@@ -63,18 +61,18 @@ sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '$vdr_maxfilesize_gb'G"' $VDR_CONF
 
 VDR_SETUP_CONF="/var/lib/vdr/setup.conf"
 
-vdr_epglanguage=$(omv_config_get "//services/vdrplugin/vdr_epglanguage")
+vdr_epglanguage=$(omv_config_get "//services/vdr/vdr_epglanguage")
 sed -i "/EPGLanguages/c\EPGLanguages = $vdr_epglanguage" $VDR_SETUP_CONF
 
-vdr_channelupdatemode=$(omv_config_get "//services/vdrplugin/vdr_channelupdatemode")
+vdr_channelupdatemode=$(omv_config_get "//services/vdr/vdr_channelupdatemode")
 sed -i "/UpdateChannels/c\UpdateChannels = "$vdr_channelupdatemode $VDR_SETUP_CONF
 
 # 0 or 1
-vdr_subtitles=$(omv_config_get "//services/vdrplugin/vdr_subtitles")
+vdr_subtitles=$(omv_config_get "//services/vdr/vdr_subtitles")
 sed -i "/DisplaySubtitles/c\DisplaySubtitles = "$vdr_subtitles $VDR_SETUP_CONF
 sed -i "/UseSubtitle/c\UseSubtitle = "$vdr_subtitles $VDR_SETUP_CONF
 
-vdr_subtitle_languages=$(omv_config_get "//services/vdrplugin/vdr_subtitle_languages")
+vdr_subtitle_languages=$(omv_config_get "//services/vdr/vdr_subtitle_languages")
 sed -i "/SubtitleLanguages/c\SubtitleLanguages = $vdr_subtitle_languages" $VDR_SETUP_CONF
 
 #################################################
@@ -82,14 +80,14 @@ sed -i "/SubtitleLanguages/c\SubtitleLanguages = $vdr_subtitle_languages" $VDR_S
 #################################################
 VDRADMIN_AM_CONFIG_FILE="/etc/default/vdradmin-am"
 
-vdradminam_enable=$(omv_config_get "//services/vdrplugin/vdradminam_enable")
+vdradminam_enable=$(omv_config_get "//services/vdr/vdradminam_enable")
 sed -i '/ENABLED=/c\ENABLED='$vdradminam_enable $VDRADMIN_AM_CONFIG_FILE
 
 #################################################
 # Update /etc/default/vdradmin-am 
 #################################################
 VDRADMIN_AM_SETUP_CONF="/var/lib/vdradmin-am/vdradmind.conf"
-vdradminam_port=$(omv_config_get "//services/vdrplugin/vdradminam_port")
+vdradminam_port=$(omv_config_get "//services/vdr/vdradminam_port")
 sed -i '/SERVERPORT/c\SERVERPORT = '$vdradminam_port $VDRADMIN_AM_SETUP_CONF
 
 #################################################
