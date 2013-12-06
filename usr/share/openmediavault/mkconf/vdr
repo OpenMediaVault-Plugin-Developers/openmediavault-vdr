@@ -61,19 +61,21 @@ sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '$vdr_maxfilesize_gb'G"' $VDR_CONF
 
 VDR_SETUP_CONF="/var/lib/vdr/setup.conf"
 
-vdr_epglanguage=$(omv_config_get "//services/vdr/vdr_epglanguage")
-sed -i "/EPGLanguages/c\EPGLanguages = $vdr_epglanguage" $VDR_SETUP_CONF
-
-vdr_channelupdatemode=$(omv_config_get "//services/vdr/vdr_channelupdatemode")
-sed -i "/UpdateChannels/c\UpdateChannels = "$vdr_channelupdatemode $VDR_SETUP_CONF
-
-# 0 or 1
-vdr_subtitles=$(omv_config_get "//services/vdr/vdr_subtitles")
-sed -i "/DisplaySubtitles/c\DisplaySubtitles = "$vdr_subtitles $VDR_SETUP_CONF
-sed -i "/UseSubtitle/c\UseSubtitle = "$vdr_subtitles $VDR_SETUP_CONF
-
-vdr_subtitle_languages=$(omv_config_get "//services/vdr/vdr_subtitle_languages")
-sed -i "/SubtitleLanguages/c\SubtitleLanguages = $vdr_subtitle_languages" $VDR_SETUP_CONF
+if [ -f $VDR_SETUP_CONF ]; then
+  vdr_epglanguage=$(omv_config_get "//services/vdr/vdr_epglanguage")
+  sed -i "/EPGLanguages/c\EPGLanguages = $vdr_epglanguage" $VDR_SETUP_CONF
+  
+  vdr_channelupdatemode=$(omv_config_get "//services/vdr/vdr_channelupdatemode")
+  sed -i "/UpdateChannels/c\UpdateChannels = "$vdr_channelupdatemode $VDR_SETUP_CONF
+  
+  # 0 or 1
+  vdr_subtitles=$(omv_config_get "//services/vdr/vdr_subtitles")
+  sed -i "/DisplaySubtitles/c\DisplaySubtitles = "$vdr_subtitles $VDR_SETUP_CONF
+  sed -i "/UseSubtitle/c\UseSubtitle = "$vdr_subtitles $VDR_SETUP_CONF
+  
+  vdr_subtitle_languages=$(omv_config_get "//services/vdr/vdr_subtitle_languages")
+  sed -i "/SubtitleLanguages/c\SubtitleLanguages = $vdr_subtitle_languages" $VDR_SETUP_CONF
+fi
 
 #################################################
 # Update /etc/default/vdradmin-am 
