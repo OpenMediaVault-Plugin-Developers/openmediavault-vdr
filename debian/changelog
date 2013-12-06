@@ -5,7 +5,7 @@ openmediavault-vdr (0.5.2) stable; urgency=low
   * Fix mkconf script so parameters are read from the correct location and check if /var/lib/vdr/setup.conf exists
   * Fix postinst script so that vdr is not left running after installation
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 06 Dec 2013 23:55:00 +0200
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 07 Dec 2013 00:13:00 +0200
  
  openmediavault-vdr (0.5.1) stable; urgency=low
 
