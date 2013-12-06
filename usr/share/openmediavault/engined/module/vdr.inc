@@ -42,7 +42,7 @@ class OMVModuleVdrPlugin extends OMVModuleServiceAbstract
         global $xmlConfig;
 
         // Get the configuration object.
-        $xpath = "//services/vdrplugin";
+        $xpath = "//services/vdr";
         $object = $xmlConfig->get($xpath);
 
         // If no data is found then create an error
