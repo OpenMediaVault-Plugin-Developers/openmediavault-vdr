@@ -425,7 +425,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
 
         var msg = 'Channel Scan Started. Scanning can take over 30 minutes. There is no feedback when the scan is complete. Use the "Scan Status" button to check when you can enable VDR.';
 
-        me.fireEvent("exception", me, msg);
         OMV.MessageBox.info(null, msg);
     },
 
@@ -446,7 +445,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
         var me = this;
 
         if (!success) {
-            me.fireEvent("exception", me, response);
             OMV.MessageBox.error(null, response);
         } else {
             var msg;
@@ -457,7 +455,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 msg = "Channel Scan is not active.";
             }
 
-            me.fireEvent("exception", me, msg);
             OMV.MessageBox.info(null, msg);
         }
     },
