@@ -42,6 +42,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         $this->registerMethod("setSettings");
         $this->registerMethod("scanChannels");
         $this->registerMethod("scanStatus");
+        $this->registerMethod("getChannels");
     }
 
     public function getSettings($params, $context)
@@ -315,6 +316,19 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         }
 
         return $retMessage;
+    }
+
+    // Function to get channels from channels.conf
+    public function getChannels($params, $context)
+    {
+        $retMessage = null;
+        $cmd = "cat /etc/vdr/channels.conf";
+        $retMessage = $this->exec($cmd, $output);
+        $retArray = array();
+        foreach ($output as $chanNbr => $chanVal) {
+            $retArray[$chanNbr] = array("channel" => $chanVal);
+        }
+        return $retArray;    
     }
 
 }
