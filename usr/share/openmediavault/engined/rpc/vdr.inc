@@ -43,6 +43,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         $this->registerMethod("scanChannels");
         $this->registerMethod("scanStatus");
         $this->registerMethod("getChannels");
+        $this->registerMethod("setChannels");
     }
 
     public function getSettings($params, $context)
@@ -329,6 +330,19 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
             $retArray[$chanNbr] = array("channel" => $chanVal);
         }
         return $retArray;    
+    }
+
+    // Function to set channels to channels.conf
+    public function setChannels($params, $context)
+    {
+        $perkele = "";
+        foreach ($params['channels'] as $paramsk => $paramsv) {
+            $perkele = $perkele . $paramsv;
+            $perkele = $perkele . "\\n";
+        } 
+        $cmd = "echo '" . $perkele . "' > /root/channelback";
+        $echoReturn = $this->exec($cmd, $output);
+        return 0;
     }
 
 }

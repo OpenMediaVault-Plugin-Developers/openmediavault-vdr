@@ -29,6 +29,9 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         "Ext.grid.plugin.DragDrop",
         "Ext.grid.column.RowNumberer"
     ],
+	uses: [
+		"OMV.window.MessageBox"
+	],
 
     viewConfig : {
         plugins : {
@@ -44,7 +47,8 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
     hideUpButton    : false,
     hideDownButton  : false,
     hideApplyButton : false,
-    stateful        : false,
+    //stateful          : true,
+    //stateId           : "9889057b-b2c0-4c48-a4c1-8c9b4fb51234",
 
     columns         : [{
         xtype: "rownumberer"
@@ -56,11 +60,14 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
     initComponent : function () {
         var me = this;
+        me.mode = "local";
+
         Ext.apply(me, {
             store : Ext.create("OMV.data.Store", {
                 autoLoad : true,
+                storeId : "jee",
                 model    : OMV.data.Model.createImplicit({
-                    idProperty : "uuid",
+                    idProperty : "channel",
                     fields     : [{
                         name : "channel",
                         type : "string"
@@ -79,11 +86,60 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         me.callParent(arguments);
     },
 
-	onApplyButton: function() {
-		
+    afterDeletion : function() {
+        var me = this;
+        me.view.refresh();
+    },
+
+	afterMoveRows : function(records, index) {
+        var me = this;
+		var sm = me.getSelectionModel();
+		sm.select(records);
+        me.view.refresh();
+	},
+
+	onApplyButton : function() {
+        var me = this;
+
+        var rpcarr =[];
+        var arr =[];
+        arr = me.getStore().data.getRange();
+
+        for(var i = 0; i < arr.length; i++){
+            rpcarr[i] = arr[i].data.channel.toString();
+        }
+
+		var rpcOptions = {
+			scope       : me,
+			callback    : me.onApply,
+			relayErrors : true,
+			rpcData     : {
+				    service : "VDR",
+				    method  : "setChannels",
+				    params  : { channels : rpcarr }
+			}
+		};
+
+		// Display waiting dialog.
+		OMV.MessageBox.wait(null, _("Saving ..."));
+		// Execute RPC.
+		OMV.Rpc.request(rpcOptions);
+	},
+
+	onApply: function(id, success, response) {
+		var me = this;
+		OMV.MessageBox.updateProgress(1);
+		OMV.MessageBox.hide();
+		if(!success) {
+			//me.fireEvent("exception", me, response);
+			OMV.MessageBox.error(null, response);
+		} else {
+			//var values = me.getRpcSetParams();
+			//me.fireEvent("submit", me, values, response);
+			OMV.MessageBox.success(null, _("The changes have been applied successfully."));
+			me.store.reload();//me.doReload();
+		}
 	}
-
-
 
 });
 
