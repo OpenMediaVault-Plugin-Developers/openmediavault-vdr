@@ -327,7 +327,20 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         $retMessage = $this->exec($cmd, $output);
         $retArray = array();
         foreach ($output as $chanNbr => $chanVal) {
-            $retArray[$chanNbr] = array("channel" => $chanVal);
+
+            $channelPortions = preg_split("/:/", $chanVal);
+            $channelNameCompany = preg_split("/;/", $channelPortions[0]);
+            
+            if ($channelPortions[8] != "0") {
+                $channelEncrypted = "Yes";
+            } else {
+                $channelEncrypted = "No";
+            }
+
+            $retArray[$chanNbr] = array( "channel"          => $chanVal,
+                                         "channelName"      => $channelNameCompany[0],
+                                         "channelCompany"   => $channelNameCompany[1],
+                                         "channelEncrypted" => $channelEncrypted);
         }
         return $retArray;    
     }
@@ -335,14 +348,26 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
     // Function to set channels to channels.conf
     public function setChannels($params, $context)
     {
-        $perkele = "";
+        $channelString = "";
         foreach ($params['channels'] as $paramsk => $paramsv) {
-            $perkele = $perkele . $paramsv;
-            $perkele = $perkele . "\\n";
+            $channelString = $channelString
+                           . $paramsv
+                           . "\\n";
         } 
-        $cmd = "echo '" . $perkele . "' > /root/channelback";
-        $echoReturn = $this->exec($cmd, $output);
-        return 0;
+
+        $channelFile = "/etc/vdr/channels.conf;";
+
+        $cmd = "/etc/init.d/vdradmin-am stop; "
+             . "/etc/init.d/vdr stop; "
+             . "echo '" 
+             . $channelString 
+             . "' > "
+             . $channelFile
+             . "/etc/init.d/vdr start;"
+             . "/etc/init.d/vdradmin-am start; ";
+
+        $retVal = $this->exec($cmd, $output);
+        return $retVal;
     }
 
 }

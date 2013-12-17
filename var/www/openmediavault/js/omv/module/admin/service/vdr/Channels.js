@@ -53,9 +53,17 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
     columns         : [{
         xtype: "rownumberer"
     },{
-        text      : _("Channel"),
+        text      : _("Channel Name"),
         sortable  : false,
-        dataIndex : "channel"
+        dataIndex : "channelName"
+    },{
+        text      : _("Channel Company"),
+        sortable  : false,
+        dataIndex : "channelCompany"
+    },{
+        text      : _("Encrypted"),
+        sortable  : false,
+        dataIndex : "channelEncrypted"
     }],
 
     initComponent : function () {
@@ -65,11 +73,19 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         Ext.apply(me, {
             store : Ext.create("OMV.data.Store", {
                 autoLoad : true,
-                storeId : "jee",
                 model    : OMV.data.Model.createImplicit({
                     idProperty : "channel",
                     fields     : [{
                         name : "channel",
+                        type : "string"
+                    },{
+                        name : "channelName",
+                        type : "string"
+                    },{
+                        name : "channelCompany",
+                        type : "string"
+                    },{
+                        name : "channelEncrypted",
                         type : "string"
                     }]  
                     
@@ -103,7 +119,7 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
         var rpcarr =[];
         var arr =[];
-        arr = me.getStore().data.getRange();
+        arr = me.store.data.getRange();
 
         for(var i = 0; i < arr.length; i++){
             rpcarr[i] = arr[i].data.channel.toString();
@@ -134,8 +150,6 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 			//me.fireEvent("exception", me, response);
 			OMV.MessageBox.error(null, response);
 		} else {
-			//var values = me.getRpcSetParams();
-			//me.fireEvent("submit", me, values, response);
 			OMV.MessageBox.success(null, _("The changes have been applied successfully."));
 			me.store.reload();//me.doReload();
 		}
