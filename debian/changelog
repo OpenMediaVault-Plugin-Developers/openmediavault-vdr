@@ -1,6 +1,10 @@
 openmediavault-vdr (0.5.4) stable; urgency=low
 
+  * Added button to show number of detected devices (Closes: #2)
   * Added Channel Tab to change channel order and delete channels (Closes: #3)
+  * Added Instructions for first time use (Closes: #5)
+  * Added hyperlink to VDRAdmin-AM page (Closes: #5)
+  * Fixed recording directory permissions (Closes: #6)
 
 openmediavault-vdr (0.5.3) stable; urgency=low
 

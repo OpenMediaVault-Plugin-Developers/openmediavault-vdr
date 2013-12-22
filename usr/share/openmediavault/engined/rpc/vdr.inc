@@ -44,6 +44,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         $this->registerMethod("scanStatus");
         $this->registerMethod("getChannels");
         $this->registerMethod("setChannels");
+        $this->registerMethod("checkDevices");
     }
 
     public function getSettings($params, $context)
@@ -368,6 +369,18 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
 
         $retVal = $this->exec($cmd, $output);
         return $retVal;
+    }
+
+    public function checkDevices($params, $context)
+    {
+        $cmd = "if [ -d /dev/dvb ]; then ls /dev/dvb; fi";
+
+        // If script fails to execute then create an error
+        if (0 !== $this->exec($cmd, $output))
+            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+                $cmd, implode("\n", $output));
+
+        return count($output);
     }
 
 }

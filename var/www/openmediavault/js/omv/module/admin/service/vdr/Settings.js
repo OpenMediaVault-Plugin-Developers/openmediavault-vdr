@@ -87,6 +87,15 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 "satellite_fieldset"
             ],
             properties : "show"
+        },{
+            conditions : [{
+                name  : "vdradminam_enable",
+                value : true
+            }],
+            name       : [
+                "vdradminam_linkbutton"
+            ],
+            properties : "enabled"
         }]
     }],
 
@@ -120,6 +129,15 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 labelSeparator : ""
             },
             items : [{
+                xtype   : "text",
+                text    : 'VDR stands for "Video Disk Recorder". VDR needs a TV Tuner device to work. VDR works in DVB and ATSC networks.\nInstructions for first time use:\n1: Check that your TV Tuner device is detected. Use "Check for Connected Devices" button\n2: Set Transponder Type\n3: Adjust Transponder Settings\n4: Scan Channels\n5: After Channel Scan is completed set Recording directory etc. Then enable VDR and VDRAdmin-AM.',
+                style: {
+                    marginTop       : "10px",
+                    marginBottom    : "10px",
+                    fontStyle       : "italic",
+                    display         : "block"
+                }
+            },{
                 xtype      : "checkbox",
                 name       : "vdr_enable",
                 fieldLabel : _("Enable"),
@@ -139,6 +157,16 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 mode          : 'local',
                 triggerAction : 'all',
                 selectOnFocus : true
+            },{
+                xtype       : "button",
+                name        : "vdr_checkdevicesbutton",
+                text        : _("Check for Connected Devices"),
+                handler     : Ext.Function.bind(me.onCheckDevicesButton, me, [me]),
+                scope       : me,
+                style       : {
+                    marginTop       : "10px",
+                    marginBottom    : "10px"
+                }
             },{
                 xtype         : "fieldset",
                 id            : "atsc_fieldset",
@@ -340,7 +368,7 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
             },{
                 xtype : "text",
                 id    : "vdr_initialscan_notdone",
-                text  : "NOTE! Disabled VDR to enable scanning.",
+                text  : "NOTE! Disable VDR to enable scanning.",
                 style : {
                     textDecoration : "underline",
                     fontWeight     : "bold",
@@ -405,6 +433,25 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 labelSeparator : ""
             },
             items : [{
+                xtype   : "text",
+                text    : "VDRAdmin-AM is a web based user interface to VDR. The button below is a link to the user interface. The default username/password is linvdr/linvdr.",
+                style: {
+                    marginTop   : "10px",
+                    fontStyle   : "italic",
+                    display     : "block"
+                }
+            },{
+                xtype       : "button",
+                name        : "vdradminam_linkbutton",
+                text        : _("Go to VDRAdmin-AM"),
+                handler     : Ext.Function.bind(me.onVdradminamButton, me, [me]),
+                scope       : me,
+                style       : {
+                    marginTop       : "10px",
+                    marginBottom    : "10px"
+                }
+                
+            },{
                 xtype      : "checkbox",
                 name       : "vdradminam_enable",
                 fieldLabel : _("Enable"),
@@ -418,6 +465,37 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 allowBlank    : true
             }]
         }];
+    },
+
+    onVdradminamButton : function() {
+        var me = this;
+        window.open("http://" + window.location.hostname + ":" + me.getForm().findField("vdradminam_port").getValue(), "_blank");
+
+    },
+
+    onCheckDevicesButton : function() {
+        var me = this;
+
+        OMV.Rpc.request({
+            scope    : me,
+            callback : me.onCheckDevices,
+            rpcData  : {
+                service : "VDR",
+                method  : "checkDevices"
+            }
+        });
+    },
+
+    onCheckDevices : function(id, success, response) {
+        var me = this;
+
+        if (!success) {
+            OMV.MessageBox.error(null, response);
+        } else {
+            var msg;
+            msg = "Number of detected devices: " + response;
+            OMV.MessageBox.info(null, msg);
+        }
     },
 
     onScanButton : function() {

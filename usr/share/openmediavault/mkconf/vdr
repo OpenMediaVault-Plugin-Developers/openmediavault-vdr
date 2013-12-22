@@ -49,7 +49,10 @@ fi
 recuuid=$(omv_config_get "//services/vdr/vdr_recordingdir")
 vdr_recordingdir=$(omv_get_sharedfolder_path $recuuid)
 sed -i '/VIDEO_DIR/c\VIDEO_DIR="'$vdr_recordingdir'"' $VDR_CONFIG_FILE
-
+# Set permissions for vdr to access recording directory
+if [ ! -z "$vdr_recordingdir" -a "$vdr_recordingdir" != " " ]; then
+    setfacl -m u\:vdr\:rwx $vdr_recordingdir
+fi
 
 vdr_maxfilesize_gb=$(omv_config_get "//services/vdr/vdr_maxfilesize_gb")
 sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '$vdr_maxfilesize_gb'G"' $VDR_CONFIG_FILE
