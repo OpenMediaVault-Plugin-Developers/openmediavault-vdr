@@ -27,44 +27,107 @@ case "$1" in
     configure)
     	if ! omv_config_exists "/config/services/vdr"; then
     	    echo "Initialize VDR plugin configuration"
+            VDR_INIT=true
+
+            VDR_ENABLE="0"
+            VDR_TRANSPONDERTYPE="c"
+            VDR_ATSC_COUNTRY=" "
+            VDR_ATSC_TYPE="3"
+            VDR_ATSC_SCAN_ENCRYPTED="0"
+            VDR_DVB_T_COUNTRY=" "
+            VDR_DVB_T_SCAN_ENCRYPTED="0"
+            VDR_DVB_C_COUNTRY=" "
+            VDR_DVB_C_QAM=" "
+            VDR_DVB_C_SYMBOLRATE=" "
+            VDR_DVB_C_EXTENDED_QAM="0"
+            VDR_DVB_C_SCAN_ENCRYPTED="0"
+            VDR_DVB_S_COUNTRY=" "
+            VDR_DVB_S_SATELLITE=" "
+            VDR_DVB_S_SCAN_ENCRYPTED="0"
+
+            VDR_RECORDINGDIR=""
+            VDR_MAXFILESIZE_GB="5"
+            VDR_EPGLANGUAGE=""
+            VDR_SUBTITLES=""
+            VDR_SUBTITLE_LANGUAGES=""
+            VDR_CHANNELUPDATEMODE="1"
+
+            VDRADMINAM_ENABLE="0"
+            VDRADMINAM_PORT="8001"
+        else
+            echo "Importing previous configuration"
+
+            VDR_INIT=false
             
-            # VDR Part
-	        object="<vdr_enable>0</vdr_enable>"
-	        object="${object}<vdr_transpondertype>c</vdr_transpondertype>"
-            object="${object}<vdr_atsc_country> </vdr_atsc_country>"
-            object="${object}<vdr_atsc_type>3</vdr_atsc_type>"
-            object="${object}<vdr_atsc_scan_encrypted>0</vdr_atsc_scan_encrypted>"
-            object="${object}<vdr_dvb_t_country> </vdr_dvb_t_country>"
-            object="${object}<vdr_dvb_t_scan_encrypted>0</vdr_dvb_t_scan_encrypted>"
-            object="${object}<vdr_dvb_c_country> </vdr_dvb_c_country>"
-            object="${object}<vdr_dvb_c_qam> </vdr_dvb_c_qam>"
-            object="${object}<vdr_dvb_c_symbolrate> </vdr_dvb_c_symbolrate>"
-            object="${object}<vdr_dvb_c_extended_qam>0</vdr_dvb_c_extended_qam>"
-            object="${object}<vdr_dvb_c_scan_encrypted>0</vdr_dvb_c_scan_encrypted>"
-            object="${object}<vdr_dvb_s_country> </vdr_dvb_s_country>"
-            object="${object}<vdr_dvb_s_satellite> </vdr_dvb_s_satellite>"
-            object="${object}<vdr_dvb_s_scan_encrypted>0</vdr_dvb_s_scan_encrypted>"
-	        object="${object}<vdr_recordingdir></vdr_recordingdir>"
-	        object="${object}<vdr_maxfilesize_gb>5</vdr_maxfilesize_gb>"
-	        object="${object}<vdr_epglanguage></vdr_epglanguage>"
-            object="${object}<vdr_subtitles></vdr_subtitles>"
-            object="${object}<vdr_subtitle_languages></vdr_subtitle_languages>"
-	        object="${object}<vdr_channelupdatemode>1</vdr_channelupdatemode>"
+            VDR_ENABLE="$(omv_config_get "/config/services/vdr/vdr_enable")"
+            VDR_TRANSPONDERTYPE="$(omv_config_get "/config/services/vdr/vdr_transpondertype")"
+            VDR_ATSC_COUNTRY="$(omv_config_get "/config/services/vdr/vdr_atsc_country")"
+            VDR_ATSC_TYPE="$(omv_config_get "/config/services/vdr/vdr_atsc_type")"
+            VDR_ATSC_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/vdr_atsc_scan_encrypted")"
+            VDR_DVB_T_COUNTRY="$(omv_config_get "/config/services/vdr/vdr_dvb_t_country")"
+            VDR_DVB_T_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/vdr_dvb_t_scan_encrypted")"
+            VDR_DVB_C_COUNTRY="$(omv_config_get "/config/services/vdr/vdr_dvb_c_country")"
+            VDR_DVB_C_QAM="$(omv_config_get "/config/services/vdr/vdr_dvb_c_qam")"
+            VDR_DVB_C_SYMBOLRATE="$(omv_config_get "/config/services/vdr/vdr_dvb_c_symbolrate")"
+            VDR_DVB_C_EXTENDED_QAM="$(omv_config_get "/config/services/vdr/vdr_dvb_c_extended_qam")"
+            VDR_DVB_C_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/vdr_dvb_c_scan_encrypted")"
+            VDR_DVB_S_COUNTRY="$(omv_config_get "/config/services/vdr/vdr_dvb_s_country")"
+            VDR_DVB_S_SATELLITE="$(omv_config_get "/config/services/vdr/vdr_dvb_s_satellite")"
+            VDR_DVB_S_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/vdr_dvb_s_scan_encrypted")"
 
-            # VDR Admin-am
-	        object="${object}<vdradminam_enable>0</vdradminam_enable>"
-	        object="${object}<vdradminam_port>8001</vdradminam_port>"
+            VDR_RECORDINGDIR="$(omv_config_get "/config/services/vdr/vdr_recordingdir")"
+            VDR_MAXFILESIZE_GB="$(omv_config_get "/config/services/vdr/vdr_maxfilesize_gb")"
+            VDR_EPGLANGUAGE="$(omv_config_get "/config/services/vdr/vdr_epglanguage")"
+            VDR_SUBTITLES="$(omv_config_get "/config/services/vdr/vdr_subtitles")"
+            VDR_SUBTITLE_LANGUAGES="$(omv_config_get "/config/services/vdr/vdr_subtitle_languages")"
+            VDR_CHANNELUPDATEMODE="$(omv_config_get "/config/services/vdr/vdr_channelupdatemode")"
 
-    	    omv_config_add_element "/config/services" "vdr" "${object}" true
-    	fi
+            VDRADMINAM_ENABLE="$(omv_config_get "/config/services/vdr/vdradminam_enable")"
+            VDRADMINAM_PORT="$(omv_config_get "/config/services/vdr/vdradminam_port")"
+
+        fi
+
+        omv_config_delete "/config/services/vdr"
+
+        # VDR Part
+        object="<vdr_enable>${VDR_ENABLE}</vdr_enable>"
+        object="${object}<vdr_transpondertype>${VDR_TRANSPONDERTYPE}</vdr_transpondertype>"
+        object="${object}<vdr_atsc_country>${VDR_ATSC_COUNTRY}</vdr_atsc_country>"
+        object="${object}<vdr_atsc_type>${VDR_ATSC_TYPE}</vdr_atsc_type>"
+        object="${object}<vdr_atsc_scan_encrypted>${VDR_ATSC_SCAN_ENCRYPTED}</vdr_atsc_scan_encrypted>"
+        object="${object}<vdr_dvb_t_country>${VDR_DVB_T_COUNTRY}</vdr_dvb_t_country>"
+        object="${object}<vdr_dvb_t_scan_encrypted>${VDR_DVB_T_SCAN_ENCRYPTED}</vdr_dvb_t_scan_encrypted>"
+        object="${object}<vdr_dvb_c_country>${VDR_DVB_C_COUNTRY}</vdr_dvb_c_country>"
+        object="${object}<vdr_dvb_c_qam>${VDR_DVB_C_QAM}</vdr_dvb_c_qam>"
+        object="${object}<vdr_dvb_c_symbolrate>${VDR_DVB_C_SYMBOLRATE}</vdr_dvb_c_symbolrate>"
+        object="${object}<vdr_dvb_c_extended_qam>${VDR_DVB_C_EXTENDED_QAM}</vdr_dvb_c_extended_qam>"
+        object="${object}<vdr_dvb_c_scan_encrypted>${VDR_DVB_C_SCAN_ENCRYPTED}</vdr_dvb_c_scan_encrypted>"
+        object="${object}<vdr_dvb_s_country>${VDR_DVB_S_COUNTRY}</vdr_dvb_s_country>"
+        object="${object}<vdr_dvb_s_satellite>${VDR_DVB_S_SATELLITE}</vdr_dvb_s_satellite>"
+        object="${object}<vdr_dvb_s_scan_encrypted>${VDR_DVB_S_SCAN_ENCRYPTED}</vdr_dvb_s_scan_encrypted>"
+        object="${object}<vdr_recordingdir>${VDR_RECORDINGDIR}</vdr_recordingdir>"
+        object="${object}<vdr_maxfilesize_gb>${VDR_MAXFILESIZE_GB}</vdr_maxfilesize_gb>"
+        object="${object}<vdr_epglanguage>${VDR_EPGLANGUAGE}</vdr_epglanguage>"
+        object="${object}<vdr_subtitles>${VDR_SUBTITLES}</vdr_subtitles>"
+        object="${object}<vdr_subtitle_languages>${VDR_SUBTITLE_LANGUAGES}</vdr_subtitle_languages>"
+        object="${object}<vdr_channelupdatemode>${VDR_CHANNELUPDATEMODE}</vdr_channelupdatemode>"
+
+        # VDR Admin-am
+        object="${object}<vdradminam_enable>${VDRADMINAM_ENABLE}</vdradminam_enable>"
+        object="${object}<vdradminam_port>${VDRADMINAM_PORT}</vdradminam_port>"
+
+	    omv_config_add_element "/config/services" "vdr" "${object}" true
         
-        # Start and stop VDR inorder to generate the original configuration files
-        /bin/sed -i '/ENABLED=/c\ENABLED=1' ${VDR_DEFAULT_CONFIG}
-        /etc/init.d/vdr start
-        sleep 2
-        /etc/init.d/vdr stop
-        /etc/init.d/vdradmin-am stop
-        /bin/sed -i '/ENABLED=/c\ENABLED=0' ${VDR_DEFAULT_CONFIG}
+        if $VDR_INIT; then
+            # Start and stop VDR inorder to generate the original configuration files
+            /bin/sed -i '/ENABLED=/c\ENABLED=1' ${VDR_DEFAULT_CONFIG}
+            /etc/init.d/vdr start
+            sleep 2
+            /etc/init.d/vdr stop
+            /etc/init.d/vdradmin-am stop
+            /bin/sed -i '/ENABLED=/c\ENABLED=0' ${VDR_DEFAULT_CONFIG}
+        fi
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

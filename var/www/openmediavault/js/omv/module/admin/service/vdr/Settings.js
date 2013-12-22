@@ -434,7 +434,7 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
             },
             items : [{
                 xtype   : "text",
-                text    : "VDRAdmin-AM is a web based user interface to VDR. The button below is a link to the user interface. The default username/password is linvdr/linvdr.",
+                text    : "VDRAdmin-AM is a web based user interface to VDR. The button below is a link to the user interface.\nThe default username/password is linvdr/linvdr.",
                 style: {
                     marginTop   : "10px",
                     fontStyle   : "italic",
