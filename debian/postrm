@@ -23,7 +23,7 @@ set -e
 CONFIG="/config/services/vdr"
 
 case "$1" in
-    purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    purge|remove|abort-install|disappear)
     	if omv_config_exists $CONFIG; then
             echo "Deleting Configuration"
             omv_config_delete $CONFIG;
@@ -32,6 +32,10 @@ case "$1" in
     	if ! omv_config_exists $CONFIG; then
             echo "Configuration Deleted"
     	fi
+    ;;
+
+    upgrade|failed-upgrade|abort-upgrade)
+        echo "Configuration left untouched"
     ;;
 
     *)
