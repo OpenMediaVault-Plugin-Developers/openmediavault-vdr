@@ -120,7 +120,7 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
 	onApplyButton : function() {
         var me = this;
-        var msg = "Do you really want to apply the configuration?";
+        var msg = "Do you really want to apply the configuration?\nNote: VDR will be restarted to apply the configuration.\nActive recordings will be temporarily paused.";
 
         OMV.MessageBox.show({
 				title   : _("Confirmation"),
