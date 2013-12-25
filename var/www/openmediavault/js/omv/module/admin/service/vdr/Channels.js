@@ -42,13 +42,12 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         }
     },
 
-	hideAddButton   : true,
-	hideEditButton  : true,
-    hideUpButton    : false,
-    hideDownButton  : false,
-    hideApplyButton : false,
-    //stateful          : true,
-    //stateId           : "9889057b-b2c0-4c48-a4c1-8c9b4fb51234",
+	hideAddButton       : true,
+	hideEditButton      : true,
+    hideUpButton        : false,
+    hideDownButton      : false,
+    hideApplyButton     : false,
+    hideRefreshButton   : false,
 
     columns         : [{
         xtype: "rownumberer"
@@ -102,6 +101,11 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         me.callParent(arguments);
     },
 
+    onRefreshButton : function() {
+        var me = this;
+		me.store.reload();
+	},
+
     afterDeletion : function() {
         var me = this;
         me.view.refresh();
@@ -116,7 +120,27 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
 	onApplyButton : function() {
         var me = this;
+        var msg = "Do you really want to apply the configuration?";
 
+        OMV.MessageBox.show({
+				title   : _("Confirmation"),
+				msg     : msg,
+				buttons : Ext.Msg.YESNO,
+				fn      : function(answer) {
+					    if(answer == "no") {
+                            me.store.reload();
+						    return;
+                        }
+					    me.startApply();
+				},
+				scope: me,
+				icon: Ext.Msg.QUESTION
+			});
+
+    },
+
+    startApply : function() {
+        var me = this;
         var rpcarr =[];
         var arr =[];
         arr = me.store.data.getRange();

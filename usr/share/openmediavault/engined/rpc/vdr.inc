@@ -323,9 +323,11 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
     // Function to get channels from channels.conf
     public function getChannels($params, $context)
     {
-        $retMessage = null;
         $cmd = "cat /var/lib/vdr/channels.conf";
-        $retMessage = $this->exec($cmd, $output);
+        if (0 !== $this->exec($cmd, $output))
+            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+                $cmd, implode("\n", $output));
+
         $retArray = array();
         foreach ($output as $chanNbr => $chanVal) {
 
@@ -365,9 +367,11 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
              . "' > "
              . $channelFile
              . "/etc/init.d/vdr start;"
-             . "/etc/init.d/vdradmin-am start; ";
+             . "/etc/init.d/vdradmin-am start;";
 
-        $retVal = $this->exec($cmd, $output);
+        if (0 !== $this->exec($cmd, $output))
+            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+                $cmd, implode("\n", $output));
         return $retVal;
     }
 
