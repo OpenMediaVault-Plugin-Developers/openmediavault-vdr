@@ -357,6 +357,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
                            . $paramsv
                            . "\\n";
         } 
+        $channelString = substr($channelString,0,-2);
 
         $channelFile = "/var/lib/vdr/channels.conf;";
 
