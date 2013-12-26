@@ -23,8 +23,10 @@ require_once ("openmediavault/util.inc");
 require_once ("openmediavault/rpcservice.inc");
 require_once ("openmediavault/notify.inc");
 
-class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
+class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 {
+    private $_channelFileLocation = "/var/lib/vdr/channels.conf";
+
     private function getXPath()
     {
         return '//services/vdr';
@@ -41,7 +43,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         $this->registerMethod("getSettings");
         $this->registerMethod("setSettings");
         $this->registerMethod("scanChannels");
-        $this->registerMethod("scanStatus");
+        $this->registerMethod("scanInProgress");
         $this->registerMethod("getChannels");
         $this->registerMethod("setChannels");
         $this->registerMethod("checkDevices");
@@ -160,7 +162,7 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         );
 
         // Update the xmlConfig file. If it fails then generate an error
-        if (FALSE === $xmlConfig->replace($this->getXPath(), $object))
+        if ($xmlConfig->replace($this->getXPath(), $object) === false)
             throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
 
         // Notify configuration changes.
@@ -171,19 +173,23 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
         return $object;
     }
 
+    /**
+     * Performs a channel scan
+     *
+     * @return void
+     */
     public function scanChannels($params, $context)
     {
         $cmd = "";
 
         // Check if scan is active
         // If active or checking failed return
-        $scanStatusRet = $this->scanStatus();
-        if ("1" !== $scanStatusRet) {
+        if ($this->scanInProgress())
             return $scanStatusRet;
-        }
 
         // Temporary file
         $channelFile = "/tmp/channels.conf";
+
         // Output file type is for VDR 1.7
         $ouputMode = " -o 7 ";
 
@@ -290,8 +296,8 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
                 break;
         }
 
-        $cmd = sprintf("%1\$s; cat %2\$s > /var/lib/vdr/channels.conf; rm %2\$s;",
-            $cmd, $channelFile);
+        $cmd = sprintf("%1\$s; cat %2\$s > %3\$s; rm %2\$s;",
+            $cmd, $channelFile, $this->_channelFileLocation);
 
         // If script fails to execute then create an error
         if (0 !== $this->exec($cmd, $output))
@@ -299,80 +305,86 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
                 $cmd, implode("\n", $output));
     }
 
-    // Function to check if w_scan is still active;
-    public function scanStatus($params, $context)
+    /**
+     * Check if w_scan in running
+     *
+     * @return boolean
+     */
+    public function scanInProgress($params, $context)
     {
-        $retMessage = null;
         $cmd = "pgrep -n w_scan 2>&1";
         $pgrepReturn = $this->exec($cmd, $output);
 
-        if ($pgrepReturn == 0) {
-            //"Channel scan is still running"
-            $retMessage = "0";
-        } elseif ($pgrepReturn == 1) {
-            //"Channel Scan is not active"
-            $retMessage = "1";
+        if ($pgrepReturn === 0) {
+            // "Channel scan is still running"
+            return true;
+        } else if ($pgrepReturn === 1) {
+            // "Channel Scan is not active"
+            return false;
         } else {
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
                 $cmd, implode("\n", $output));
         }
-
-        return $retMessage;
     }
 
-    // Function to get channels from channels.conf
+    /**
+     * Get channels from channels.conf
+     *
+     * @return array
+     */
     public function getChannels($params, $context)
     {
-        $cmd = "cat /var/lib/vdr/channels.conf";
+        $cmd = sprintf("cat %s", $this->_channelFileLocation);
         if (0 !== $this->exec($cmd, $output))
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
                 $cmd, implode("\n", $output));
 
         $retArray = array();
+
         foreach ($output as $chanNbr => $chanVal) {
 
-            $channelPortions = preg_split("/:/", $chanVal);
-            $channelNameCompany = preg_split("/;/", $channelPortions[0]);
-            
-            if ($channelPortions[8] != "0") {
-                $channelEncrypted = "Yes";
-            } else {
-                $channelEncrypted = "No";
-            }
+            $channelPortions = explode(":", $chanVal);
+            $channelNameCompany = explode(";", $channelPortions[0]);
 
-            $retArray[$chanNbr] = array( "channel"          => $chanVal,
-                                         "channelName"      => $channelNameCompany[0],
-                                         "channelCompany"   => $channelNameCompany[1],
-                                         "channelEncrypted" => $channelEncrypted);
+            $channelEncrypted = $channelPortions[8] != "0";
+
+            $retArray[$chanNbr] = array(
+                "channel"          => $chanVal,
+                "channelName"      => $channelNameCompany[0],
+                "channelCompany"   => $channelNameCompany[1],
+                "channelEncrypted" => $channelEncrypted
+            );
         }
-        return $retArray;    
+
+        return $retArray;
     }
 
-    // Function to set channels to channels.conf
+    /**
+     * Save channels to channels.conf
+     */
     public function setChannels($params, $context)
     {
         $channelString = "";
-        foreach ($params['channels'] as $paramsk => $paramsv) {
-            $channelString = $channelString
-                           . $paramsv
-                           . "\\n";
-        } 
-        $channelString = substr($channelString,0,-2);
 
-        $channelFile = "/var/lib/vdr/channels.conf;";
+        foreach ($params['channels'] as $paramsk => $paramsv) {
+            $channelString = $channelString . $paramsv . "\\n";
+        }
+
+        $channelString = substr($channelString, 0, -2);
 
         $cmd = "/etc/init.d/vdradmin-am stop; "
              . "/etc/init.d/vdr stop; "
-             . "echo '" 
-             . $channelString 
+             . "echo '"
+             . $channelString
              . "' > "
-             . $channelFile
+             . $this->_channelFileLocation . ";"
              . "/etc/init.d/vdr start;"
              . "/etc/init.d/vdradmin-am start;";
 
         if (0 !== $this->exec($cmd, $output))
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
                 $cmd, implode("\n", $output));
+
         return $retVal;
     }
 
@@ -392,4 +404,4 @@ class OMVRpcServiceVdrPlugin extends OMVRpcServiceAbstract
 
 // Register the RPC service.
 $rpcServiceMgr = &OMVRpcServiceMgr::getInstance();
-$rpcServiceMgr->registerService(new OMVRpcServiceVdrPlugin());
+$rpcServiceMgr->registerService(new OMVRpcServiceVdr());

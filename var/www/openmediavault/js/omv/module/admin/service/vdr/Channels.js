@@ -15,6 +15,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// require("js/omv/WorkspaceManager.js")
+// require("js/omv/workspace/grid/Panel.js")
+// require("js/omv/Rpc.js")
+// require("js/omv/data/Store.js")
+// require("js/omv/data/Model.js")
+
 /**
  * @class OMV.module.admin.service.vdr.Settings
  * @derived OMV.workspace.grid.Panel
@@ -38,7 +44,9 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
             ptype : "gridviewdragdrop"
         },
         listeners : {
-            drop : function (node, data) {data.view.refresh();}
+            drop : function (node, data) {
+                data.view.refresh();
+            }
         }
     },
 
@@ -48,6 +56,7 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
     hideDownButton      : false,
     hideApplyButton     : false,
     hideRefreshButton   : false,
+    mode                : "local",
 
     columns         : [{
         xtype: "rownumberer"
@@ -62,12 +71,14 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
     },{
         text      : _("Encrypted"),
         sortable  : false,
-        dataIndex : "channelEncrypted"
+        dataIndex : "channelEncrypted",
+        renderer  : function(value) {
+            return value ? "Yes" : "No";
+        }
     }],
 
     initComponent : function () {
         var me = this;
-        me.mode = "local";
 
         Ext.apply(me, {
             store : Ext.create("OMV.data.Store", {
@@ -85,9 +96,9 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
                         type : "string"
                     },{
                         name : "channelEncrypted",
-                        type : "string"
-                    }]  
-                    
+                        type : "boolean"
+                    }]
+
                 }),
                 proxy    : {
                     type    : "rpc",
@@ -98,24 +109,28 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
                 }
             })
         });
+
         me.callParent(arguments);
     },
 
-    onRefreshButton : function() {
-        var me = this;
-		me.store.reload();
-	},
-
     afterDeletion : function() {
         var me = this;
-        me.view.refresh();
+
+        me.doReload();
     },
 
 	afterMoveRows : function(records, index) {
         var me = this;
 		var sm = me.getSelectionModel();
+
 		sm.select(records);
         me.view.refresh();
+	},
+
+	doReload : function() {
+	    var me = this;
+
+	    me.store.reload();
 	},
 
 	onApplyButton : function() {
@@ -123,30 +138,29 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         var msg = "Do you really want to apply the configuration?\nNote: VDR will be restarted to apply the configuration.\nActive recordings will be temporarily paused.";
 
         OMV.MessageBox.show({
-				title   : _("Confirmation"),
-				msg     : msg,
-				buttons : Ext.Msg.YESNO,
-				fn      : function(answer) {
-					    if(answer == "no") {
-                            me.store.reload();
-						    return;
-                        }
-					    me.startApply();
-				},
-				scope: me,
-				icon: Ext.Msg.QUESTION
-			});
+			title   : _("Confirmation"),
+			msg     : msg,
+			buttons : Ext.Msg.YESNO,
+			fn      : function(answer) {
+    		    if (answer == "no") {
+                    me.doReload();
+    			    return;
+                }
 
+    		    me.startApply();
+			},
+			scope : me,
+			icon  : Ext.Msg.QUESTION
+		});
     },
 
     startApply : function() {
         var me = this;
-        var rpcarr =[];
-        var arr =[];
-        arr = me.store.data.getRange();
+        var rpcArr = [];
+        var arr = me.store.data.getRange();
 
-        for(var i = 0; i < arr.length; i++){
-            rpcarr[i] = arr[i].data.channel.toString();
+        for (var i = 0, j = arr.length; i < j; i++) {
+            rpcArr[i] = arr[i].data.channel.toString();
         }
 
 		var rpcOptions = {
@@ -154,28 +168,32 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 			callback    : me.onApply,
 			relayErrors : true,
 			rpcData     : {
-				    service : "VDR",
-				    method  : "setChannels",
-				    params  : { channels : rpcarr }
+			    service : "VDR",
+			    method  : "setChannels",
+			    params  : {
+			        channels : rpcArr
+		        }
 			}
 		};
 
 		// Display waiting dialog.
 		OMV.MessageBox.wait(null, _("Saving ..."));
+
 		// Execute RPC.
 		OMV.Rpc.request(rpcOptions);
 	},
 
 	onApply: function(id, success, response) {
 		var me = this;
+
 		OMV.MessageBox.updateProgress(1);
 		OMV.MessageBox.hide();
-		if(!success) {
-			//me.fireEvent("exception", me, response);
+
+		if (!success) {
 			OMV.MessageBox.error(null, response);
 		} else {
 			OMV.MessageBox.success(null, _("The changes have been applied successfully."));
-			me.store.reload();//me.doReload();
+			me.doReload();
 		}
 	}
 

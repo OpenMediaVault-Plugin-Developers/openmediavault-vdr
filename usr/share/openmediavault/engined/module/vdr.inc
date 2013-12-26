@@ -21,7 +21,7 @@ require_once ("openmediavault/config.inc");
 require_once ("openmediavault/error.inc");
 require_once ("openmediavault/initscript.inc");
 
-class OMVModuleVdrPlugin extends OMVModuleServiceAbstract
+class OMVModuleVdr extends OMVModuleServiceAbstract
     implements OMVINotifyListener, OMVIModuleServiceStatus
 {
     public function getName()
@@ -50,8 +50,8 @@ class OMVModuleVdrPlugin extends OMVModuleServiceAbstract
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
 
         return array(
-            "name" => $this->getName(),
-            "title" => gettext("VDR"),
+            "name"    => $this->getName(),
+            "title"   => gettext("VDR"),
             "enabled" => boolval($object['vdr_enable']),
             "running" => ("running"));
     }
@@ -71,4 +71,4 @@ class OMVModuleVdrPlugin extends OMVModuleServiceAbstract
 
 // Register the Module
 $moduleMgr = &OMVModuleMgr::getInstance();
-$moduleMgr->registerModule(new OMVModuleVdrPlugin());
+$moduleMgr->registerModule(new OMVModuleVdr());

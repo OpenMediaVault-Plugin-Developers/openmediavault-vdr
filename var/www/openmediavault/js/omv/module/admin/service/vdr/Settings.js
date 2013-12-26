@@ -450,7 +450,7 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     marginTop       : "10px",
                     marginBottom    : "10px"
                 }
-                
+
             },{
                 xtype      : "checkbox",
                 name       : "vdradminam_enable",
@@ -538,7 +538,7 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
             callback : me.onScanStatus,
             rpcData  : {
                 service : "VDR",
-                method  : "scanStatus"
+                method  : "scanInProgress"
             }
         });
     },
@@ -549,13 +549,8 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
         if (!success) {
             OMV.MessageBox.error(null, response);
         } else {
-            var msg;
-
-            if (response == "0") {
-                msg = "Channel scan is still running.";
-            } else if (response == "1") {
-                msg = "Channel Scan is not active.";
-            }
+            var msg = response ? "Channel scan is still running."
+                : "Channel Scan is not active.";
 
             OMV.MessageBox.info(null, msg);
         }
