@@ -129,15 +129,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 labelSeparator : ""
             },
             items : [{
-                xtype   : "text",
-                text    : 'VDR stands for "Video Disk Recorder". VDR needs a TV Tuner device to work. VDR works in DVB and ATSC networks.\nInstructions for first time use:\n1: Check that your TV Tuner device is detected. Use "Check for Connected Devices" button\n2: Set Transponder Type\n3: Adjust Transponder Settings\n4: Scan Channels\n5: After Channel Scan is completed set Recording directory etc. Then enable VDR and VDRAdmin-AM.',
-                style: {
-                    marginTop       : "10px",
-                    marginBottom    : "10px",
-                    fontStyle       : "italic",
-                    display         : "block"
-                }
-            },{
                 xtype      : "checkbox",
                 name       : "vdr_enable",
                 fieldLabel : _("Enable"),
@@ -433,14 +424,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 labelSeparator : ""
             },
             items : [{
-                xtype   : "text",
-                text    : "VDRAdmin-AM is a web based user interface to VDR. The button below is a link to the user interface.\nThe default username/password is linvdr/linvdr.",
-                style: {
-                    marginTop   : "10px",
-                    fontStyle   : "italic",
-                    display     : "block"
-                }
-            },{
                 xtype       : "button",
                 name        : "vdradminam_linkbutton",
                 text        : _("Go to VDRAdmin-AM"),

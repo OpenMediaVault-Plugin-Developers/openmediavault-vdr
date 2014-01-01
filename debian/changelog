@@ -1,6 +1,6 @@
 openmediavault-vdr (0.5.5) stable; urgency=low
 
-  * S
+  * Instructions moved to separate info Tab (Closes: #8 github)
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 1 Dec 2014 23:05:00 -0500
 
