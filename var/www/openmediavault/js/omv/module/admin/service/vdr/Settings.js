@@ -134,6 +134,12 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 fieldLabel : _("Enable"),
                 checked    : false
             },{
+                xtype      : "checkbox",
+                name       : "vdr_logging_on",
+                fieldLabel : _("Full Log"),
+                checked    : false,
+                boxLabel   : _("Enable logging of all VDR actions to SysLog.")
+            },{
                 xtype      : "combo",
                 name       : "vdr_transpondertype",
                 fieldLabel : "Transponder Type",

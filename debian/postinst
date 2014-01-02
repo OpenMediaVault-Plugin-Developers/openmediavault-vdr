@@ -30,6 +30,7 @@ case "$1" in
             VDR_INIT=true
 
             VDR_ENABLE="0"
+            VDR_LOGGING_ON="0"
             VDR_TRANSPONDERTYPE="c"
             VDR_ATSC_COUNTRY=" "
             VDR_ATSC_TYPE="3"
@@ -60,6 +61,7 @@ case "$1" in
             VDR_INIT=false
             
             VDR_ENABLE="$(omv_config_get "/config/services/vdr/vdr_enable")"
+            VDR_LOGGING_ON="$(omv_config_get "/config/services/vdr/vdr_logging_on")"
             VDR_TRANSPONDERTYPE="$(omv_config_get "/config/services/vdr/vdr_transpondertype")"
             VDR_ATSC_COUNTRY="$(omv_config_get "/config/services/vdr/vdr_atsc_country")"
             VDR_ATSC_TYPE="$(omv_config_get "/config/services/vdr/vdr_atsc_type")"
@@ -91,6 +93,7 @@ case "$1" in
 
         # VDR Part
         object="<vdr_enable>${VDR_ENABLE}</vdr_enable>"
+        object="<vdr_enable>${VDR_LOGGING_ON}</vdr_enable>"
         object="${object}<vdr_transpondertype>${VDR_TRANSPONDERTYPE}</vdr_transpondertype>"
         object="${object}<vdr_atsc_country>${VDR_ATSC_COUNTRY}</vdr_atsc_country>"
         object="${object}<vdr_atsc_type>${VDR_ATSC_TYPE}</vdr_atsc_type>"

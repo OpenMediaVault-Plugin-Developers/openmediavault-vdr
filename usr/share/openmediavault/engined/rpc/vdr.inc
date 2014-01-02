@@ -64,6 +64,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
         // Modify the result object. (Change characters to values)
         $object['vdr_enable'] = boolval($object['vdr_enable']);
+        $object['vdr_logging_on'] = boolval($object['vdr_logging_on']);
         //['vdr_transpondertype'];
         //vdr_atsc_country
         //vdr_atsc_type
@@ -103,6 +104,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             "type":"object",
             "properties":{
                 "vdr_enable":{"type":"boolean"},
+                "vdr_logging_on":{"type":"boolean"},
                 "vdr_transpondertype":{"type":"string"},
                 "vdr_atsc_country":{"type":"string"},
                 "vdr_atsc_type":{"type":"number"},
@@ -137,6 +139,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Update the configuration object.
         $object = array(
             "vdr_enable" => array_boolval($params, 'vdr_enable'),
+            "vdr_logging_on" => array_boolval($params, 'vdr_logging_on'),
             "vdr_transpondertype" => $params['vdr_transpondertype'],
             "vdr_atsc_country" => $params['vdr_atsc_country'],
             "vdr_atsc_type" => $params['vdr_atsc_type'],

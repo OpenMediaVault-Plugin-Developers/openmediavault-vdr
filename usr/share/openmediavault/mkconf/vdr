@@ -55,6 +55,7 @@ if [ ! -z "$vdr_recordingdir" -a "$vdr_recordingdir" != " " ]; then
 fi
 
 vdr_maxfilesize_gb=$(omv_config_get "//services/vdr/vdr_maxfilesize_gb")
+vdr_logging_on=$(omv_config_get "//services/vdr/vdr_logging_on")
 sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '$vdr_maxfilesize_gb'G"' $VDR_CONFIG_FILE
 
 #################################################
