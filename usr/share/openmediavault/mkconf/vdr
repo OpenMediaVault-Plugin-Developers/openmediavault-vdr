@@ -55,13 +55,14 @@ if [ ! -z "$vdr_recordingdir" -a "$vdr_recordingdir" != " " ]; then
 fi
 
 vdr_maxfilesize_gb=$(omv_config_get "//services/vdr/vdr_maxfilesize_gb")
+
 vdr_logging_on=$(omv_config_get "//services/vdr/vdr_logging_on")
 vdr_log=" -l 1" # Log errors only
-if [ $vdr_logging_on ]; then
-    $vdr_log="" # Log everything
+if [ "$vdr_logging_on" = "1" ]; then
+    vdr_log="" # Log everything
 fi
 
-sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '$vdr_maxfilesize_gb'G'$vdr_log'"' $VDR_CONFIG_FILE
+sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '"$vdr_maxfilesize_gb"'G'"$vdr_log"'"' $VDR_CONFIG_FILE
 
 #################################################
 # Update /etc/vdr/setup.conf
