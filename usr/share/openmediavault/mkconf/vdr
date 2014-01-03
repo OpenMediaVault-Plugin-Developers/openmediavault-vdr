@@ -43,7 +43,7 @@ sed -i '/ENABLE_SHUTDOWN=/c\ENABLE_SHUTDOWN=0' $VDR_CONFIG_FILE
 
 #VIDEO DIR Parameter exists?
 if ! grep -qs "VIDEO_DIR" $VDR_CONFIG_FILE; then
-echo "VIDEO_DIR" >> $VDR_CONFIG_FILE
+    echo "VIDEO_DIR" >> $VDR_CONFIG_FILE
 fi
 
 recuuid=$(omv_config_get "//services/vdr/vdr_recordingdir")
@@ -63,6 +63,26 @@ if [ "$vdr_logging_on" = "1" ]; then
 fi
 
 sed -i '/OPTIONS=/c\OPTIONS="-w 60 --filesize '"$vdr_maxfilesize_gb"'G'"$vdr_log"'"' $VDR_CONFIG_FILE
+
+#################################################
+# Update /etc/vdr/plugins/order.conf
+# (Enable/disable VDR plugins)
+#################################################
+VDR_PLUGINS_FILE="/etc/vdr/plugins/order.conf"
+
+vdr_streamdev_enable=$(omv_config_get "//services/vdr/vdr_streamdev_enable")
+if [ "$vdr_streamdev_enable" = "0" ]; then
+    echo "-streamdev-server" >> $VDR_PLUGINS_FILE # Disable
+else
+    sed -i '/-streamdev-server/d' $VDR_PLUGINS_FILE # Remove disable command
+fi
+
+vdr_live_enable=$(omv_config_get "//services/vdr/vdr_live_enable")
+if [ "$vdr_live_enable" = "0" ]; then
+    echo "-live" >> $VDR_PLUGINS_FILE # Disable
+else
+    sed -i '/-live/d' $VDR_PLUGINS_FILE # Remove disable command
+fi
 
 #################################################
 # Update /etc/vdr/setup.conf
@@ -85,6 +105,15 @@ if [ -f $VDR_SETUP_CONF ]; then
 
     vdr_subtitle_languages=$(omv_config_get "//services/vdr/vdr_subtitle_languages")
     sed -i "/SubtitleLanguages/c\SubtitleLanguages = $vdr_subtitle_languages" $VDR_SETUP_CONF
+
+    # Streamdev-server port affects also live settings
+    vdr_streamdev_port=$(omv_config_get "//services/vdr/vdr_streamdev_port")
+    #Parameter exists?
+    if ! grep -qs "streamdev-server.HTTPServerPort" $VDR_SETUP_CONF; then
+        echo "streamdev-server.HTTPServerPort" >> $VDR_SETUP_CONF
+    fi
+    sed -i "/streamdev-server.HTTPServerPort/c\streamdev-server.HTTPServerPort = $vdr_streamdev_port" $VDR_SETUP_CONF
+    sed -i "/live.StreamdevPort/c\live.StreamdevPort = $vdr_streamdev_port" $VDR_SETUP_CONF
 fi
 
 #################################################
@@ -96,11 +125,12 @@ vdradminam_enable=$(omv_config_get "//services/vdr/vdradminam_enable")
 sed -i '/ENABLED=/c\ENABLED='$vdradminam_enable $VDRADMIN_AM_CONFIG_FILE
 
 #################################################
-# Update /etc/default/vdradmin-am
+# Update /var/lib/vdradmin-am/vdradmind.conf
 #################################################
 VDRADMIN_AM_SETUP_CONF="/var/lib/vdradmin-am/vdradmind.conf"
 vdradminam_port=$(omv_config_get "//services/vdr/vdradminam_port")
 sed -i '/SERVERPORT/c\SERVERPORT = '$vdradminam_port $VDRADMIN_AM_SETUP_CONF
+sed -i "/ST_STREAMDEV_PORT/c\ST_STREAMDEV_PORT = $vdr_streamdev_port"
 
 #################################################
 # Restart VDR and VDRAdmin-am after the parameter updates

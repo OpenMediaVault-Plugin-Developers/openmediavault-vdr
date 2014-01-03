@@ -53,6 +53,11 @@ case "$1" in
             VDR_SUBTITLE_LANGUAGES=""
             VDR_CHANNELUPDATEMODE="1"
 
+            VDR_STREAMDEV_ENABLE="0"
+            VDR_STREAMDEV_PORT="3000"
+
+            VDR_LIVE_ENABLE="0"
+
             VDRADMINAM_ENABLE="0"
             VDRADMINAM_PORT="8001"
         else
@@ -84,6 +89,11 @@ case "$1" in
             VDR_SUBTITLE_LANGUAGES="$(omv_config_get "/config/services/vdr/vdr_subtitle_languages")"
             VDR_CHANNELUPDATEMODE="$(omv_config_get "/config/services/vdr/vdr_channelupdatemode")"
 
+            VDR_STREAMDEV_ENABLE="$(omv_config_get "/config/services/vdr/vdr_streamdev_enable")"
+            VDR_STREAMDEV_PORT="$(omv_config_get "/config/services/vdr/vdr_streamdev_port")"
+
+            VDR_LIVE_ENABLE="$(omv_config_get "/config/services/vdr/vdr_live_enable")"
+
             VDRADMINAM_ENABLE="$(omv_config_get "/config/services/vdr/vdradminam_enable")"
             VDRADMINAM_PORT="$(omv_config_get "/config/services/vdr/vdradminam_port")"
 
@@ -114,6 +124,13 @@ case "$1" in
         object="${object}<vdr_subtitles>${VDR_SUBTITLES}</vdr_subtitles>"
         object="${object}<vdr_subtitle_languages>${VDR_SUBTITLE_LANGUAGES}</vdr_subtitle_languages>"
         object="${object}<vdr_channelupdatemode>${VDR_CHANNELUPDATEMODE}</vdr_channelupdatemode>"
+
+        # VDR streamdev-server
+        object="${object}<vdr_streamdev_enable>${VDR_STREAMDEV_ENABLE}</vdr_streamdev_enable>"
+        object="${object}<vdr_streamdev_port>${VDR_STREAMDEV_PORT}</vdr_streamdev_port>"
+
+        # VDR Live
+        object="${object}<vdr_live_enable>${VDR_STREAMDEV_ENABLE}</vdr_live_enable>"
 
         # VDR Admin-am
         object="${object}<vdradminam_enable>${VDRADMINAM_ENABLE}</vdradminam_enable>"

@@ -423,7 +423,39 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 triggerAction : 'all',
                 selectOnFocus : true
             }]
-        },{
+        },{ /* VDR-plugin-streamdev-server */
+            xtype         : "fieldset",
+            title         : _("VDR-plugin-streamdev-server"),
+            fieldDefaults : {
+                labelSeparator : ""
+            },
+            items : [{
+                xtype      : "checkbox",
+                name       : "vdr_streamdev_enable",
+                fieldLabel : _("Enable"),
+                checked    : false
+            },{
+                xtype         : "numberfield",
+                name          : "vdr_streamdev_port",
+                fieldLabel    : "Port Number",
+                minValue      : 0,
+                allowDecimals : false,
+                allowBlank    : true,
+                value         : 3000
+            }]
+        },{ /* VDR-plugin-live */
+            xtype         : "fieldset",
+            title         : _("VDR-plugin-live"),
+            fieldDefaults : {
+                labelSeparator : ""
+            },
+            items : [{
+                xtype      : "checkbox",
+                name       : "vdr_live_enable",
+                fieldLabel : _("Enable"),
+                checked    : false
+            }]
+        },{ /* VDRAdmin-AM */
             xtype         : "fieldset",
             title         : _("VDRAdmin-AM settings"),
             fieldDefaults : {

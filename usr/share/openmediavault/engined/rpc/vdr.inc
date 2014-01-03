@@ -87,6 +87,11 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         //vdr_epglanguage
         //vdr_channelupdatemode
 
+        $object['vdr_streamdev_enable'] = boolval($object['vdr_streamdev_enable']);
+        $object['vdr_streamdev_port'] = intval($object['vdr_streamdev_port']);
+
+        $object['vdr_live_enable'] = boolval($object['vdr_live_enable']);
+
         $object['vdradminam_enable'] = boolval($object['vdradminam_enable']);
         $object['vdradminam_port'] = intval($object['vdradminam_port']);
 
@@ -125,6 +130,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                 "vdr_subtitle_languages":{"type":"string"},
                 "vdr_epglanguage":{"type":"string"},
                 "vdr_channelupdatemode":{"type":"number","minimum":0,"maximum":6},
+                "vdr_streamdev_enable":{"type":"boolean"},
+                "vdr_streamdev_port":{"type":"integer","minimum":1,"maximum":65535}
+                "vdr_live_enable":{"type":"boolean"},
                 "vdradminam_enable":{"type":"boolean"},
                 "vdradminam_port":{"type":"integer","minimum":1,"maximum":65535}
             }
@@ -160,6 +168,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             "vdr_subtitle_languages" => $params['vdr_subtitle_languages'],
             "vdr_epglanguage" => $params['vdr_epglanguage'],
             "vdr_channelupdatemode" => $params['vdr_channelupdatemode'],
+            "vdr_streamdev_enable" => array_boolval($params, 'vdr_streamdev_enable'),
+            "vdr_streamdev_port" => $params['vdr_streamdev_port']
+            "vdr_live_enable" => array_boolval($params, 'vdr_live_enable'),
             "vdradminam_enable" => array_boolval($params, 'vdradminam_enable'),
             "vdradminam_port" => $params['vdradminam_port']
         );
