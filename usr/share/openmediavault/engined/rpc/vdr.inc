@@ -131,7 +131,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                 "vdr_epglanguage":{"type":"string"},
                 "vdr_channelupdatemode":{"type":"number","minimum":0,"maximum":6},
                 "vdr_streamdev_enable":{"type":"boolean"},
-                "vdr_streamdev_port":{"type":"integer","minimum":1,"maximum":65535}
+                "vdr_streamdev_port":{"type":"integer","minimum":1,"maximum":65535},
                 "vdr_live_enable":{"type":"boolean"},
                 "vdradminam_enable":{"type":"boolean"},
                 "vdradminam_port":{"type":"integer","minimum":1,"maximum":65535}
@@ -169,7 +169,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             "vdr_epglanguage" => $params['vdr_epglanguage'],
             "vdr_channelupdatemode" => $params['vdr_channelupdatemode'],
             "vdr_streamdev_enable" => array_boolval($params, 'vdr_streamdev_enable'),
-            "vdr_streamdev_port" => $params['vdr_streamdev_port']
+            "vdr_streamdev_port" => $params['vdr_streamdev_port'],
             "vdr_live_enable" => array_boolval($params, 'vdr_live_enable'),
             "vdradminam_enable" => array_boolval($params, 'vdradminam_enable'),
             "vdradminam_port" => $params['vdradminam_port']

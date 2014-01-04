@@ -130,7 +130,7 @@ sed -i '/ENABLED=/c\ENABLED='$vdradminam_enable $VDRADMIN_AM_CONFIG_FILE
 VDRADMIN_AM_SETUP_CONF="/var/lib/vdradmin-am/vdradmind.conf"
 vdradminam_port=$(omv_config_get "//services/vdr/vdradminam_port")
 sed -i '/SERVERPORT/c\SERVERPORT = '$vdradminam_port $VDRADMIN_AM_SETUP_CONF
-sed -i "/ST_STREAMDEV_PORT/c\ST_STREAMDEV_PORT = $vdr_streamdev_port"
+sed -i "/ST_STREAMDEV_PORT/c\ST_STREAMDEV_PORT = $vdr_streamdev_port" $VDRADMIN_AM_SETUP_CONF
 
 #################################################
 # Restart VDR and VDRAdmin-am after the parameter updates
