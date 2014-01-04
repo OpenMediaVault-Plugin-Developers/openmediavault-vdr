@@ -108,11 +108,17 @@ if [ -f $VDR_SETUP_CONF ]; then
 
     # Streamdev-server port affects also live settings
     vdr_streamdev_port=$(omv_config_get "//services/vdr/vdr_streamdev_port")
-    #Parameter exists?
+    # Parameter exists?
     if ! grep -qs "streamdev-server.HTTPServerPort" $VDR_SETUP_CONF; then
         echo "streamdev-server.HTTPServerPort" >> $VDR_SETUP_CONF
     fi
     sed -i "/streamdev-server.HTTPServerPort/c\streamdev-server.HTTPServerPort = $vdr_streamdev_port" $VDR_SETUP_CONF
+
+    # live streamdev-server port
+    # Parameter exists?
+    if ! grep -qs "live.StreamdevPort" $VDR_SETUP_CONF; then
+        echo "live.StreamdevPort" >> $VDR_SETUP_CONF
+    fi
     sed -i "/live.StreamdevPort/c\live.StreamdevPort = $vdr_streamdev_port" $VDR_SETUP_CONF
 fi
 
