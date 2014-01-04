@@ -89,10 +89,10 @@ case "$1" in
             VDR_SUBTITLE_LANGUAGES="$(omv_config_get "/config/services/vdr/vdr_subtitle_languages")"
             VDR_CHANNELUPDATEMODE="$(omv_config_get "/config/services/vdr/vdr_channelupdatemode")"
 
-            VDR_STREAMDEV_ENABLE="$(omv_config_get "/config/services/vdr/vdr_streamdev_enable")"
-            VDR_STREAMDEV_PORT="$(omv_config_get "/config/services/vdr/vdr_streamdev_port")"
+            VDR_STREAMDEV_ENABLE="0" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_enable")"
+            VDR_STREAMDEV_PORT="3000" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_port")"
 
-            VDR_LIVE_ENABLE="$(omv_config_get "/config/services/vdr/vdr_live_enable")"
+            VDR_LIVE_ENABLE="0" # "$(omv_config_get "/config/services/vdr/vdr_live_enable")"
 
             VDRADMINAM_ENABLE="$(omv_config_get "/config/services/vdr/vdradminam_enable")"
             VDRADMINAM_PORT="$(omv_config_get "/config/services/vdr/vdradminam_port")"
