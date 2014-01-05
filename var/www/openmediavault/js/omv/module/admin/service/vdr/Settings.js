@@ -89,6 +89,24 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
             properties : "show"
         },{
             conditions : [{
+                name  : "vdr_streamdev_enable",
+                value : true
+            }],
+            name       : [
+                "vdr_streamdev_linkbutton"
+            ],
+            properties : "enabled"
+        },{
+            conditions : [{
+                name  : "vdr_live_enable",
+                value : true
+            }],
+            name       : [
+                "vdr_live_linkbutton"
+            ],
+            properties : "enabled"
+        },{
+            conditions : [{
                 name  : "vdradminam_enable",
                 value : true
             }],
@@ -430,6 +448,17 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 labelSeparator : ""
             },
             items : [{
+                xtype       : "button",
+                name        : "vdr_streamdev_linkbutton",
+                text        : _("Go to streamdev-server"),
+                handler     : Ext.Function.bind(me.onVdrStreamdevButton, me, [me]),
+                scope       : me,
+                style       : {
+                    marginTop       : "10px",
+                    marginBottom    : "10px"
+                }
+
+            },{
                 xtype      : "checkbox",
                 name       : "vdr_streamdev_enable",
                 fieldLabel : _("Enable"),
@@ -454,6 +483,17 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 labelSeparator : ""
             },
             items : [{
+                xtype       : "button",
+                name        : "vdr_live_linkbutton",
+                text        : _("Go to live"),
+                handler     : Ext.Function.bind(me.onVdrLiveButton, me, [me]),
+                scope       : me,
+                style       : {
+                    marginTop       : "10px",
+                    marginBottom    : "10px"
+                }
+
+            },{
                 xtype      : "checkbox",
                 name       : "vdr_live_enable",
                 fieldLabel : _("Enable"),
@@ -498,6 +538,18 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 allowBlank    : true
             }]
         }];
+    },
+
+    onVdrStreamdevButton : function() {
+        var me = this;
+        window.open("http://" + window.location.hostname + ":" + me.getForm().findField("vdr_streamdev_port").getValue(), "_blank");
+
+    },
+
+    onVdrLiveButton : function() {
+        var me = this;
+        window.open("http://" + window.location.hostname + ":" + me.getForm().findField("vdr_live_port").getValue(), "_blank");
+
     },
 
     onVdradminamButton : function() {
