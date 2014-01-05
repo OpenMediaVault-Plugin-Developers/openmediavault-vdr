@@ -54,6 +54,40 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
                         + '</p>'
             }]
         },{
+            /* streamdev info */
+            xtype : "fieldset",
+            layout : "fit",
+            items : [{
+                border  : false,
+                html    : '<h3>VDR-plugin-streamdev-server</h3>'
+                        + '<p>'
+                        + 'VDR-plugin-streamdev-server enables streaming from VDR to other computers in the network.'  + '<br>'
+                        + 'If you change the streamdev-server port VDR-plugin-live and VDRAdmin-AM parameters are automatically updated to match the port of the streamdev-server.'
+                        + '</p>'
+                        + '<h3>Port</h3>'
+                        + '<p>'
+                        + 'The port setting refers to HTTP port.'
+                        + '</p>'
+                        + '<h3>Allowed hosts</h3>'
+                        + '<p>'
+                        + 'Allowed hosts parameter defines what IP-addresses can connect to the streamdev-server.'  + '<br>'
+                        + 'This parameter uses CIDR notation. Value "192.168.1.0/24" = Connections are allowed from IP-address range 192.168.1.0-192.168.1.255 ' 
+                        + 'The parameter can also be just a single IP-address.'
+                        + '</p>'
+            }]
+        },{
+            /* live info */
+            xtype : "fieldset",
+            layout : "fit",
+            items : [{
+                border  : false,
+                html    : '<h3>VDR-plugin-live</h3>'
+                        + '<p>'
+                        + 'VDR-plugin-live  is a web based user interface to VDR.'  + '<br>'
+                        + 'The default username/password is admin/live. These can be changed from VDR-plugin-live under Setup/Use authentication.'
+                        + '</p>'
+            }]
+        },{
             /* VDRAdmin-AM info*/
             xtype : "fieldset",
             layout : "fit",
