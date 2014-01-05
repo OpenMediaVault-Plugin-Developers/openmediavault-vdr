@@ -123,6 +123,26 @@ if [ -f $VDR_SETUP_CONF ]; then
 fi
 
 #################################################
+# Update /etc/vdr/plugins/streamdevhosts.conf
+#################################################
+VDR_STREAMDEV_HOSTS_CONF="/etc/vdr/plugins/streamdevhosts.conf"
+vdr_streamdev_hosts=$(omv_config_get "//services/vdr/vdr_streamdev_hosts")
+VDR_STREAMDEV_LINE_ID="# Configured by OMV Plugin"
+
+# Parameter exists?
+if ! grep -qs "$VDR_STREAMDEV_LINE_ID" $VDR_STREAMDEV_HOSTS_CONF; then
+    echo "$VDR_STREAMDEV_LINE_ID" >> $VDR_STREAMDEV_HOSTS_CONF
+fi
+sed -i "/$VDR_STREAMDEV_LINE_ID/c\\$vdr_streamdev_hosts $VDR_STREAMDEV_LINE_ID" $VDR_STREAMDEV_HOSTS_CONF
+
+#################################################
+# Update /etc/vdr/plugins/plugin.live.conf
+#################################################
+VDR_LIVE_CONF="/etc/vdr/plugins/plugin.live.conf"
+vdr_live_port=$(omv_config_get "//services/vdr/vdr_live_port")
+sed -i "/--port/c\--port=$vdr_live_port" $VDR_LIVE_CONF
+
+#################################################
 # Update /etc/default/vdradmin-am
 #################################################
 VDRADMIN_AM_CONFIG_FILE="/etc/default/vdradmin-am"

@@ -89,8 +89,10 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
         $object['vdr_streamdev_enable'] = boolval($object['vdr_streamdev_enable']);
         $object['vdr_streamdev_port'] = intval($object['vdr_streamdev_port']);
+        //vdr_streamdev_hosts
 
         $object['vdr_live_enable'] = boolval($object['vdr_live_enable']);
+        $object['vdr_live_port'] = intval($object['vdr_live_port']);
 
         $object['vdradminam_enable'] = boolval($object['vdradminam_enable']);
         $object['vdradminam_port'] = intval($object['vdradminam_port']);
@@ -132,7 +134,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                 "vdr_channelupdatemode":{"type":"number","minimum":0,"maximum":6},
                 "vdr_streamdev_enable":{"type":"boolean"},
                 "vdr_streamdev_port":{"type":"integer","minimum":1,"maximum":65535},
+                "vdr_streamdev_hosts":{"type":"string"},
                 "vdr_live_enable":{"type":"boolean"},
+                "vdr_live_port":{"type":"integer","minimum":1,"maximum":65535},
                 "vdradminam_enable":{"type":"boolean"},
                 "vdradminam_port":{"type":"integer","minimum":1,"maximum":65535}
             }
@@ -170,7 +174,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             "vdr_channelupdatemode" => $params['vdr_channelupdatemode'],
             "vdr_streamdev_enable" => array_boolval($params, 'vdr_streamdev_enable'),
             "vdr_streamdev_port" => $params['vdr_streamdev_port'],
+            "vdr_streamdev_hosts" => $params['vdr_streamdev_hosts'],
             "vdr_live_enable" => array_boolval($params, 'vdr_live_enable'),
+            "vdr_live_port" => $params['vdr_live_port'],
             "vdradminam_enable" => array_boolval($params, 'vdradminam_enable'),
             "vdradminam_port" => $params['vdradminam_port']
         );

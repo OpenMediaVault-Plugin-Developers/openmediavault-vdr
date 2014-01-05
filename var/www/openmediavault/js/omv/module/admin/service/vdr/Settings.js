@@ -442,6 +442,10 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 allowDecimals : false,
                 allowBlank    : true,
                 value         : 3000
+            },{
+                xtype      : "textfield",
+                name       : "vdr_streamdev_hosts",
+                fieldLabel : "Allowed hosts"
             }]
         },{ /* VDR-plugin-live */
             xtype         : "fieldset",
@@ -454,6 +458,14 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 name       : "vdr_live_enable",
                 fieldLabel : _("Enable"),
                 checked    : false
+            },{
+                xtype         : "numberfield",
+                name          : "vdr_live_port",
+                fieldLabel    : "Port Number",
+                minValue      : 0,
+                allowDecimals : false,
+                allowBlank    : true,
+                value         : 8008
             }]
         },{ /* VDRAdmin-AM */
             xtype         : "fieldset",

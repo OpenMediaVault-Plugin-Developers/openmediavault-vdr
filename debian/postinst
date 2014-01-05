@@ -55,8 +55,10 @@ case "$1" in
 
             VDR_STREAMDEV_ENABLE="0"
             VDR_STREAMDEV_PORT="3000"
+            VDR_STREAMDEV_HOSTS="192.168.1.0/24"
 
             VDR_LIVE_ENABLE="0"
+            VDR_LIVE_PORT="8008"
 
             VDRADMINAM_ENABLE="0"
             VDRADMINAM_PORT="8001"
@@ -91,8 +93,10 @@ case "$1" in
 
             VDR_STREAMDEV_ENABLE="0" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_enable")"
             VDR_STREAMDEV_PORT="3000" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_port")"
+            VDR_STREAMDEV_HOSTS="192.168.1.0/24" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_hosts")"
 
             VDR_LIVE_ENABLE="0" # "$(omv_config_get "/config/services/vdr/vdr_live_enable")"
+            VDR_LIVE_PORT="8008" # "$(omv_config_get "/config/services/vdr/vdr_live_port")"
 
             VDRADMINAM_ENABLE="$(omv_config_get "/config/services/vdr/vdradminam_enable")"
             VDRADMINAM_PORT="$(omv_config_get "/config/services/vdr/vdradminam_port")"
@@ -128,9 +132,11 @@ case "$1" in
         # VDR streamdev-server
         object="${object}<vdr_streamdev_enable>${VDR_STREAMDEV_ENABLE}</vdr_streamdev_enable>"
         object="${object}<vdr_streamdev_port>${VDR_STREAMDEV_PORT}</vdr_streamdev_port>"
+        object="${object}<vdr_streamdev_hosts>${VDR_STREAMDEV_HOSTS}</vdr_streamdev_hosts>"
 
         # VDR Live
-        object="${object}<vdr_live_enable>${VDR_STREAMDEV_ENABLE}</vdr_live_enable>"
+        object="${object}<vdr_live_enable>${VDR_LIVE_ENABLE}</vdr_live_enable>"
+        object="${object}<vdr_live_port>${VDR_LIVE_PORT}</vdr_live_port>"
 
         # VDR Admin-am
         object="${object}<vdradminam_enable>${VDRADMINAM_ENABLE}</vdradminam_enable>"
