@@ -201,17 +201,19 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     public function scanChannels($params, $context)
     {
         $cmd = "";
+        $scanInProgressParams = "";
+        $scanInProgressContext = "";
 
         // Check if scan is active
         // If active or checking failed return
-        if ($this->scanInProgress())
+        if ($this->scanInProgress($scanInProgressParams, $scanInProgressContext))
             return $scanStatusRet;
 
         // Temporary file
         $channelFile = "/tmp/channels.conf";
 
         // Output file type is for VDR 1.7
-        $ouputMode = " -o 7 ";
+        $outputMode = " -o 7 ";
 
         // Parse script based on transponder settings
         $transpoderType = $params['vdr_transpondertype'];
