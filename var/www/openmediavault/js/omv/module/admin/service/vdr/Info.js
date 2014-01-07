@@ -89,7 +89,7 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
                         + 'Allowed hosts parameter defines what IP-addresses can connect to the streamdev-server.'
                         + '</p>'
                         + '<p>'
-                        + 'This parameter uses CIDR notation. Value "192.168.1.0/24" = Connections are allowed from IP-address range 192.168.1.0-192.168.1.255.' 
+                        + 'This parameter uses CIDR notation. Value "192.168.1.0/24" = Connections are allowed from IP-address range 192.168.1.0-192.168.1.255.'
                         + 'The parameter can also be just a single IP-address.'
                         + '</p>'
             }]
@@ -108,7 +108,7 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
                         + '</p>'
             }]
         },{
-            /* VDRAdmin-AM info*/
+            /* VDRAdmin-AM info */
             xtype : "fieldset",
             layout : "fit",
             items : [{
@@ -121,7 +121,7 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
                         + 'The default username/password is linvdr/linvdr. These can be changed from VDRAdmin-AM under Configuration/Identification.'
                         + '</p>'
             }]
-        }]
+        }];
     }
 
 });
