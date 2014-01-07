@@ -201,13 +201,11 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     public function scanChannels($params, $context)
     {
         $cmd = "";
-        $scanInProgressParams = "";
-        $scanInProgressContext = "";
 
         // Check if scan is active
         // If active or checking failed return
-        if ($this->scanInProgress($scanInProgressParams, $scanInProgressContext))
-            return $scanStatusRet;
+        if ($this->scanInProgress(array(), $context))
+            return;
 
         // Temporary file
         $channelFile = "/tmp/channels.conf";
@@ -334,6 +332,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      */
     public function scanInProgress($params, $context)
     {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+
         $cmd = "pgrep -n w_scan 2>&1";
         $pgrepReturn = $this->exec($cmd, $output);
 
