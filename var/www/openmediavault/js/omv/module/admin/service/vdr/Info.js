@@ -19,7 +19,7 @@
 // require("js/omv/workspace/form/Panel.js")
 
 /**
- * @class OMV.module.admin.service.vdr.Settings
+ * @class OMV.module.admin.service.vdr.Info
  * @derived OMV.workspace.form.Panel
  */
 Ext.define("OMV.module.admin.service.vdr.Info", {

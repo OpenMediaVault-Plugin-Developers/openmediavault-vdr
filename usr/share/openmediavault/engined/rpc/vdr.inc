@@ -407,12 +407,13 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         if (0 !== $this->exec($cmd, $output))
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
                 $cmd, implode("\n", $output));
-
-        return $retVal;
     }
 
     public function checkDevices($params, $context)
     {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+
         $cmd = "if [ -d /dev/dvb ]; then ls /dev/dvb; fi";
 
         // If script fails to execute then create an error

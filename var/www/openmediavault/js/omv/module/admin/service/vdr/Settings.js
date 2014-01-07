@@ -441,7 +441,8 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 triggerAction : 'all',
                 selectOnFocus : true
             }]
-        },{ /* VDR-plugin-streamdev-server */
+        },{
+            /* VDR-plugin-streamdev-server */
             xtype         : "fieldset",
             title         : _("VDR-plugin-streamdev-server"),
             fieldDefaults : {
@@ -457,7 +458,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     marginTop       : "10px",
                     marginBottom    : "10px"
                 }
-
             },{
                 xtype      : "checkbox",
                 name       : "vdr_streamdev_enable",
@@ -476,7 +476,8 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 name       : "vdr_streamdev_hosts",
                 fieldLabel : "Allowed hosts"
             }]
-        },{ /* VDR-plugin-live */
+        },{
+            /* VDR-plugin-live */
             xtype         : "fieldset",
             title         : _("VDR-plugin-live"),
             fieldDefaults : {
@@ -492,7 +493,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     marginTop       : "10px",
                     marginBottom    : "10px"
                 }
-
             },{
                 xtype      : "checkbox",
                 name       : "vdr_live_enable",
@@ -507,7 +507,8 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 allowBlank    : true,
                 value         : 8008
             }]
-        },{ /* VDRAdmin-AM */
+        },{
+            /* VDRAdmin-AM */
             xtype         : "fieldset",
             title         : _("VDRAdmin-AM settings"),
             fieldDefaults : {
@@ -523,7 +524,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                     marginTop       : "10px",
                     marginBottom    : "10px"
                 }
-
             },{
                 xtype      : "checkbox",
                 name       : "vdradminam_enable",
