@@ -91,12 +91,35 @@ case "$1" in
             VDR_SUBTITLE_LANGUAGES="$(omv_config_get "/config/services/vdr/vdr_subtitle_languages")"
             VDR_CHANNELUPDATEMODE="$(omv_config_get "/config/services/vdr/vdr_channelupdatemode")"
 
-            VDR_STREAMDEV_ENABLE="0" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_enable")"
-            VDR_STREAMDEV_PORT="3000" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_port")"
-            VDR_STREAMDEV_HOSTS="192.168.1.0/24" # "$(omv_config_get "/config/services/vdr/vdr_streamdev_hosts")"
+            if ! omv_config_exists "/config/services/vdr/vdr_streamdev_enable"; then
+                VDR_STREAMDEV_ENABLE="0" 
+            else
+                VDR_STREAMDEV_ENABLE="$(omv_config_get "/config/services/vdr/vdr_streamdev_enable")"
+            fi
 
-            VDR_LIVE_ENABLE="0" # "$(omv_config_get "/config/services/vdr/vdr_live_enable")"
-            VDR_LIVE_PORT="8008" # "$(omv_config_get "/config/services/vdr/vdr_live_port")"
+            if ! omv_config_exists "/config/services/vdr/vdr_streamdev_port"; then
+                VDR_STREAMDEV_PORT="3000"
+            else
+                VDR_STREAMDEV_PORT="$(omv_config_get "/config/services/vdr/vdr_streamdev_port")"
+            fi
+
+            if ! omv_config_exists "/config/services/vdr/vdr_streamdev_hosts"; then
+                VDR_STREAMDEV_HOSTS="192.168.1.0/24"
+            else
+                VDR_STREAMDEV_HOSTS="$(omv_config_get "/config/services/vdr/vdr_streamdev_hosts")"
+            fi
+
+            if ! omv_config_exists "/config/services/vdr/vdr_live_enable"; then
+                VDR_LIVE_ENABLE="0"
+            else
+                VDR_LIVE_ENABLE="$(omv_config_get "/config/services/vdr/vdr_live_enable")"
+            fi
+
+            if ! omv_config_exists "/config/services/vdr/vdr_live_port"; then
+                VDR_LIVE_PORT="8008"
+            else
+                VDR_LIVE_PORT="$(omv_config_get "/config/services/vdr/vdr_live_port")"
+            fi
 
             VDRADMINAM_ENABLE="$(omv_config_get "/config/services/vdr/vdradminam_enable")"
             VDRADMINAM_PORT="$(omv_config_get "/config/services/vdr/vdradminam_port")"
