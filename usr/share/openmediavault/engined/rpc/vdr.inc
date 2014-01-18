@@ -25,6 +25,9 @@ require_once ("openmediavault/notify.inc");
 
 class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 {
+    const COUNTRY_LIST   = "c",
+          SATELLITE_LIST = "s";
+
     private $_channelFileLocation = "/var/lib/vdr/channels.conf";
 
     private function getXPath()
@@ -37,7 +40,6 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         return "VDR";
     }
 
-
     public function initialize()
     {
         $this->registerMethod("getSettings");
@@ -47,6 +49,8 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $this->registerMethod("getChannels");
         $this->registerMethod("setChannels");
         $this->registerMethod("checkDevices");
+        $this->registerMethod("enumerateCountries");
+        $this->registerMethod("enumerateSatellites");
     }
 
     public function getSettings($params, $context)
@@ -412,7 +416,8 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     public function checkDevices($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+        $this->validateMethodContext($context,
+            array("role" => OMV_ROLE_ADMINISTRATOR));
 
         $cmd = "if [ -d /dev/dvb ]; then ls /dev/dvb; fi";
 
@@ -422,6 +427,55 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                 $cmd, implode("\n", $output));
 
         return count($output);
+    }
+
+    public function enumerateCountries($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context,
+            array("role" => OMV_ROLE_ADMINISTRATOR));
+
+        return $this->getWscanList(self::COUNTRY_LIST);
+    }
+
+    public function enumerateSatellites($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context,
+            array("role" => OMV_ROLE_ADMINISTRATOR));
+
+        return $this->getWscanList(self::SATELLITE_LIST);
+    }
+
+    private function getWscanList($type)
+    {
+        $cmd = sprintf("w_scan -%s? 2>&1", $type);
+
+        if (0 !== $this->exec($cmd, $output))
+            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+                $cmd, implode("\n", $output));
+
+        $list = array();
+
+        foreach ($output as $row) {
+            $row = trim($row);
+            $row = str_replace("\t\t", "\t", $row);
+            $data = explode("\t", $row);
+
+            if (self::COUNTRY_LIST === $type) {
+                $list[] = array(
+                    "abbr" => $data[0],
+                    "country" => $data[1],
+                );
+            } else if (self::SATELLITE_LIST === $type) {
+                $list[] = array(
+                    "abbr" => $data[0],
+                    "satellite" => $data[1],
+                );
+            }
+        }
+
+        return $list;
     }
 
 }
