@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-vdr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-01-22 07:37-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ATSC Transponder settings"
+msgstr ""
+
+msgid "Channel Company"
+msgstr ""
+
+msgid "Channel Name"
+msgstr ""
+
+msgid "Channels"
+msgstr ""
+
+msgid "Check for Connected Devices"
+msgstr ""
+
+msgid "Confirmation"
+msgstr ""
+
+msgid "DVB-C Transponder settings"
+msgstr ""
+
+msgid "DVB-S Transponder settings"
+msgstr ""
+
+msgid "DVB-T Transponder settings"
+msgstr ""
+
+msgid "Enable"
+msgstr ""
+
+msgid "Enable logging of all VDR actions to SysLog."
+msgstr ""
+
+msgid "Encrypted"
+msgstr ""
+
+msgid "Encrypted Channels"
+msgstr ""
+
+msgid "Extended QAM scan"
+msgstr ""
+
+msgid "Full Log"
+msgstr ""
+
+msgid "Go to VDRAdmin-AM"
+msgstr ""
+
+msgid "Go to live"
+msgstr ""
+
+msgid "Go to streamdev-server"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Saving ..."
+msgstr ""
+
+msgid "Scan Channels"
+msgstr ""
+
+msgid "Scan Status"
+msgstr ""
+
+msgid "The changes have been applied successfully."
+msgstr ""
+
+msgid "Use Subtitles"
+msgstr ""
+
+msgid "VDR"
+msgstr ""
+
+msgid "VDR / VDRAdmin-AM"
+msgstr ""
+
+msgid "VDR Settings"
+msgstr ""
+
+msgid "VDR settings"
+msgstr ""
+
+msgid "VDR-plugin-live"
+msgstr ""
+
+msgid "VDR-plugin-streamdev-server"
+msgstr ""
+
+msgid "VDRAdmin-AM settings"
+msgstr ""

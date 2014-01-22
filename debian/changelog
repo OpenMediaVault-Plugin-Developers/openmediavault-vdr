@@ -1,3 +1,10 @@
+openmediavault-vdr (0.5.6) stable; urgency=low
+
+  * Get list of countries and satellites directly from w_scan
+  * Add locale file
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 22 Jan 2014 07:37:00 -0500
+
 openmediavault-vdr (0.5.5) stable; urgency=low
 
   * vdr-plugin-streamdev-server added. (Closes: #4 github)
