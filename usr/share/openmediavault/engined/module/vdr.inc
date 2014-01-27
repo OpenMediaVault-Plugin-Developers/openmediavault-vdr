@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once ("openmediavault/module.inc");
-require_once ("openmediavault/config.inc");
-require_once ("openmediavault/error.inc");
-require_once ("openmediavault/initscript.inc");
+require_once "openmediavault/module.inc";
+require_once "openmediavault/config.inc";
+require_once "openmediavault/error.inc";
+require_once "openmediavault/initscript.inc";
 
 class OMVModuleVdr extends OMVModuleServiceAbstract
     implements OMVINotifyListener, OMVIModuleServiceStatus
@@ -41,26 +41,21 @@ class OMVModuleVdr extends OMVModuleServiceAbstract
     {
         global $xmlConfig;
 
-        // Get the configuration object.
         $xpath = "//services/vdr";
         $object = $xmlConfig->get($xpath);
 
-        // If no data is found then create an error
         if (is_null($object))
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
 
         return array(
             "name"    => $this->getName(),
             "title"   => gettext("VDR"),
-            "enabled" => boolval($object['vdr_enable']),
+            "enabled" => boolval($object["vdr_enable"]),
             "running" => ("running"));
     }
 
-    function bindListeners(OMVNotifyDispatcher $dispatcher)
+    public function bindListeners(OMVNotifyDispatcher $dispatcher)
     {
-        // Bind Listeners function is used to add monitoring about changes made to the configuration
-        // After configuration changes It activates the message:
-        // "The configuration has been changed. You must apply ... Apply button"
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
             "org.openmediavault.services.vdr",

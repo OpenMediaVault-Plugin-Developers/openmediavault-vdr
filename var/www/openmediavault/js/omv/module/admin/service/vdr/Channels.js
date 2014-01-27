@@ -20,6 +20,7 @@
 // require("js/omv/Rpc.js")
 // require("js/omv/data/Store.js")
 // require("js/omv/data/Model.js")
+// require("js/omv/module/admin/service/vdr/window/Scan.js")
 
 /**
  * @class OMV.module.admin.service.vdr.Settings
@@ -33,9 +34,10 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         "OMV.data.Model",
         "OMV.data.proxy.Rpc",
         "Ext.grid.plugin.DragDrop",
-        "Ext.grid.column.RowNumberer"
+        "Ext.grid.column.RowNumberer",
+        "OMV.module.admin.service.vdr.window.Scan"
     ],
-	uses: [
+	uses : [
 		"OMV.window.MessageBox"
 	],
 
@@ -113,6 +115,33 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         me.callParent(arguments);
     },
 
+    getTopToolbarItems : function() {
+        var me = this;
+        var items = me.callParent(arguments);
+
+        Ext.Array.push(items, [{
+            xtype: "tbseparator"
+        },{
+            id      : me.getId() + "-scan",
+            xtype   : "button",
+            text    : _("Scan"),
+            icon    : "images/search.png",
+            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler : Ext.Function.bind(me.onScanButton, me, [ me ]),
+            scope   : me
+        },{
+            id      : me.getId() + "-scan-status",
+            xtype   : "button",
+            text    : _("Scan status"),
+            icon    : "images/info.png",
+            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler : Ext.Function.bind(me.onScanStatusButton, me, [ me ]),
+            scope   : me
+        }]);
+
+        return items;
+    },
+
     afterDeletion : function() {
         var me = this;
 
@@ -135,7 +164,7 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
 	onApplyButton : function() {
         var me = this;
-        var msg = "Do you really want to apply the configuration?\nNote: VDR will be restarted to apply the configuration.\nActive recordings will be temporarily paused.";
+        var msg = "Do you really want to apply the configuration? Note: VDR will be restarted to apply the configuration. Active recordings will be temporarily paused.";
 
         OMV.MessageBox.show({
 			title   : _("Confirmation"),
@@ -195,15 +224,61 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 			OMV.MessageBox.success(null, _("The changes have been applied successfully."));
 			me.doReload();
 		}
-	}
+	},
 
+    onScanButton : function() {
+        var me = this;
+
+        OMV.Rpc.request({
+            scope    : me,
+            callback : me.onScan,
+            rpcData  : {
+                service : "VDR",
+                method  : "vdrIsRunning"
+            }
+        });
+    },
+
+    onScan : function(id, success, response) {
+        if (!response && success) {
+            Ext.create("OMV.module.admin.service.vdr.window.Scan").show();
+        } else {
+            OMV.MessageBox.error(null, _("Can't perform a channel scan while VDR is still running, disable VDR andr try again."));
+        }
+    },
+
+    onScanStatusButton : function() {
+        var me = this;
+
+        OMV.Rpc.request({
+            scope    : me,
+            callback : me.onScanStatus,
+            rpcData  : {
+                service : "VDR",
+                method  : "scanInProgress"
+            }
+        });
+    },
+
+    onScanStatus : function(id, success, response) {
+        var me = this;
+
+        if (!success) {
+            OMV.MessageBox.error(null, response);
+        } else {
+            var msg = response ? "Channel scan is still running."
+                : "Channel Scan is not active.";
+
+            OMV.MessageBox.info(null, msg);
+        }
+    }
 });
 
 
 OMV.WorkspaceManager.registerPanel({
     id        : "channels",
     path      : "/service/vdr",
-    text      : _("Channels"),
+    text      : _("Manage channels"),
     position  : 20,
     className : "OMV.module.admin.service.vdr.Channels"
 });

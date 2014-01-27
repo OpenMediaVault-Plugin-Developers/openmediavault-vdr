@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 // require("js/omv/WorkspaceManager.js")
 
 OMV.WorkspaceManager.registerNode({
     id      : "vdr",
     path    : "/service",
-    text    : _("VDR / VDRAdmin-AM"),
+    text    : _("VDR"),
     icon16  : "images/play.png",
     iconSvg : "images/play.svg"
 });
