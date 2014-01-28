@@ -58,7 +58,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $this->registerMethod("vdrIsRunning");
         $this->registerMethod("getScanSettings");
         $this->registerMethod("setScanSettings");
-        $this->registerMethod("scanChannels");
+        $this->registerMethod("executeChannelScan");
         $this->registerMethod("scanInProgress");
         $this->registerMethod("getChannels");
         $this->registerMethod("setChannels");
@@ -267,156 +267,169 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         return $object;
     }
 
-    /**
-     * Performs a channel scan
-     *
-     * @return void
-     */
-    public function scanChannels($params, $context)
+    private function getWscanCommand()
     {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+        global $xmlConfig;
 
-        $this->validateMethodParams($params, '{
-            "type"       : "object",
-            "properties" : {
-                "transpondertype"      : { "type" : "string" },
-                "atsc_country"         : { "type" : "string" },
-                "atsc_type"            : { "type" : "number" },
-                "atsc_scan_encrypted"  : { "type" : "boolean" },
-                "dvb_t_country"        : { "type" : "string" },
-                "dvb_t_scan_encrypted" : { "type" : "boolean" },
-                "dvb_c_country"        : { "type" : "string" },
-                "dvb_c_qam"            : { "type" : "string", "maxLength" : "1" },
-                "dvb_c_symbolrate"     : { "type" : "string", "maxLength" : "1" },
-                "dvb_c_extended_qam"   : { "type" : "boolean" },
-                "dvb_c_scan_encrypted" : { "type" : "boolean" },
-                "dvb_s_country"        : { "type" : "string" },
-                "dvb_s_satellite"      : { "type" : "string" },
-                "dvb_s_scan_encrypted" : { "type" : "boolean" }
-            }
-        }');
+        // Get the configuration object.
+        $object = $xmlConfig->get($this->getWscanXPath());
+
+        if (is_null($object))
+            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getWscanXPath());
 
         $cmd = "";
-
-        // Check if scan is active
-        // If active or checking failed return
-        if ($this->scanInProgress(array(), $context))
-            return;
 
         // Output file type is for VDR 1.7
         $outputMode = " -o 7 ";
 
         // Parse script based on transponder settings
-        $transpoderType = $params["transpondertype"];
+        $transpoderType = $object["transpondertype"];
 
         switch ($transpoderType) {
             case self::WSCAN_ATSC:
-                if (boolval($params["atsc_scan_encrypted"]) == false) {
+                if (boolval($object["atsc_scan_encrypted"]) == false) {
                     $atsc_scan_encrypted = " -E 0";
                 } else {
                     $atsc_scan_encrypted = "";
                 }
 
                 $str = " -c "
-                     . $params["atsc_country"]
+                     . $object["atsc_country"]
                      . " -A "
-                     . $params["atsc_type"]
+                     . $object["atsc_type"]
                      . $atsc_scan_encrypted;
 
                 $cmd = "w_scan -fa"
                      . $str
-                     . $outputMode
-                     . " >> "
-                     . $channelFile;
+                     . $outputMode;
 
                 break;
 
             case self::WSCAN_CABLE:
-                if ($params["dvb_c_qam"] == " ") {
+                if ($object["dvb_c_qam"] == " ") {
                     $dvb_c_qam = "";
                 } else {
-                    $dvb_c_qam = " -Q " . $params["dvb_c_qam"];
+                    $dvb_c_qam = " -Q " . $object["dvb_c_qam"];
                 }
 
-                if ($params["dvb_c_symbolrate"] == " ") {
+                if ($object["dvb_c_symbolrate"] == " ") {
                     $dvb_c_symbolrate = "";
                 } else {
-                    $dvb_c_symbolrate = " -S " . $params["dvb_c_symbolrate"];
+                    $dvb_c_symbolrate = " -S " . $object["dvb_c_symbolrate"];
                 }
 
-                if (boolval($params["dvb_c_extended_qam"]) == false) {
+                if (boolval($object["dvb_c_extended_qam"]) == false) {
                     $dvb_c_extended_qam = "";
                 } else {
                     $dvb_c_extended_qam = " -e 2";
                 }
 
-                if (boolval($params["dvb_c_scan_encrypted"]) == false) {
+                if (boolval($object["dvb_c_scan_encrypted"]) == false) {
                     $dvb_c_scan_encrypted = " -E 0";
                 } else {
                     $dvb_c_scan_encrypted = "";
                 }
 
-                $str = " -c " . $params["dvb_c_country"]
+                $str = " -c " . $object["dvb_c_country"]
                      . $dvb_c_qam . $dvb_c_symbolrate
                      . $dvb_c_extended_qam
                      . $dvb_c_scan_encrypted;
 
                 $cmd = "w_scan -fc"
                      . $str
-                     . $outputMode
-                     . " >> "
-                     . $channelFile;
+                     . $outputMode;
 
                 break;
 
             case self::WSCAN_TERRESTIAL:
-                if (boolval($params["dvb_t_scan_encrypted"]) == false) {
+                if (boolval($object["dvb_t_scan_encrypted"]) == false) {
                     $dvb_t_scan_encrypted = " -E 0";
                 } else {
                     $dvb_t_scan_encrypted = "";
                 }
 
                 $str = " -c "
-                     . $params["dvb_t_country"]
+                     . $object["dvb_t_country"]
                      . $dvb_t_scan_encrypted;
                 $cmd = "w_scan -ft"
                      . $str
-                     . $outputMode
-                     . " >> "
-                     . $channelFile;
+                     . $outputMode;
 
                 break;
 
             case self::WSCAN_SATELLITE:
-                if (boolval($params["dvb_s_scan_encrypted"]) == false) {
+                if (boolval($object["dvb_s_scan_encrypted"]) == false) {
                     $dvb_s_scan_encrypted = " -E 0";
                 } else {
                     $dvb_s_scan_encrypted = "";
                 }
 
                 $str = " -c "
-                     . $params["dvb_s_country"]
+                     . $object["dvb_s_country"]
                      . " -s "
-                     . $params["dvb_s_satellite"]
+                     . $object["dvb_s_satellite"]
                      . $dvb_s_scan_encrypted;
 
                 $cmd = "w_scan -fs"
                      . $str
-                     . $outputMode
-                     . " >> "
-                     . $channelFile;
+                     . $outputMode;
 
                 break;
         }
 
-        $cmd = sprintf("%1\$s; cat %2\$s > %3\$s; rm %2\$s;",
-            $cmd, $this->_tempChannelFileLocation, $this->_channelFileLocation);
+        return $cmd;
+    }
 
-        // If script fails to execute then create an error
-        if (0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
-                $cmd, implode("\n", $output));
+    /**
+     * Performs a channel scan
+     *
+     * @return void
+     */
+    public function executeChannelScan($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+
+        // Check if scan is active
+        // If active or checking failed return
+        if ($this->scanInProgress(array(), $context))
+            return;
+
+        // Create a background process.
+        $bgStatusFilename = $this->createBgProcStatus();
+        $pid = $this->fork();
+
+        if ($pid > 0) {
+            $this->initializeBgProcStatus($bgStatusFilename, $pid);
+            return $bgStatusFilename;
+        }
+
+        try {
+            $bgOutputFilename = $this->createBgProcOutput();
+            $this->updateBgProcStatus($bgStatusFilename, "outputfilename",
+                $bgOutputFilename);
+
+            // Redirect stderr to $bgOutputFilename because of w_scans nature
+            $cmd = sprintf("%s > %s 2>%s",
+                $this->getWscanCommand(), $this->_tempChannelFileLocation, $bgOutputFilename);
+
+            if (0 === $this->exec($cmd, $output)) {
+                // Append channel.conf data to real file
+                // and remove the temporary
+                $cmd = sprintf("cat %1\$s > %2\$s; rm %1\$s",
+                    $this->_tempChannelFileLocation, $this->_channelFileLocation);
+
+                if (0 !== $this->exec($cmd, $output))
+                    throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+                        $cmd, implode("\n", $output));
+            }
+
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
+            exit(0);
+        } catch(\Exception $e) {
+            $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
+            exit(1);
+        }
     }
 
     /**

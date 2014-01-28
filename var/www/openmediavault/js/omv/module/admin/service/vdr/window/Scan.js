@@ -333,17 +333,30 @@ Ext.define("OMV.module.admin.service.vdr.window.Scan", {
 
     doScan : function() {
         var me = this;
-        var msg = "Channel Scan Started. Scanning can take over 30 minutes. There is no feedback when the scan is complete. Use the 'Scan Status' button to check when you can enable VDR.";
 
-        OMV.Rpc.request({
-            scope   : me,
-            rpcData : {
-                service : "VDR",
-                method  : "scanChannels",
-                params  : me.getRpcGetParams()
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Scanning for channels ..."),
+            rpcService      : "VDR",
+            rpcMethod       : "executeChannelScan",
+            rpcParams       : {},
+            rpcIgnoreErrors : false,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope  : me,
+                finish : function(wnd, response) {
+                    wnd.appendValue(_("Done ..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
             }
         });
 
-        OMV.MessageBox.info(null, msg);
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
     }
 });
