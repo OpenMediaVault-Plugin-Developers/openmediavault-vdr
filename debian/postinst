@@ -137,7 +137,7 @@ case "$1" in
 
         # VDR
         object="<vdr_enable>${VDR_ENABLE}</vdr_enable>"
-        object="<vdr_enable>${VDR_LOGGING_ON}</vdr_enable>"
+        object="${object}<vdr_logging_on>${VDR_LOGGING_ON}</vdr_logging_on>"
         object="${object}<vdr_recordingdir>${VDR_RECORDINGDIR}</vdr_recordingdir>"
         object="${object}<vdr_maxfilesize_gb>${VDR_MAXFILESIZE_GB}</vdr_maxfilesize_gb>"
         object="${object}<vdr_epglanguage>${VDR_EPGLANGUAGE}</vdr_epglanguage>"
