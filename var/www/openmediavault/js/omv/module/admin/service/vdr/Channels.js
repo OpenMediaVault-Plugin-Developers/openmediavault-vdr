@@ -91,6 +91,9 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
                         name : "channel",
                         type : "string"
                     },{
+                        name : "channelGroup",
+                        type : "string"
+                    },{
                         name : "channelName",
                         type : "string"
                     },{
@@ -142,12 +145,6 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         return items;
     },
 
-    afterDeletion : function() {
-        var me = this;
-
-        me.doReload();
-    },
-
 	afterMoveRows : function(records, index) {
         var me = this;
 		var sm = me.getSelectionModel();
@@ -185,11 +182,11 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
     startApply : function() {
         var me = this;
-        var rpcArr = [];
-        var arr = me.store.data.getRange();
+        var rpcData = new Array();
+        var records = me.store.getRange();
 
-        for (var i = 0, j = arr.length; i < j; i++) {
-            rpcArr[i] = arr[i].data.channel.toString();
+        for (var i = 0; i < records.length; i++) {
+            rpcData.push(records[i].data);
         }
 
 		var rpcOptions = {
@@ -200,7 +197,7 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 			    service : "VDR",
 			    method  : "setChannels",
 			    params  : {
-			        channels : rpcArr
+			        channels : rpcData
 		        }
 			}
 		};

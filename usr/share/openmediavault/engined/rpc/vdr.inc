@@ -16,12 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "openmediavault/object.inc";
 require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
-require_once "openmediavault/util.inc";
-require_once "openmediavault/rpcservice.inc";
+require_once "openmediavault/initscript.inc";
 require_once "openmediavault/notify.inc";
+require_once "openmediavault/object.inc";
+require_once "openmediavault/rpcservice.inc";
+require_once "openmediavault/util.inc";
 
 class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 {
@@ -469,24 +470,40 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
                 $cmd, implode("\n", $output));
 
-        $retArray = array();
+        $channels = array();
+        $groupStack = array();
 
-        foreach ($output as $chanNbr => $chanVal) {
+        foreach ($output as $chanVal) {
 
-            $channelPortions = explode(":", $chanVal);
-            $channelNameCompany = explode(";", $channelPortions[0]);
+            $channelString = trim($chanVal);
 
-            $channelEncrypted = $channelPortions[8] != "0";
+            if (!empty($channelString)) {
+                if (substr($channelString, 0, 1) === ":") {
+                    // Push to stack (emulated stack behaviour)
+                    $groupStack[] = $channelString;
 
-            $retArray[$chanNbr] = array(
-                "channel"          => $chanVal,
-                "channelName"      => $channelNameCompany[0],
-                "channelCompany"   => $channelNameCompany[1],
-                "channelEncrypted" => $channelEncrypted
-            );
+                    continue;
+                }
+
+                // Pop from stack (emulated stack behaviour)
+                $channelGroup = array_pop($groupStack);
+
+                $channelPortions = explode(":", $channelString);
+                $channelNameCompany = explode(";", $channelPortions[0]);
+
+                $channelEncrypted = $channelPortions[8] != "0";
+
+                $channels[] = array(
+                    "channel"          => $channelString,
+                    "channelGroup"     => $channelGroup,
+                    "channelName"      => $channelNameCompany[0],
+                    "channelCompany"   => $channelNameCompany[1],
+                    "channelEncrypted" => $channelEncrypted
+                );
+            }
         }
 
-        return $retArray;
+        return $channels;
     }
 
     /**
@@ -494,26 +511,31 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      */
     public function setChannels($params, $context)
     {
-        $channelString = "";
+        $config = $this->getSettings(array(), $context);
+        $enable = $config["vdr_enable"];
+        $channelConf = "";
 
-        foreach ($params["channels"] as $paramsk => $paramsv) {
-            $channelString = $channelString . $paramsv . "\\n";
+        $vdrInit = new OMVSysVInitScript("vdr", false);
+        $vdrAdminInit = new OMVSysVInitScript("vdradmin-am", false);
+
+        foreach ($params["channels"] as $channel) {
+            // Add group delimiter if it exists
+            if (!empty($channel["channelGroup"]))
+                $channelConf .= $channel["channelGroup"] . PHP_EOL;
+
+            $channelConf .= $channel["channel"] . PHP_EOL;
         }
 
-        $channelString = substr($channelString, 0, -2);
+        $vdrAdminInit->stop();
+        $vdrInit->stop();
 
-        $cmd = "/etc/init.d/vdradmin-am stop; "
-             . "/etc/init.d/vdr stop; "
-             . "echo '"
-             . $channelString
-             . "' > "
-             . $this->_channelFileLocation . ";"
-             . "/etc/init.d/vdr start;"
-             . "/etc/init.d/vdradmin-am start;";
+        file_put_contents($this->_channelFileLocation, $channelConf);
 
-        if (0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
-                $cmd, implode("\n", $output));
+        // Only start services again if enabled
+        if ($enable) {
+            $vdrAdminInit->start();
+            $vdrInit->start();
+        }
     }
 
     public function checkDevices($params, $context)
