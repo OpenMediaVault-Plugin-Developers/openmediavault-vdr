@@ -26,7 +26,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract
 {
     public function getName()
     {
-        return "VDR";
+        return "vdr";
     }
 
     public function applyConfig()
@@ -47,11 +47,14 @@ class OMVModuleVdr extends OMVModuleServiceAbstract
         if (is_null($object))
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
 
+        $initd = new OMVSysVInitScript($this->getName());
+
         return array(
             "name"    => $this->getName(),
             "title"   => gettext("VDR"),
             "enabled" => boolval($object["vdr_enable"]),
-            "running" => ("running"));
+            "running" => $initd->status() == 0
+        );
     }
 
     public function bindListeners(OMVNotifyDispatcher $dispatcher)
