@@ -20,14 +20,11 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-
 #################################################
 # Shutdown VDR and VDRAdmin-am for the parameter updates
 #################################################
 /etc/init.d/vdr stop
 /etc/init.d/vdradmin-am stop
-
-
 
 #################################################
 # Update /etc/default/vdr
@@ -37,11 +34,10 @@ VDR_CONFIG_FILE="/etc/default/vdr"
 vdr_enable=$(omv_config_get "//services/vdr/vdr_enable")
 sed -i '/ENABLED=/c\ENABLED='$vdr_enable $VDR_CONFIG_FILE
 
-#Do not enable shutdown through VDR
+# Do not enable shutdown through VDR
 sed -i '/ENABLE_SHUTDOWN=/c\ENABLE_SHUTDOWN=0' $VDR_CONFIG_FILE
 
-
-#VIDEO DIR Parameter exists?
+# VIDEO DIR Parameter exists?
 if ! grep -qs "VIDEO_DIR" $VDR_CONFIG_FILE; then
     echo "VIDEO_DIR" >> $VDR_CONFIG_FILE
 fi
@@ -49,6 +45,7 @@ fi
 recuuid=$(omv_config_get "//services/vdr/vdr_recordingdir")
 vdr_recordingdir=$(omv_get_sharedfolder_path $recuuid)
 sed -i '/VIDEO_DIR/c\VIDEO_DIR="'$vdr_recordingdir'"' $VDR_CONFIG_FILE
+
 # Set permissions for vdr to access recording directory
 if [ ! -z "$vdr_recordingdir" -a "$vdr_recordingdir" != " " ]; then
     setfacl -m u\:vdr\:rwx $vdr_recordingdir
@@ -58,6 +55,7 @@ vdr_maxfilesize_gb=$(omv_config_get "//services/vdr/vdr_maxfilesize_gb")
 
 vdr_logging_on=$(omv_config_get "//services/vdr/vdr_logging_on")
 vdr_log=" -l 1" # Log errors only
+
 if [ "$vdr_logging_on" = "1" ]; then
     vdr_log="" # Log everything
 fi
@@ -92,6 +90,9 @@ fi
 VDR_SETUP_CONF="/var/lib/vdr/setup.conf"
 
 if [ -f $VDR_SETUP_CONF ]; then
+    # Do not enable shutdown through VDR
+    sed -i "/MinUserInactivity/c\MinUserInactivity = 0" $VDR_SETUP_CONF
+
     vdr_epglanguage=$(omv_config_get "//services/vdr/vdr_epglanguage")
     sed -i "/EPGLanguages/c\EPGLanguages = $vdr_epglanguage" $VDR_SETUP_CONF
 
@@ -168,5 +169,5 @@ fi
 
 #####################
 if [ "$vdradminam_enable" = "1" ]; then
-/etc/init.d/vdradmin-am start
+    /etc/init.d/vdradmin-am start
 fi
