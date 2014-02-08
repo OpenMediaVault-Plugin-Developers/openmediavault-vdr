@@ -2,12 +2,12 @@ Source: openmediavault-vdr
 Section: net
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Build-Depends: debhelper (>= 8.0.0)
+Build-Depends: debhelper (>= 9.0.0)
 Standards-Version: 3.9.3
 
 Package: openmediavault-vdr
 Architecture: all
-Depends: openmediavault (>= 0.5.31), openmediavault (<< 0.6), vdr, vdradmin-am,
+Depends: openmediavault (>= 0.6), vdr, vdradmin-am,
  vdr-plugin-xineliboutput, vdr-plugin-epgsearch, vdr-plugin-live,
  vdr-plugin-streamdev-server, dvb-apps, w-scan, ${misc:Depends}
 Description: VDR plugin for OpenMediaVault.
