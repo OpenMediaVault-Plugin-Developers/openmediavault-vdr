@@ -1,3 +1,9 @@
+openmediavault-vdr (0.5.7) unstable; urgency=medium
+
+  * Move channel scan to channel management tab
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 08 Feb 2014 03:26:02 +0100
+
 openmediavault-vdr (0.5.6) stable; urgency=low
 
   * Get list of countries and satellites directly from w_scan
