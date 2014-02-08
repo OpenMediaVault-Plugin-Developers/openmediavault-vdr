@@ -1,3 +1,9 @@
+openmediavault-vdr (1.0.0) stable; urgency=medium
+
+  * OMV 1.0 compatibility
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 08 Feb 2014 03:30:08 +0100
+
 openmediavault-vdr (0.5.7) unstable; urgency=medium
 
   * Move channel scan to channel management tab
