@@ -37,9 +37,9 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         "Ext.grid.column.RowNumberer",
         "OMV.module.admin.service.vdr.window.Scan"
     ],
-	uses : [
-		"OMV.window.MessageBox"
-	],
+    uses : [
+        "OMV.window.MessageBox"
+    ],
 
     viewConfig : {
         plugins : {
@@ -52,8 +52,8 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         }
     },
 
-	hideAddButton       : true,
-	hideEditButton      : true,
+    hideAddButton       : true,
+    hideEditButton      : true,
     hideUpButton        : false,
     hideDownButton      : false,
     hideApplyButton     : false,
@@ -145,83 +145,83 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         return items;
     },
 
-	afterMoveRows : function(records, index) {
+    afterMoveRows : function(records, index) {
         var me = this;
-		var sm = me.getSelectionModel();
+        var sm = me.getSelectionModel();
 
-		sm.select(records);
+        sm.select(records);
         me.view.refresh();
-	},
+    },
 
-	doReload : function() {
-	    var me = this;
+    doReload : function() {
+        var me = this;
 
-	    me.store.reload();
-	},
+        me.store.reload();
+    },
 
-	onApplyButton : function() {
+    onApplyButton : function() {
         var me = this;
         var msg = "Do you really want to apply the configuration? Note: VDR will be restarted to apply the configuration. Active recordings will be temporarily paused.";
 
         OMV.MessageBox.show({
-			title   : _("Confirmation"),
-			msg     : msg,
-			buttons : Ext.Msg.YESNO,
-			fn      : function(answer) {
-    		    if (answer == "no") {
+            title   : _("Confirmation"),
+            msg     : msg,
+            buttons : Ext.Msg.YESNO,
+            fn      : function(answer) {
+                if (answer == "no") {
                     me.doReload();
-    			    return;
+                    return;
                 }
 
-    		    me.startApply();
-			},
-			scope : me,
-			icon  : Ext.Msg.QUESTION
-		});
+                me.startApply();
+            },
+            scope : me,
+            icon  : Ext.Msg.QUESTION
+        });
     },
 
     startApply : function() {
         var me = this;
-        var rpcData = new Array();
+        var rpcData = [];
         var records = me.store.getRange();
 
         for (var i = 0; i < records.length; i++) {
             rpcData.push(records[i].data);
         }
 
-		var rpcOptions = {
-			scope       : me,
-			callback    : me.onApply,
-			relayErrors : true,
-			rpcData     : {
-			    service : "VDR",
-			    method  : "setChannels",
-			    params  : {
-			        channels : rpcData
-		        }
-			}
-		};
+        var rpcOptions = {
+            scope       : me,
+            callback    : me.onApply,
+            relayErrors : true,
+            rpcData     : {
+                service : "VDR",
+                method  : "setChannels",
+                params  : {
+                    channels : rpcData
+                }
+            }
+        };
 
-		// Display waiting dialog.
-		OMV.MessageBox.wait(null, _("Saving ..."));
+        // Display waiting dialog.
+        OMV.MessageBox.wait(null, _("Saving ..."));
 
-		// Execute RPC.
-		OMV.Rpc.request(rpcOptions);
-	},
+        // Execute RPC.
+        OMV.Rpc.request(rpcOptions);
+    },
 
-	onApply: function(id, success, response) {
-		var me = this;
+    onApply: function(id, success, response) {
+        var me = this;
 
-		OMV.MessageBox.updateProgress(1);
-		OMV.MessageBox.hide();
+        OMV.MessageBox.updateProgress(1);
+        OMV.MessageBox.hide();
 
-		if (!success) {
-			OMV.MessageBox.error(null, response);
-		} else {
-			OMV.MessageBox.success(null, _("The changes have been applied successfully."));
-			me.doReload();
-		}
-	},
+        if (!success) {
+            OMV.MessageBox.error(null, response);
+        } else {
+            OMV.MessageBox.success(null, _("The changes have been applied successfully."));
+            me.doReload();
+        }
+    },
 
     onScanButton : function() {
         var me = this;
