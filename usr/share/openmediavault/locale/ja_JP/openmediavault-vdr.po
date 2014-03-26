@@ -1,24 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+# Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-vdr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-26 14:20-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2014-03-26 19:20+0000\n"
+"Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
+"Language-Team: Japanese (Japan) (http://www.transifex.com/projects/p/openmediavault-vdr/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja_JP\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "ATSC Transponder settings"
-msgstr ""
+msgstr "ATSC Transponder設定"
 
 msgid "All updates and add newly found channels"
 msgstr ""
@@ -29,14 +29,16 @@ msgstr ""
 msgid "Allowed hosts"
 msgstr ""
 
-msgid "Can't perform a channel scan while VDR is still running, disable VDR andr try again."
+msgid ""
+"Can't perform a channel scan while VDR is still running, disable VDR andr "
+"try again."
 msgstr ""
 
 msgid "Channel Company"
-msgstr ""
+msgstr "チャンネル会社"
 
 msgid "Channel Name"
-msgstr ""
+msgstr "チャンネル名"
 
 msgid "Channel Names and PIDs"
 msgstr ""
@@ -48,16 +50,16 @@ msgid "Check for connected devices"
 msgstr ""
 
 msgid "Confirmation"
-msgstr ""
+msgstr "確認"
 
 msgid "DVB-C Transponder settings"
-msgstr ""
+msgstr "DVB-C Transponder設定"
 
 msgid "DVB-S Transponder settings"
-msgstr ""
+msgstr "DVB-S Transponder設定"
 
 msgid "DVB-T Transponder settings"
-msgstr ""
+msgstr "DVB-T Transponder設定"
 
 msgid "Done ..."
 msgstr ""
@@ -66,34 +68,34 @@ msgid "EPG language"
 msgstr ""
 
 msgid "Enable"
-msgstr ""
+msgstr "有効"
 
 msgid "Enable logging of all VDR actions to syslog."
 msgstr ""
 
 msgid "Encrypted"
-msgstr ""
+msgstr "暗号化済み"
 
 msgid "Encrypted Channels"
-msgstr ""
+msgstr "暗号化されたチャンネル"
 
 msgid "Extended QAM scan"
-msgstr ""
+msgstr "拡張QAMのスキャン"
 
 msgid "Full log"
 msgstr ""
 
 msgid "Go to VDRAdmin-AM"
-msgstr ""
+msgstr "VDRAdmin-AMへ"
 
 msgid "Go to live"
-msgstr ""
+msgstr "liveへ"
 
 msgid "Go to streamdev-server"
-msgstr ""
+msgstr " streamdev-serverへ"
 
 msgid "Info"
-msgstr ""
+msgstr "情報"
 
 msgid "Manage channels"
 msgstr ""
@@ -123,7 +125,7 @@ msgid "Save and scan"
 msgstr ""
 
 msgid "Saving ..."
-msgstr ""
+msgstr "保存中 ..."
 
 msgid "Scan"
 msgstr ""
@@ -144,22 +146,22 @@ msgid "Subtitle language(s)"
 msgstr ""
 
 msgid "The changes have been applied successfully."
-msgstr ""
+msgstr "変更は正常に適応されました。"
 
 msgid "Use subtitles"
 msgstr ""
 
 msgid "VDR"
-msgstr ""
+msgstr "VDR"
 
 msgid "VDR settings"
-msgstr ""
+msgstr "VDR設定"
 
 msgid "VDR-plugin-live"
-msgstr ""
+msgstr "VDR-plugin-live"
 
 msgid "VDR-plugin-streamdev-server"
-msgstr ""
+msgstr "VDR-plugin-live"
 
 msgid "VDRAdmin-AM settings"
-msgstr ""
+msgstr "VDRAdmin-AM設定"

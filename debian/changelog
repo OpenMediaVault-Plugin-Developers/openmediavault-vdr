@@ -1,6 +1,7 @@
 openmediavault-vdr (1.0.0) stable; urgency=medium
 
   * OMV 1.0 compatibility
+  * Update locales
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 08 Feb 2014 03:30:08 +0100
 

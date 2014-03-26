@@ -1,24 +1,25 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+# Translators:
+# Cyryl Sochacki <cyrylsochacki@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-vdr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-26 14:20-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2014-03-26 19:20+0000\n"
+"Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/openmediavault-vdr/language/pl/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 msgid "ATSC Transponder settings"
-msgstr ""
+msgstr "Ustawienia Transpondera ATSC"
 
 msgid "All updates and add newly found channels"
 msgstr ""
@@ -29,14 +30,16 @@ msgstr ""
 msgid "Allowed hosts"
 msgstr ""
 
-msgid "Can't perform a channel scan while VDR is still running, disable VDR andr try again."
+msgid ""
+"Can't perform a channel scan while VDR is still running, disable VDR andr "
+"try again."
 msgstr ""
 
 msgid "Channel Company"
-msgstr ""
+msgstr "Firma kanału"
 
 msgid "Channel Name"
-msgstr ""
+msgstr "Nazwa kanału"
 
 msgid "Channel Names and PIDs"
 msgstr ""
@@ -48,16 +51,16 @@ msgid "Check for connected devices"
 msgstr ""
 
 msgid "Confirmation"
-msgstr ""
+msgstr "Potwierdzenie"
 
 msgid "DVB-C Transponder settings"
-msgstr ""
+msgstr "Ustawienia tunera DVB-C"
 
 msgid "DVB-S Transponder settings"
-msgstr ""
+msgstr "Ustawienia tunera DVB-S"
 
 msgid "DVB-T Transponder settings"
-msgstr ""
+msgstr "Ustawienia tunera DVB-T"
 
 msgid "Done ..."
 msgstr ""
@@ -66,34 +69,34 @@ msgid "EPG language"
 msgstr ""
 
 msgid "Enable"
-msgstr ""
+msgstr "Włącz"
 
 msgid "Enable logging of all VDR actions to syslog."
 msgstr ""
 
 msgid "Encrypted"
-msgstr ""
+msgstr "Szyfrowanie"
 
 msgid "Encrypted Channels"
-msgstr ""
+msgstr "Szyfrowane kanały"
 
 msgid "Extended QAM scan"
-msgstr ""
+msgstr "Rozszerzone skanowanie QAM"
 
 msgid "Full log"
 msgstr ""
 
 msgid "Go to VDRAdmin-AM"
-msgstr ""
+msgstr "Przejdź do VDRAdmin-AM"
 
 msgid "Go to live"
-msgstr ""
+msgstr "Przejdź do na żywo"
 
 msgid "Go to streamdev-server"
-msgstr ""
+msgstr "Przejdź do serwera streamdev"
 
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 msgid "Manage channels"
 msgstr ""
@@ -123,7 +126,7 @@ msgid "Save and scan"
 msgstr ""
 
 msgid "Saving ..."
-msgstr ""
+msgstr "Zapisuje ...."
 
 msgid "Scan"
 msgstr ""
@@ -144,22 +147,22 @@ msgid "Subtitle language(s)"
 msgstr ""
 
 msgid "The changes have been applied successfully."
-msgstr ""
+msgstr "Zmiany zostały poprawnie wprowadzone."
 
 msgid "Use subtitles"
 msgstr ""
 
 msgid "VDR"
-msgstr ""
+msgstr "VDR"
 
 msgid "VDR settings"
-msgstr ""
+msgstr "ustawienia VDR"
 
 msgid "VDR-plugin-live"
-msgstr ""
+msgstr "VDR-plugin-live"
 
 msgid "VDR-plugin-streamdev-server"
-msgstr ""
+msgstr "VDR-plugin-streamdev-server"
 
 msgid "VDRAdmin-AM settings"
-msgstr ""
+msgstr "Ustawienia  VDRAdmin-AM"
