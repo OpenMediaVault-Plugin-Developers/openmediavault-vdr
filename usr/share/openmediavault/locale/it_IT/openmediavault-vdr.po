@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: openmediavault-vdr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-26 14:20-0500\n"
-"PO-Revision-Date: 2014-03-26 19:20+0000\n"
-"Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
+"PO-Revision-Date: 2014-03-31 12:08+0000\n"
+"Last-Translator: Paolo Velati <paolo.velati@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/openmediavault-vdr/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,18 +22,18 @@ msgid "ATSC Transponder settings"
 msgstr "Impostazioni ATSC transponder"
 
 msgid "All updates and add newly found channels"
-msgstr ""
+msgstr "Tutti gli aggiornamenti e aggiungi i nuovi canali trovati"
 
 msgid "All updates, new channels and add new transponders"
-msgstr ""
+msgstr "Tutti gli aggiornamenti, nuovi canali e aggiungi i nuovi transponder"
 
 msgid "Allowed hosts"
-msgstr ""
+msgstr "Host permessi"
 
 msgid ""
 "Can't perform a channel scan while VDR is still running, disable VDR andr "
 "try again."
-msgstr ""
+msgstr "Impossibile effettuare una scansione canali mentre VDR è in esecuzione, disabilita VDR e riprova."
 
 msgid "Channel Company"
 msgstr "Società Canale"
@@ -42,13 +42,13 @@ msgid "Channel Name"
 msgstr "Nome Canale"
 
 msgid "Channel Names and PIDs"
-msgstr ""
+msgstr "Nomi e PID dei Canali"
 
 msgid "Channel update mode"
-msgstr ""
+msgstr "Modalità aggiornamento Canale"
 
 msgid "Check for connected devices"
-msgstr ""
+msgstr "Controlla Dispositivi Connessi"
 
 msgid "Confirmation"
 msgstr "Conferma"
@@ -63,16 +63,16 @@ msgid "DVB-T Transponder settings"
 msgstr "Impostazioni DVB-T transponder"
 
 msgid "Done ..."
-msgstr ""
+msgstr "Fatto ..."
 
 msgid "EPG language"
-msgstr ""
+msgstr "Lingua EPG"
 
 msgid "Enable"
 msgstr "Abilita"
 
 msgid "Enable logging of all VDR actions to syslog."
-msgstr ""
+msgstr "Abilita log verso SysLog di tutte le azioni VDR."
 
 msgid "Encrypted"
 msgstr "Criptato"
@@ -84,7 +84,7 @@ msgid "Extended QAM scan"
 msgstr "Scansione QAM estesa"
 
 msgid "Full log"
-msgstr ""
+msgstr "Log Completi"
 
 msgid "Go to VDRAdmin-AM"
 msgstr "Vai a VDRAdmin-AM"
@@ -99,58 +99,58 @@ msgid "Info"
 msgstr "Info"
 
 msgid "Manage channels"
-msgstr ""
+msgstr "Gestione Canali"
 
 msgid "Maximum filesize in GB"
-msgstr ""
+msgstr "Dimensione file massima in GB"
 
 msgid "No update"
-msgstr ""
+msgstr "Nessun aggiornamento"
 
 msgid "Number of detected devices: "
-msgstr ""
+msgstr "Numero di dispositivi rilevati:"
 
 msgid "Only Channel Names"
-msgstr ""
+msgstr "Solo nomi dei Canali"
 
 msgid "Only Channel PIDs"
-msgstr ""
+msgstr "Solo PID dei Canali"
 
 msgid "Port number"
-msgstr ""
+msgstr "Numero porta"
 
 msgid "Recording directory"
-msgstr ""
+msgstr "Cartella registrazioni"
 
 msgid "Save and scan"
-msgstr ""
+msgstr "Salva e scansiona"
 
 msgid "Saving ..."
 msgstr "Salvataggio ..."
 
 msgid "Scan"
-msgstr ""
+msgstr "Scansione"
 
 msgid "Scan settings"
-msgstr ""
+msgstr "Impostazioni scansione"
 
 msgid "Scan status"
-msgstr ""
+msgstr "Stato Scansione"
 
 msgid "Scanning for channels ..."
-msgstr ""
+msgstr "Scansione Canali in corso ..."
 
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 msgid "Subtitle language(s)"
-msgstr ""
+msgstr "Lingua/e sottotitoli"
 
 msgid "The changes have been applied successfully."
 msgstr "I cambiamenti sono stati impostati correttamente."
 
 msgid "Use subtitles"
-msgstr ""
+msgstr "Utilizza Sottotitoli"
 
 msgid "VDR"
 msgstr "VDR"
