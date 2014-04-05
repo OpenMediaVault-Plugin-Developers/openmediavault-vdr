@@ -163,12 +163,12 @@ case "$1" in
 	    omv_config_add_element "/config/services" "vdr" "${object}" true
 
 
-		# New version of VDR does not provide channels.conf automatically but the plugin requires it.
-		if [ ! -f /var/lib/vdr/channels.conf ]; then
-    		touch /var/lib/vdr/channels.conf
-    		chown vdr:vdr /var/lib/vdr/channels.conf
-    		chmod 644 /var/lib/vdr/channels.conf
-		fi
+        # New version of VDR does not provide channels.conf automatically but the plugin requires it.
+        if [ ! -f /var/lib/vdr/channels.conf ]; then
+            touch /var/lib/vdr/channels.conf
+            chown vdr:vdr /var/lib/vdr/channels.conf
+            chmod 644 /var/lib/vdr/channels.conf
+        fi
 
         if $VDR_INIT; then
             # Start and stop VDR inorder to generate the original configuration files
