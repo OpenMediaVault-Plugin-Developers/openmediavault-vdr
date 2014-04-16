@@ -9,10 +9,10 @@ VDR_DEFAULT_CONFIG="/etc/default/vdr"
 
 case "$1" in
     configure)
-    	if ! omv_config_exists "/config/services/vdr"; then
-    	    echo "Initialize VDR plugin configuration"
+        if ! omv_config_exists "/config/services/vdr"; then
+            echo "Initialize VDR plugin configuration"
 
-    	    # VDR
+            # VDR
             VDR_INIT=true
             VDR_ENABLE="0"
             VDR_LOGGING_ON="0"
@@ -160,7 +160,7 @@ case "$1" in
         object="${object}<vdradminam_enable>${VDRADMINAM_ENABLE}</vdradminam_enable>"
         object="${object}<vdradminam_port>${VDRADMINAM_PORT}</vdradminam_port>"
 
-	    omv_config_add_element "/config/services" "vdr" "${object}" true
+        omv_config_add_element "/config/services" "vdr" "${object}" true
 
 
         # New version of VDR does not provide channels.conf automatically but the plugin requires it.
@@ -180,6 +180,10 @@ case "$1" in
             /bin/sed -i '/ENABLED=/c\ENABLED=0' ${VDR_DEFAULT_CONFIG}
         fi
 
+        # Activate package triggers. These triggers are only set during the
+        # package installation.
+        dpkg-trigger update-fixperms
+        dpkg-trigger update-locale
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
