@@ -39,29 +39,27 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
             layout : "fit",
             items : [{
                 border  : false,
-                html    : "<h3>VDR</h3>" +
+                html    : '<h3 style="margin-top: 5px;">VDR (Video Disk Recorder)</h3>' +
                           "<p>" +
-                          "VDR stands for 'Video Disk Recorder'. VDR needs a TV tuner device to work. VDR works in DVB and ATSC networks." +
+                          "The VDR plugin needs a TV tuner device to operate. VDR works with DVB and ATSC networks." +
                           "</p>" +
-                          "<h3>" +
-                          "First time use" +
-                          "</h3>" +
+                          "<h4>First time use</h4>" +
                           "<p>" +
                           "<ol>" +
                           "<li>" +
-                          "Check that your TV tuner device is detected. Use 'Check for connected devices' button" +
+                          "Check that your TV tuner device is detected. Use the 'Check for connected devices' button." +
                           "</li>" +
                           "<li>" +
-                          "Navigate to the manage channels tab and press on the scan button" +
+                          "Navigate to the manage channels tab and press on the scan button." +
                           "</li>" +
                           "<li>" +
-                          "Set transponder type" +
+                          "Set the transponder type." +
                           "</li>" +
                           "<li>" +
-                          "Adjust transponder settings" +
+                          "Adjust transponder settings." +
                           "</li>" +
                           "<li>" +
-                          "Save and scan" +
+                          "Save and scan." +
                           "</li>" +
                           "<li>" +
                           "After the channel scan is completed, set recording directory and other options." +
@@ -78,24 +76,19 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
             layout : "fit",
             items : [{
                 border  : false,
-                html    : "<h3>VDR-plugin-streamdev-server</h3>" +
+                html    : '<h3 style="margin-top: 5px;">VDR-plugin-streamdev-server</h3>' +
                           "<p>" +
-                          "VDR-plugin-streamdev-server enables streaming from VDR to other computers in the network." +
+                          "Enables streaming from your VDR to other computers on your network." +
                           "</p>" +
+                          "<h4>Port</h4>" +
                           "<p>" +
-                          "If you change the streamdev-server port VDR-plugin-live and VDRAdmin-AM parameters are automatically updated to match the port of the streamdev-server." +
+                          "Sets the TCP port on which the server listens for hosts.  If you change the streamdev-server port the VDR-plugin-live & VDRAdmin-AM parameters are automatically updated to match the port of the server.  " +
+                          "Be sure to create a rule to open up the this port to your LAN if you are using OMVs Firewall." +  
                           "</p>" +
-                          "<h3>Port</h3>" +
+                          "<h4>Allowed hosts</h4>" +
                           "<p>" +
-                          "The port setting refers to HTTP port." +
-                          "</p>" +
-                          "<h3>Allowed hosts</h3>" +
-                          "<p>" +
-                          "Allowed hosts parameter defines what IP-addresses can connect to the streamdev-server." +
-                          "</p>" +
-                          "<p>" +
-                          "This parameter uses CIDR notation. Value '192.168.1.0/24' = Connections are allowed from IP-address range 192.168.1.0-192.168.1.255." +
-                          "The parameter can also be just a single IP-address." +
+                          'This parameter defines the IP-addresses that are allowed to connect to the streamdev-server in CIDR notation (i.e. A local network can be specified via a value of <b>"192.168.1.0/24"</b>, which denotes a range of 192.168.1.0-192.168.1.255.  ' +
+                          'Or a single IP-address may be used.)' +
                           "</p>"
             }]
         },{
@@ -104,12 +97,9 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
             layout : "fit",
             items : [{
                 border  : false,
-                html    : "<h3>VDR-plugin-live</h3>" +
+                html    : '<h3 style="margin-top: 5px;">VDR-plugin-live</h3>' +
                           "<p>" +
-                          "VDR-plugin-live is a web based user interface to VDR." +
-                          "</p>" +
-                          "<p>" +
-                          "The default username/password is admin/live. These can be changed from VDR-plugin-live under Setup/Use authentication." +
+                          "Is a web based user interface to VDR. The default <b>Username= admin</b> and <b>Password= live</b> are as such.  The UserID and Password can be changed in the user interface of VDR-plugin-live at Setup/Use authentication. Requires firewall rule if OMV's Firewall in use." +
                           "</p>"
             }]
         },{
@@ -118,12 +108,9 @@ Ext.define("OMV.module.admin.service.vdr.Info", {
             layout : "fit",
             items : [{
                 border  : false,
-                html    : "<h3>VDRAdmin-AM</h3>" +
+                html    : '<h3 style="margin-top: 5px;">VDRAdmin-AM</h3>' +
                           "<p>" +
-                          "VDRAdmin-AM is a web based user interface to VDR." +
-                          "</p>" +
-                          "<p>" +
-                          "The default username/password is linvdr/linvdr. These can be changed from VDRAdmin-AM under Configuration/Identification." +
+                          "Is also, an alternative, a web based user interface for VDR.  The default login is <b>Username= linvdr</b> and <b>Password= linvdr</b>. The UserID and Password can be changed in the user interface of VDRAdmin-AM under Configuration/Identification.  Requires firewall rule if OMV's Firewall in use." +
                           "</p>"
             }]
         }];
