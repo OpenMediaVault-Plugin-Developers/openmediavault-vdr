@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2014 OpenMediaVault Plugin Developers
  *
@@ -34,8 +35,13 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
           WSCAN_SATELLITE = "s",
           WSCAN_TERRESTIAL = "t";
 
-    private $_channelFileLocation = "/var/lib/vdr/channels.conf";
-    private $_tempChannelFileLocation = "/tmp/channels.conf";
+    private $channelFileLocation = "/var/lib/vdr/channels.conf";
+    private $tempChannelFileLocation = "/tmp/channels.conf";
+
+    private function getEventMessagePath()
+    {
+        return "org.openmediavault.services.vdr";
+    }
 
     private function getXPath()
     {
@@ -78,8 +84,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Get the configuration object.
         $object = $xmlConfig->get($this->getXPath());
 
-        if (is_null($object))
+        if (is_null($object)) {
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getXPath());
+        }
 
         // Modify the result object
         $object["vdr_enable"]         = boolval($object["vdr_enable"]);
@@ -111,35 +118,42 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
 
-        $this->validateMethodParams($params, '{
-            "type"       : "object",
-            "properties" : {
-                "vdr_enable"             : { "type" : "boolean" },
-                "vdr_logging_on"         : { "type" : "boolean" },
-                "vdr_recordingdir"       : { "type" : "string" },
-                "vdr_maxfilesize_gb"     : { "type" : "integer", "minimum" : 1 },
-                "vdr_subtitles"          : { "type" : "boolean" },
-                "vdr_subtitle_languages" : { "type" : "string" },
-                "vdr_epglanguage"        : { "type" : "string" },
-                "vdr_channelupdatemode"  : { "type" : "number", "minimum" : 0, "maximum" : 6 },
+        $this->validateMethodParams(
+            $params,
+            '{
+                "type"       : "object",
+                "properties" : {
+                    "vdr_enable"             : { "type" : "boolean" },
+                    "vdr_logging_on"         : { "type" : "boolean" },
+                    "vdr_recordingdir"       : { "type" : "string" },
+                    "vdr_maxfilesize_gb"     : { "type" : "integer", "minimum" : 1 },
+                    "vdr_subtitles"          : { "type" : "boolean" },
+                    "vdr_subtitle_languages" : { "type" : "string" },
+                    "vdr_epglanguage"        : { "type" : "string" },
+                    "vdr_channelupdatemode"  : { "type" : "number", "minimum" : 0, "maximum" : 6 },
 
-                "vdr_streamdev_enable" : { "type" : "boolean" },
-                "vdr_streamdev_port"   : { "type" : "integer", "minimum" : 1, "maximum" : 65535 },
-                "vdr_streamdev_hosts"  : { "type" : "string" },
+                    "vdr_streamdev_enable" : { "type" : "boolean" },
+                    "vdr_streamdev_port"   : { "type" : "integer", "minimum" : 1, "maximum" : 65535 },
+                    "vdr_streamdev_hosts"  : { "type" : "string" },
 
-                "vdr_live_enable" : { "type" : "boolean" },
-                "vdr_live_port"   : { "type" : "integer", "minimum" : 1, "maximum" : 65535 },
+                    "vdr_live_enable" : { "type" : "boolean" },
+                    "vdr_live_port"   : { "type" : "integer", "minimum" : 1, "maximum" : 65535 },
 
-                "vdradminam_enable" : { "type" : "boolean" },
-                "vdradminam_port"   : { "type" : "integer", "minimum" : 1, "maximum" : 65535 }
-            }
-        }');
+                    "vdradminam_enable" : { "type" : "boolean" },
+                    "vdradminam_port"   : { "type" : "integer", "minimum" : 1, "maximum" : 65535 }
+                }
+            }'
+        );
 
         // Get the existing configuration object.
         $oldObject = $xmlConfig->get($this->getXPath());
 
-        if (is_null($oldObject))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getXPath());
+        if (is_null($oldObject)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
 
         // Update the configuration object.
         $object = array(
@@ -171,12 +185,17 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         );
 
         // Update the xmlConfig file. If it fails then generate an error
-        if ($xmlConfig->replace($this->getXPath(), $object) === false)
+        if ($xmlConfig->replace($this->getXPath(), $object) === false) {
             throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
+        }
 
         // Notify configuration changes.
         $dispatcher = &OMVNotifyDispatcher::getInstance();
-        $dispatcher->notify(OMV_NOTIFY_MODIFY, "org.openmediavault.services.vdr", $object);
+        $dispatcher->notify(
+            OMV_NOTIFY_MODIFY,
+            $this->getEventMessagePath(),
+            $object
+        );
 
         // Return the configuration object.
         return $object;
@@ -203,8 +222,12 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Get the configuration object.
         $object = $xmlConfig->get($this->getWscanXPath());
 
-        if (is_null($object))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getWscanXPath());
+        if (is_null($object)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getWscanXPath()
+            );
+        }
 
         // Modify the result object.
         $object['atsc_scan_encrypted']  = boolval($object['atsc_scan_encrypted']);
@@ -223,25 +246,28 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
 
-        $this->validateMethodParams($params, '{
-            "type"       : "object",
-            "properties" : {
-                "transpondertype"      : { "type" : "string" },
-                "atsc_country"         : { "type" : "string" },
-                "atsc_type"            : { "type" : "number" },
-                "atsc_scan_encrypted"  : { "type" : "boolean" },
-                "dvb_t_country"        : { "type" : "string" },
-                "dvb_t_scan_encrypted" : { "type" : "boolean" },
-                "dvb_c_country"        : { "type" : "string" },
-                "dvb_c_qam"            : { "type" : "string", "maxLength" : "1" },
-                "dvb_c_symbolrate"     : { "type" : "string", "maxLength" : "1" },
-                "dvb_c_extended_qam"   : { "type" : "boolean" },
-                "dvb_c_scan_encrypted" : { "type" : "boolean" },
-                "dvb_s_country"        : { "type" : "string" },
-                "dvb_s_satellite"      : { "type" : "string" },
-                "dvb_s_scan_encrypted" : { "type" : "boolean" }
-            }
-        }');
+        $this->validateMethodParams(
+            $params,
+            '{
+                "type"       : "object",
+                "properties" : {
+                    "transpondertype"      : { "type" : "string" },
+                    "atsc_country"         : { "type" : "string" },
+                    "atsc_type"            : { "type" : "number" },
+                    "atsc_scan_encrypted"  : { "type" : "boolean" },
+                    "dvb_t_country"        : { "type" : "string" },
+                    "dvb_t_scan_encrypted" : { "type" : "boolean" },
+                    "dvb_c_country"        : { "type" : "string" },
+                    "dvb_c_qam"            : { "type" : "string", "maxLength" : "1" },
+                    "dvb_c_symbolrate"     : { "type" : "string", "maxLength" : "1" },
+                    "dvb_c_extended_qam"   : { "type" : "boolean" },
+                    "dvb_c_scan_encrypted" : { "type" : "boolean" },
+                    "dvb_s_country"        : { "type" : "string" },
+                    "dvb_s_satellite"      : { "type" : "string" },
+                    "dvb_s_scan_encrypted" : { "type" : "boolean" }
+                }
+            }'
+        );
 
         // Update the configuration object.
         $object = array(
@@ -261,8 +287,12 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             "dvb_s_scan_encrypted" => array_boolval($params, "dvb_s_scan_encrypted"),
         );
 
-        if ($xmlConfig->replace($this->getWscanXPath(), $object) === false)
-            throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED, $this->getWscanXPath());
+        if ($xmlConfig->replace($this->getWscanXPath(), $object) === false) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
+                $this->getWscanXPath()
+            );
+        }
 
         // Return the configuration object.
         return $object;
@@ -275,8 +305,12 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Get the configuration object.
         $object = $xmlConfig->get($this->getWscanXPath());
 
-        if (is_null($object))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getWscanXPath());
+        if (is_null($object)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getWscanXPath()
+            );
+        }
 
         $cmd = "";
 
@@ -393,8 +427,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
         // Check if scan is active
         // If active or checking failed return
-        if ($this->scanInProgress(array(), $context))
+        if ($this->scanInProgress(array(), $context)) {
             return;
+        }
 
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();
@@ -407,27 +442,41 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
         try {
             $bgOutputFilename = $this->createBgProcOutput();
-            $this->updateBgProcStatus($bgStatusFilename, "outputfilename",
-                $bgOutputFilename);
+            $this->updateBgProcStatus(
+                $bgStatusFilename,
+                "outputfilename",
+                $bgOutputFilename
+            );
 
             // Redirect stderr to $bgOutputFilename because of w_scans nature
-            $cmd = sprintf("%s > %s 2>%s",
-                $this->getWscanCommand(), $this->_tempChannelFileLocation, $bgOutputFilename);
+            $cmd = sprintf(
+                "%s > %s 2>%s",
+                $this->getWscanCommand(),
+                $this->tempChannelFileLocation,
+                $bgOutputFilename
+            );
 
             if (0 === $this->exec($cmd, $output)) {
                 // Append channel.conf data to real file
                 // and remove the temporary
-                $cmd = sprintf("cat %1\$s > %2\$s; rm %1\$s",
-                    $this->_tempChannelFileLocation, $this->_channelFileLocation);
+                $cmd = sprintf(
+                    "cat %1\$s > %2\$s; rm %1\$s",
+                    $this->tempChannelFileLocation,
+                    $this->channelFileLocation
+                );
 
-                if (0 !== $this->exec($cmd, $output))
-                    throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
-                        $cmd, implode("\n", $output));
+                if (0 !== $this->exec($cmd, $output)) {
+                    throw new OMVException(
+                        OMVErrorMsg::E_EXEC_FAILED,
+                        $cmd,
+                        implode("\n", $output)
+                    );
+                }
             }
 
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
             exit(0);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
             exit(1);
         }
@@ -449,12 +498,15 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         if ($pgrepReturn === 0) {
             // "Channel scan is still running"
             return true;
-        } else if ($pgrepReturn === 1) {
+        } elseif ($pgrepReturn === 1) {
             // "Channel Scan is not active"
             return false;
         } else {
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
-                $cmd, implode("\n", $output));
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_FAILED,
+                $cmd,
+                implode("\n", $output)
+            );
         }
     }
 
@@ -465,10 +517,14 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      */
     public function getChannels($params, $context)
     {
-        $cmd = sprintf("cat %s", $this->_channelFileLocation);
-        if (0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
-                $cmd, implode("\n", $output));
+        $cmd = sprintf("cat %s", $this->channelFileLocation);
+        if (0 !== $this->exec($cmd, $output)) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_FAILED,
+                $cmd,
+                implode("\n", $output)
+            );
+        }
 
         $channels = array();
         $groupStack = array();
@@ -520,8 +576,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
         foreach ($params["channels"] as $channel) {
             // Add group delimiter if it exists
-            if (!empty($channel["channelGroup"]))
+            if (!empty($channel["channelGroup"])) {
                 $channelConf .= $channel["channelGroup"] . PHP_EOL;
+            }
 
             $channelConf .= $channel["channel"] . PHP_EOL;
         }
@@ -529,7 +586,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $vdrAdminInit->stop();
         $vdrInit->stop();
 
-        file_put_contents($this->_channelFileLocation, $channelConf);
+        file_put_contents($this->channelFileLocation, $channelConf);
 
         // Only start services again if enabled
         if ($enable) {
@@ -541,15 +598,21 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     public function checkDevices($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context,
-            array("role" => OMV_ROLE_ADMINISTRATOR));
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
 
         $cmd = "if [ -d /dev/dvb ]; then ls /dev/dvb; fi";
 
         // If script fails to execute then create an error
-        if (0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
-                $cmd, implode("\n", $output));
+        if (0 !== $this->exec($cmd, $output)) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_FAILED,
+                $cmd,
+                implode("\n", $output)
+            );
+        }
 
         return count($output);
     }
@@ -557,8 +620,10 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     public function enumerateCountries($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context,
-            array("role" => OMV_ROLE_ADMINISTRATOR));
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
 
         return $this->getWscanList(self::COUNTRY_LIST);
     }
@@ -566,8 +631,10 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     public function enumerateSatellites($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context,
-            array("role" => OMV_ROLE_ADMINISTRATOR));
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
 
         return $this->getWscanList(self::SATELLITE_LIST);
     }
@@ -576,9 +643,13 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     {
         $cmd = sprintf("w_scan -%s? 2>&1", $type);
 
-        if (0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
-                $cmd, implode("\n", $output));
+        if (0 !== $this->exec($cmd, $output)) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_FAILED,
+                $cmd,
+                implode("\n", $output)
+            );
+        }
 
         $list = array();
 
@@ -592,7 +663,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                     "abbr" => $data[0],
                     "country" => $data[1],
                 );
-            } else if (self::SATELLITE_LIST === $type) {
+            } elseif (self::SATELLITE_LIST === $type) {
                 $list[] = array(
                     "abbr" => $data[0],
                     "satellite" => $data[1],
@@ -602,7 +673,6 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
         return $list;
     }
-
 }
 
 // Register the RPC service.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2014 OpenMediaVault Plugin Developers
  *
@@ -16,14 +17,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "openmediavault/module.inc";
 require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
 require_once "openmediavault/initscript.inc";
+require_once "openmediavault/module.inc";
 
-class OMVModuleVdr extends OMVModuleServiceAbstract
-    implements OMVINotifyListener, OMVIModuleServiceStatus
+class OMVModuleVdr extends OMVModuleServiceAbstract implements
+    OMVINotifyListener,
+    OMVIModuleServiceStatus
 {
+    private function getEventMessagePath()
+    {
+        return "org.openmediavault.services.vdr";
+    }
+
     public function getName()
     {
         return "vdr";
@@ -33,8 +40,9 @@ class OMVModuleVdr extends OMVModuleServiceAbstract
     {
         $cmd = "omv-mkconf vdr 2>&1";
 
-        if (0 !== $this->exec($cmd, $output))
+        if (0 !== $this->exec($cmd, $output)) {
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
+        }
     }
 
     public function getStatus()
@@ -44,8 +52,9 @@ class OMVModuleVdr extends OMVModuleServiceAbstract
         $xpath = "//services/vdr";
         $object = $xmlConfig->get($xpath);
 
-        if (is_null($object))
+        if (is_null($object)) {
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
+        }
 
         $initd = new OMVSysVInitScript($this->getName());
 
@@ -61,10 +70,10 @@ class OMVModuleVdr extends OMVModuleServiceAbstract
     {
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            "org.openmediavault.services.vdr",
-            array($this, "setDirty"));
+            $this->getEventMessagePath(),
+            array($this, "setDirty")
+        );
     }
-
 }
 
 // Register the Module
