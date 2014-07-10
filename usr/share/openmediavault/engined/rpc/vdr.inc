@@ -158,27 +158,27 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Update the configuration object.
         $object = array(
             // Vdr
-            "vdr_enable"             => array_boolval($params, 'vdr_enable'),
-            "vdr_logging_on"         => array_boolval($params, 'vdr_logging_on'),
-            "vdr_recordingdir"       => $params['vdr_recordingdir'],
-            "vdr_maxfilesize_gb"     => $params['vdr_maxfilesize_gb'],
-            "vdr_subtitles"          => $params['vdr_subtitles'],
-            "vdr_subtitle_languages" => $params['vdr_subtitle_languages'],
-            "vdr_epglanguage"        => $params['vdr_epglanguage'],
-            "vdr_channelupdatemode"  => $params['vdr_channelupdatemode'],
+            "vdr_enable"             => array_boolval($params, "vdr_enable"),
+            "vdr_logging_on"         => array_boolval($params, "vdr_logging_on"),
+            "vdr_recordingdir"       => $params["vdr_recordingdir"],
+            "vdr_maxfilesize_gb"     => $params["vdr_maxfilesize_gb"],
+            "vdr_subtitles"          => $params["vdr_subtitles"],
+            "vdr_subtitle_languages" => $params["vdr_subtitle_languages"],
+            "vdr_epglanguage"        => $params["vdr_epglanguage"],
+            "vdr_channelupdatemode"  => $params["vdr_channelupdatemode"],
 
             // Streamdev
-            "vdr_streamdev_enable" => array_boolval($params, 'vdr_streamdev_enable'),
-            "vdr_streamdev_port"   => $params['vdr_streamdev_port'],
-            "vdr_streamdev_hosts"  => $params['vdr_streamdev_hosts'],
+            "vdr_streamdev_enable" => array_boolval($params, "vdr_streamdev_enable"),
+            "vdr_streamdev_port"   => $params["vdr_streamdev_port"],
+            "vdr_streamdev_hosts"  => $params["vdr_streamdev_hosts"],
 
             // Live
-            "vdr_live_enable" => array_boolval($params, 'vdr_live_enable'),
-            "vdr_live_port"   => $params['vdr_live_port'],
+            "vdr_live_enable" => array_boolval($params, "vdr_live_enable"),
+            "vdr_live_port"   => $params["vdr_live_port"],
 
             // VdrAdmin
-            "vdradminam_enable" => array_boolval($params, 'vdradminam_enable'),
-            "vdradminam_port"   => $params['vdradminam_port'],
+            "vdradminam_enable" => array_boolval($params, "vdradminam_enable"),
+            "vdradminam_port"   => $params["vdradminam_port"],
 
             // Scan settings
             "w_scan" => $oldObject["w_scan"],
@@ -230,11 +230,11 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         }
 
         // Modify the result object.
-        $object['atsc_scan_encrypted']  = boolval($object['atsc_scan_encrypted']);
-        $object['dvb_t_scan_encrypted'] = boolval($object['dvb_t_scan_encrypted']);
-        $object['dvb_c_extended_qam']   = boolval($object['dvb_c_extended_qam']);
-        $object['dvb_c_scan_encrypted'] = boolval($object['dvb_c_scan_encrypted']);
-        $object['dvb_s_scan_encrypted'] = boolval($object['dvb_s_scan_encrypted']);
+        $object["atsc_scan_encrypted"]  = boolval($object["atsc_scan_encrypted"]);
+        $object["dvb_t_scan_encrypted"] = boolval($object["dvb_t_scan_encrypted"]);
+        $object["dvb_c_extended_qam"]   = boolval($object["dvb_c_extended_qam"]);
+        $object["dvb_c_scan_encrypted"] = boolval($object["dvb_c_scan_encrypted"]);
+        $object["dvb_s_scan_encrypted"] = boolval($object["dvb_s_scan_encrypted"]);
 
         return $object;
     }
