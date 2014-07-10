@@ -7,7 +7,7 @@ Standards-Version: 3.9.3
 
 Package: openmediavault-vdr
 Architecture: all
-Depends: openmediavault (>= 0.6.0.6), vdr, vdradmin-am,
+Depends: openmediavault (>= 1.0.1), vdr, vdradmin-am,
  vdr-plugin-xineliboutput, vdr-plugin-epgsearch, vdr-plugin-live,
  vdr-plugin-streamdev-server, dvb-apps, w-scan, ${misc:Depends}
 Description: VDR plugin for OpenMediaVault.

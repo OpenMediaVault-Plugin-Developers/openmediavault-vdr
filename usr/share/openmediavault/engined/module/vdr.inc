@@ -31,6 +31,11 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         return "org.openmediavault.services.vdr";
     }
 
+    private function getSharedFolderEventMessagePath()
+    {
+        return "org.openmediavault.system.shares.sharedfolder";
+    }
+
     public function getName()
     {
         return "vdr";
@@ -71,6 +76,12 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
             $this->getEventMessagePath(),
+            array($this, "setDirty")
+        );
+
+        $dispatcher->addListener(
+            OMV_NOTIFY_MODIFY,
+            $this->getSharedFolderEventMessagePath(),
             array($this, "setDirty")
         );
     }
