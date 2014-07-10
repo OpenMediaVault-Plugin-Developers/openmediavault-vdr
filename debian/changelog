@@ -1,8 +1,9 @@
-openmediavault-vdr (1.0.1.1) UNRELEASED; urgency=low
+openmediavault-vdr (1.0.2) stable; urgency=low
 
   * Conform to OMV 0.6.0.6 trigger standards
+  * Listen for shared folder modify event
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 16 Apr 2014 02:13:45 +0200
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 10 Jul 2014 17:23:13 +0200
 
 openmediavault-vdr (1.0.1) stable; urgency=medium
 
