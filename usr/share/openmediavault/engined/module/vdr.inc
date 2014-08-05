@@ -31,6 +31,11 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         return "org.openmediavault.services.vdr";
     }
 
+    private function getXPath()
+    {
+        return "//services/vdr";
+    }
+
     private function getSharedFolderEventMessagePath()
     {
         return "org.openmediavault.system.shares.sharedfolder";
@@ -41,24 +46,17 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         return "vdr";
     }
 
-    public function applyConfig()
-    {
-        $cmd = "omv-mkconf vdr 2>&1";
-
-        if (0 !== $this->exec($cmd, $output)) {
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
-        }
-    }
-
     public function getStatus()
     {
         global $xmlConfig;
 
-        $xpath = "//services/vdr";
-        $object = $xmlConfig->get($xpath);
+        $object = $xmlConfig->get($this->getXPath());
 
         if (is_null($object)) {
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
         }
 
         $initd = new OMVSysVInitScript($this->getName());
@@ -69,6 +67,55 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
             "enabled" => boolval($object["vdr_enable"]),
             "running" => $initd->status() == 0
         );
+    }
+
+    public function applyConfig()
+    {
+        $cmd = "omv-mkconf vdr 2>&1";
+
+        if (0 !== $this->exec($cmd, $output)) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_FAILED,
+                $cmd,
+                implode("\n", $output)
+            );
+        }
+    }
+
+    public function startService()
+    {
+        global $xmlConfig;
+
+        $object = $xmlConfig->get($this->getXPath());
+
+        if (is_null($object)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
+
+        if (!boolval($object["vdr_enable"])) {
+            return;
+        }
+
+        $initd = new OMVSysVInitScript($this->getName(), true);
+        $initd->exec();
+
+        if (!boolval($object["vdradminam_enable"])) {
+            return;
+        }
+
+        $initd = new OMVSysVInitScript("vdradminam_enable", true);
+        $initd->exec();
+    }
+
+    public function stopService()
+    {
+        $initd = new OMVSysVInitScript($this->getName());
+        $initd->exec();
+        $initd = new OMVSysVInitScript("vdradmin-am");
+        $initd->exec();
     }
 
     public function bindListeners(OMVNotifyDispatcher $dispatcher)

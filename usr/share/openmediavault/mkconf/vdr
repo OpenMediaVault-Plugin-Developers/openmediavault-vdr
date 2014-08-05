@@ -21,12 +21,6 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 #################################################
-# Shutdown VDR and VDRAdmin-am for the parameter updates
-#################################################
-/etc/init.d/vdr stop
-/etc/init.d/vdradmin-am stop
-
-#################################################
 # Update /etc/default/vdr
 #################################################
 VDR_CONFIG_FILE="/etc/default/vdr"
@@ -158,16 +152,3 @@ VDRADMIN_AM_SETUP_CONF="/var/lib/vdradmin-am/vdradmind.conf"
 vdradminam_port=$(omv_config_get "//services/vdr/vdradminam_port")
 sed -i '/SERVERPORT/c\SERVERPORT = '$vdradminam_port $VDRADMIN_AM_SETUP_CONF
 sed -i "/ST_STREAMDEV_PORT/c\ST_STREAMDEV_PORT = $vdr_streamdev_port" $VDRADMIN_AM_SETUP_CONF
-
-#################################################
-# Restart VDR and VDRAdmin-am after the parameter updates
-#################################################
-
-if [ "$vdr_enable" = "1" ]; then
-    /etc/init.d/vdr start
-fi
-
-#####################
-if [ "$vdradminam_enable" = "1" ]; then
-    /etc/init.d/vdradmin-am start
-fi
