@@ -571,8 +571,8 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $enable = $config["vdr_enable"];
         $channelConf = "";
 
-        $vdrInit = new OMVSysVInitScript("vdr", false);
-        $vdrAdminInit = new OMVSysVInitScript("vdradmin-am", false);
+        $vdrInit = new OMVSysVInitScript("vdr");
+        $vdrAdminInit = new OMVSysVInitScript("vdradmin-am");
 
         foreach ($params["channels"] as $channel) {
             // Add group delimiter if it exists

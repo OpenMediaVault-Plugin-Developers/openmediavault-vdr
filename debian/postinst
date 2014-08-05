@@ -173,10 +173,10 @@ case "$1" in
         if $VDR_INIT; then
             # Start and stop VDR inorder to generate the original configuration files
             /bin/sed -i '/ENABLED=/c\ENABLED=1' ${VDR_DEFAULT_CONFIG}
-            /etc/init.d/vdr start
+            invoke-rc.d vdr start
             sleep 2
-            /etc/init.d/vdr stop
-            /etc/init.d/vdradmin-am stop
+            invoke-rc.d vdr stop
+            invoke-rc.d vdradmin-am stop
             /bin/sed -i '/ENABLED=/c\ENABLED=0' ${VDR_DEFAULT_CONFIG}
         fi
 
@@ -194,5 +194,7 @@ case "$1" in
         exit 1
     ;;
 esac
+
+#DEBHELPER#
 
 exit 0
