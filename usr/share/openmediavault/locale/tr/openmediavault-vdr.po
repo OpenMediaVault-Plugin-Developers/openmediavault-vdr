@@ -3,166 +3,165 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# songming <by@songming.me>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-vdr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-26 14:20-0500\n"
-"PO-Revision-Date: 2014-11-14 19:51+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/openmediavault-vdr/language/zh_CN/)\n"
+"PO-Revision-Date: 2014-01-22 13:39+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/openmediavault-vdr/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "ATSC Transponder settings"
-msgstr "ATSC Transponder 设置"
+msgstr ""
 
 msgid "All updates and add newly found channels"
-msgstr "全部更新并添加找到的新频道"
+msgstr ""
 
 msgid "All updates, new channels and add new transponders"
-msgstr "全部更新，包括新频道和新transponders"
+msgstr ""
 
 msgid "Allowed hosts"
-msgstr "允许的主机"
+msgstr ""
 
 msgid ""
 "Can't perform a channel scan while VDR is still running, disable VDR andr "
 "try again."
-msgstr "VDR运行时不能进行频道扫描，禁用VDR后再重试。"
+msgstr ""
 
 msgid "Channel Company"
-msgstr "频道公司"
+msgstr ""
 
 msgid "Channel Name"
-msgstr "频道名"
+msgstr ""
 
 msgid "Channel Names and PIDs"
-msgstr "频道名和PID"
+msgstr ""
 
 msgid "Channel update mode"
-msgstr "频道更新模式"
+msgstr ""
 
 msgid "Check for connected devices"
-msgstr "检查联机设备"
+msgstr ""
 
 msgid "Confirmation"
-msgstr "确认"
+msgstr ""
 
 msgid "DVB-C Transponder settings"
-msgstr "DVB-C Transponder 设置"
+msgstr ""
 
 msgid "DVB-S Transponder settings"
-msgstr "DVB-S Transponder 设置"
+msgstr ""
 
 msgid "DVB-T Transponder settings"
-msgstr "DVB-T Transponder 设置"
+msgstr ""
 
 msgid "Done ..."
-msgstr "完成中 ..."
+msgstr ""
 
 msgid "EPG language"
-msgstr "EPG语言"
+msgstr ""
 
 msgid "Enable"
-msgstr "启用"
+msgstr ""
 
 msgid "Enable logging of all VDR actions to syslog."
-msgstr "记录所有VDR日志到系统日志。"
+msgstr ""
 
 msgid "Encrypted"
-msgstr "加密"
+msgstr ""
 
 msgid "Encrypted Channels"
-msgstr "加密频道"
+msgstr ""
 
 msgid "Extended QAM scan"
-msgstr "扩展 QAM 扫描"
+msgstr ""
 
 msgid "Full log"
-msgstr "全部日志"
+msgstr ""
 
 msgid "Go to VDRAdmin-AM"
-msgstr "打开 VDRAdmin-AM"
+msgstr ""
 
 msgid "Go to live"
-msgstr "打开直播"
+msgstr ""
 
 msgid "Go to streamdev-server"
-msgstr "打开 streamdev 服务器"
+msgstr ""
 
 msgid "Info"
-msgstr "信息"
+msgstr ""
 
 msgid "Manage channels"
-msgstr "管理频道"
+msgstr ""
 
 msgid "Maximum filesize in GB"
-msgstr "文件最大多少GB"
+msgstr ""
 
 msgid "No update"
-msgstr "没有更新"
+msgstr ""
 
 msgid "Number of detected devices: "
-msgstr "检测到设备数量："
+msgstr ""
 
 msgid "Only Channel Names"
-msgstr "仅频道名"
+msgstr ""
 
 msgid "Only Channel PIDs"
-msgstr "仅频道PID"
+msgstr ""
 
 msgid "Port number"
-msgstr "端口号"
+msgstr ""
 
 msgid "Recording directory"
-msgstr "录制目录"
+msgstr ""
 
 msgid "Save and scan"
-msgstr "保存和扫描"
+msgstr ""
 
 msgid "Saving ..."
-msgstr "保存中 ..."
+msgstr ""
 
 msgid "Scan"
-msgstr "扫描"
+msgstr ""
 
 msgid "Scan settings"
-msgstr "扫描设置"
+msgstr ""
 
 msgid "Scan status"
-msgstr "扫描状态"
+msgstr ""
 
 msgid "Scanning for channels ..."
-msgstr "扫描频道 ..."
+msgstr ""
 
 msgid "Settings"
-msgstr "设置"
+msgstr ""
 
 msgid "Subtitle language(s)"
-msgstr "字幕语言(可多个)"
+msgstr ""
 
 msgid "The changes have been applied successfully."
-msgstr "这些改变已成功应用。"
+msgstr ""
 
 msgid "Use subtitles"
-msgstr "使用字幕"
+msgstr ""
 
 msgid "VDR"
-msgstr "VDR"
+msgstr ""
 
 msgid "VDR settings"
-msgstr "VDR 设置"
+msgstr ""
 
 msgid "VDR-plugin-live"
-msgstr "VDR 直播插件"
+msgstr ""
 
 msgid "VDR-plugin-streamdev-server"
-msgstr "VDR-streamdev 服务插件"
+msgstr ""
 
 msgid "VDRAdmin-AM settings"
-msgstr "VDRAdmin-AM 设置"
+msgstr ""

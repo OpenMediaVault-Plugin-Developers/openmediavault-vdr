@@ -3,160 +3,160 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Paolo Velati <paolo.velati@gmail.com>, 2014
+# kochin <kochinc@outlook.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-vdr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-26 14:20-0500\n"
-"PO-Revision-Date: 2014-11-14 19:51+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/openmediavault-vdr/language/it/)\n"
+"PO-Revision-Date: 2014-11-26 13:39+0000\n"
+"Last-Translator: kochin <kochinc@outlook.com>\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/openmediavault-vdr/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "ATSC Transponder settings"
-msgstr "Impostazioni ATSC transponder"
+msgstr "ATSC 轉發器設定"
 
 msgid "All updates and add newly found channels"
-msgstr "Tutti gli aggiornamenti e aggiungi i nuovi canali trovati"
+msgstr "全部的更新與新增找到的頻道"
 
 msgid "All updates, new channels and add new transponders"
-msgstr "Tutti gli aggiornamenti, nuovi canali e aggiungi i nuovi transponder"
+msgstr "全部的更新、新頻道和新增轉發器"
 
 msgid "Allowed hosts"
-msgstr "Host permessi"
+msgstr "允許主機"
 
 msgid ""
 "Can't perform a channel scan while VDR is still running, disable VDR andr "
 "try again."
-msgstr "Impossibile effettuare una scansione canali mentre VDR è in esecuzione, disabilita VDR e riprova."
+msgstr "當 VDR 仍在運行中無法執行頻道掃描，停用 VDR 再試一次。"
 
 msgid "Channel Company"
-msgstr "Società Canale"
+msgstr "頻道公司"
 
 msgid "Channel Name"
-msgstr "Nome Canale"
+msgstr "頻道名稱"
 
 msgid "Channel Names and PIDs"
-msgstr "Nomi e PID dei Canali"
+msgstr "頻道名稱及 PIDs"
 
 msgid "Channel update mode"
-msgstr "Modalità aggiornamento Canale"
+msgstr "頻道更新模式"
 
 msgid "Check for connected devices"
-msgstr "Controlla Dispositivi Connessi"
+msgstr "檢查連接的裝置"
 
 msgid "Confirmation"
-msgstr "Conferma"
+msgstr "確認"
 
 msgid "DVB-C Transponder settings"
-msgstr "Impostazioni DVB-C transponder"
+msgstr "DVB-C 轉發器設定"
 
 msgid "DVB-S Transponder settings"
-msgstr "Impostazioni DVB-S transponder"
+msgstr "DVB-S 轉發器設定"
 
 msgid "DVB-T Transponder settings"
-msgstr "Impostazioni DVB-T transponder"
+msgstr "DVB-T 轉發器設定"
 
 msgid "Done ..."
-msgstr "Fatto ..."
+msgstr "完成 ..."
 
 msgid "EPG language"
-msgstr "Lingua EPG"
+msgstr "EPG 與鹽"
 
 msgid "Enable"
-msgstr "Abilita"
+msgstr "啟用"
 
 msgid "Enable logging of all VDR actions to syslog."
-msgstr "Abilita log verso SysLog di tutte le azioni VDR."
+msgstr "啟用記載全部 VDR 動作到 syslog。"
 
 msgid "Encrypted"
-msgstr "Criptato"
+msgstr "加密"
 
 msgid "Encrypted Channels"
-msgstr "Canali Criptati"
+msgstr "加密頻道"
 
 msgid "Extended QAM scan"
-msgstr "Scansione QAM estesa"
+msgstr "擴大 QAM 掃描"
 
 msgid "Full log"
-msgstr "Log Completi"
+msgstr "完整日誌"
 
 msgid "Go to VDRAdmin-AM"
-msgstr "Vai a VDRAdmin-AM"
+msgstr "前往 VDRAdmin-AM"
 
 msgid "Go to live"
-msgstr "Vai a live"
+msgstr "前往 live"
 
 msgid "Go to streamdev-server"
-msgstr "Vai a streamdev-server"
+msgstr "前往 streamdev-server"
 
 msgid "Info"
-msgstr "Info"
+msgstr "資訊"
 
 msgid "Manage channels"
-msgstr "Gestione Canali"
+msgstr "管理頻道"
 
 msgid "Maximum filesize in GB"
-msgstr "Dimensione file massima in GB"
+msgstr "最大檔案大小，以 GB 為單位"
 
 msgid "No update"
-msgstr "Nessun aggiornamento"
+msgstr "無更新"
 
 msgid "Number of detected devices: "
-msgstr "Numero di dispositivi rilevati:"
+msgstr "偵測到裝置的數目："
 
 msgid "Only Channel Names"
-msgstr "Solo nomi dei Canali"
+msgstr "只顯示頻道名稱"
 
 msgid "Only Channel PIDs"
-msgstr "Solo PID dei Canali"
+msgstr "只顯示頻道 PIDs"
 
 msgid "Port number"
-msgstr "Numero porta"
+msgstr "通訊埠號碼"
 
 msgid "Recording directory"
-msgstr "Cartella registrazioni"
+msgstr "錄製目錄"
 
 msgid "Save and scan"
-msgstr "Salva e scansiona"
+msgstr "儲存並掃描"
 
 msgid "Saving ..."
-msgstr "Salvataggio ..."
+msgstr "儲存中 ..."
 
 msgid "Scan"
-msgstr "Scansione"
+msgstr "掃描"
 
 msgid "Scan settings"
-msgstr "Impostazioni scansione"
+msgstr "掃描設定"
 
 msgid "Scan status"
-msgstr "Stato Scansione"
+msgstr "掃描狀態"
 
 msgid "Scanning for channels ..."
-msgstr "Scansione Canali in corso ..."
+msgstr "掃描頻道中 ..."
 
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "設定"
 
 msgid "Subtitle language(s)"
-msgstr "Lingua/e sottotitoli"
+msgstr "字幕語言"
 
 msgid "The changes have been applied successfully."
-msgstr "I cambiamenti sono stati impostati correttamente."
+msgstr "變更已被成功地套用。"
 
 msgid "Use subtitles"
-msgstr "Utilizza Sottotitoli"
+msgstr "使用自目"
 
 msgid "VDR"
 msgstr "VDR"
 
 msgid "VDR settings"
-msgstr "Impostazioni VDR"
+msgstr "VDR 設定"
 
 msgid "VDR-plugin-live"
 msgstr "VDR-plugin-live"
@@ -165,4 +165,4 @@ msgid "VDR-plugin-streamdev-server"
 msgstr "VDR-plugin-streamdev-server"
 
 msgid "VDRAdmin-AM settings"
-msgstr "Impostazioni VDRAdmin-AM"
+msgstr "VDRAdmin-AM 設定"
