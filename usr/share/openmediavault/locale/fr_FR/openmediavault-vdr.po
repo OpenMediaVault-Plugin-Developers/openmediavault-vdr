@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Paolo Velati <paolo.velati@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-vdr\n"
@@ -11,158 +10,158 @@ msgstr ""
 "POT-Creation-Date: 2014-03-26 14:20-0500\n"
 "PO-Revision-Date: 2014-11-14 19:51+0000\n"
 "Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/openmediavault-vdr/language/it/)\n"
+"Language-Team: French (http://www.transifex.com/projects/p/openmediavault-vdr/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "ATSC Transponder settings"
-msgstr "Impostazioni ATSC transponder"
+msgstr ""
 
 msgid "All updates and add newly found channels"
-msgstr "Tutti gli aggiornamenti e aggiungi i nuovi canali trovati"
+msgstr ""
 
 msgid "All updates, new channels and add new transponders"
-msgstr "Tutti gli aggiornamenti, nuovi canali e aggiungi i nuovi transponder"
+msgstr ""
 
 msgid "Allowed hosts"
-msgstr "Host permessi"
+msgstr ""
 
 msgid ""
 "Can't perform a channel scan while VDR is still running, disable VDR andr "
 "try again."
-msgstr "Impossibile effettuare una scansione canali mentre VDR è in esecuzione, disabilita VDR e riprova."
+msgstr ""
 
 msgid "Channel Company"
-msgstr "Società Canale"
+msgstr ""
 
 msgid "Channel Name"
-msgstr "Nome Canale"
+msgstr ""
 
 msgid "Channel Names and PIDs"
-msgstr "Nomi e PID dei Canali"
+msgstr ""
 
 msgid "Channel update mode"
-msgstr "Modalità aggiornamento Canale"
+msgstr ""
 
 msgid "Check for connected devices"
-msgstr "Controlla Dispositivi Connessi"
+msgstr ""
 
 msgid "Confirmation"
-msgstr "Conferma"
+msgstr ""
 
 msgid "DVB-C Transponder settings"
-msgstr "Impostazioni DVB-C transponder"
+msgstr ""
 
 msgid "DVB-S Transponder settings"
-msgstr "Impostazioni DVB-S transponder"
+msgstr ""
 
 msgid "DVB-T Transponder settings"
-msgstr "Impostazioni DVB-T transponder"
+msgstr ""
 
 msgid "Done ..."
-msgstr "Fatto ..."
+msgstr ""
 
 msgid "EPG language"
-msgstr "Lingua EPG"
+msgstr ""
 
 msgid "Enable"
-msgstr "Abilita"
+msgstr ""
 
 msgid "Enable logging of all VDR actions to syslog."
-msgstr "Abilita log verso SysLog di tutte le azioni VDR."
+msgstr ""
 
 msgid "Encrypted"
-msgstr "Criptato"
+msgstr ""
 
 msgid "Encrypted Channels"
-msgstr "Canali Criptati"
+msgstr ""
 
 msgid "Extended QAM scan"
-msgstr "Scansione QAM estesa"
+msgstr ""
 
 msgid "Full log"
-msgstr "Log Completi"
+msgstr ""
 
 msgid "Go to VDRAdmin-AM"
-msgstr "Vai a VDRAdmin-AM"
+msgstr ""
 
 msgid "Go to live"
-msgstr "Vai a live"
+msgstr ""
 
 msgid "Go to streamdev-server"
-msgstr "Vai a streamdev-server"
+msgstr ""
 
 msgid "Info"
-msgstr "Info"
+msgstr ""
 
 msgid "Manage channels"
-msgstr "Gestione Canali"
+msgstr ""
 
 msgid "Maximum filesize in GB"
-msgstr "Dimensione file massima in GB"
+msgstr ""
 
 msgid "No update"
-msgstr "Nessun aggiornamento"
+msgstr ""
 
 msgid "Number of detected devices: "
-msgstr "Numero di dispositivi rilevati:"
+msgstr ""
 
 msgid "Only Channel Names"
-msgstr "Solo nomi dei Canali"
+msgstr ""
 
 msgid "Only Channel PIDs"
-msgstr "Solo PID dei Canali"
+msgstr ""
 
 msgid "Port number"
-msgstr "Numero porta"
+msgstr ""
 
 msgid "Recording directory"
-msgstr "Cartella registrazioni"
+msgstr ""
 
 msgid "Save and scan"
-msgstr "Salva e scansiona"
+msgstr ""
 
 msgid "Saving ..."
-msgstr "Salvataggio ..."
+msgstr ""
 
 msgid "Scan"
-msgstr "Scansione"
+msgstr ""
 
 msgid "Scan settings"
-msgstr "Impostazioni scansione"
+msgstr ""
 
 msgid "Scan status"
-msgstr "Stato Scansione"
+msgstr ""
 
 msgid "Scanning for channels ..."
-msgstr "Scansione Canali in corso ..."
+msgstr ""
 
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr ""
 
 msgid "Subtitle language(s)"
-msgstr "Lingua/e sottotitoli"
+msgstr ""
 
 msgid "The changes have been applied successfully."
-msgstr "I cambiamenti sono stati impostati correttamente."
+msgstr ""
 
 msgid "Use subtitles"
-msgstr "Utilizza Sottotitoli"
+msgstr ""
 
 msgid "VDR"
-msgstr "VDR"
+msgstr ""
 
 msgid "VDR settings"
-msgstr "Impostazioni VDR"
+msgstr ""
 
 msgid "VDR-plugin-live"
-msgstr "VDR-plugin-live"
+msgstr ""
 
 msgid "VDR-plugin-streamdev-server"
-msgstr "VDR-plugin-streamdev-server"
+msgstr ""
 
 msgid "VDRAdmin-AM settings"
-msgstr "Impostazioni VDRAdmin-AM"
+msgstr ""

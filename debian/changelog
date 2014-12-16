@@ -1,3 +1,10 @@
+openmediavault-vdr (1.0.3) stable; urgency=low
+
+  * Add custom debian/control field XB-Plugin-Section
+  * Update locales
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 12 Dec 2014 07:33:35 -0600
+
 openmediavault-vdr (1.0.2) stable; urgency=low
 
   * Conform to OMV 0.6.0.6 trigger standards

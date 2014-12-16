@@ -3,160 +3,160 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Paolo Velati <paolo.velati@gmail.com>, 2014
+# Ettore Atalan <atalanttore@googlemail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-vdr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-26 14:20-0500\n"
-"PO-Revision-Date: 2014-11-14 19:51+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/openmediavault-vdr/language/it/)\n"
+"PO-Revision-Date: 2014-12-11 00:35+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"Language-Team: German (http://www.transifex.com/projects/p/openmediavault-vdr/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "ATSC Transponder settings"
-msgstr "Impostazioni ATSC transponder"
+msgstr "ATSC-Transpondereinstellungen"
 
 msgid "All updates and add newly found channels"
-msgstr "Tutti gli aggiornamenti e aggiungi i nuovi canali trovati"
+msgstr "Alle Aktualisierungen und neu gefundene Sender"
 
 msgid "All updates, new channels and add new transponders"
-msgstr "Tutti gli aggiornamenti, nuovi canali e aggiungi i nuovi transponder"
+msgstr "Alle Aktualisierungen, neue Sender und neue Transponder hinzufügen"
 
 msgid "Allowed hosts"
-msgstr "Host permessi"
+msgstr ""
 
 msgid ""
 "Can't perform a channel scan while VDR is still running, disable VDR andr "
 "try again."
-msgstr "Impossibile effettuare una scansione canali mentre VDR è in esecuzione, disabilita VDR e riprova."
+msgstr ""
 
 msgid "Channel Company"
-msgstr "Società Canale"
+msgstr "Senderunternehmen"
 
 msgid "Channel Name"
-msgstr "Nome Canale"
+msgstr "Sendername"
 
 msgid "Channel Names and PIDs"
-msgstr "Nomi e PID dei Canali"
+msgstr "Sendernamen und PIDs"
 
 msgid "Channel update mode"
-msgstr "Modalità aggiornamento Canale"
+msgstr "Senderaktualisierungsmodus"
 
 msgid "Check for connected devices"
-msgstr "Controlla Dispositivi Connessi"
+msgstr "Auf angeschlossene Geräte prüfen"
 
 msgid "Confirmation"
-msgstr "Conferma"
+msgstr "Bestätigung"
 
 msgid "DVB-C Transponder settings"
-msgstr "Impostazioni DVB-C transponder"
+msgstr "DVB-C-Transpondereinstellungen"
 
 msgid "DVB-S Transponder settings"
-msgstr "Impostazioni DVB-S transponder"
+msgstr "DVB-S-Transpondereinstellungen"
 
 msgid "DVB-T Transponder settings"
-msgstr "Impostazioni DVB-T transponder"
+msgstr "DVB-T-Transpondereinstellungen"
 
 msgid "Done ..."
-msgstr "Fatto ..."
+msgstr "Fertig ..."
 
 msgid "EPG language"
-msgstr "Lingua EPG"
+msgstr "EPG-Sprache"
 
 msgid "Enable"
-msgstr "Abilita"
+msgstr "Aktivieren"
 
 msgid "Enable logging of all VDR actions to syslog."
-msgstr "Abilita log verso SysLog di tutte le azioni VDR."
+msgstr "Protokollierung von allen VDR-Vorgängen im syslog aktivieren."
 
 msgid "Encrypted"
-msgstr "Criptato"
+msgstr "Verschlüsselt"
 
 msgid "Encrypted Channels"
-msgstr "Canali Criptati"
+msgstr "Verschlüsselte Sender"
 
 msgid "Extended QAM scan"
-msgstr "Scansione QAM estesa"
+msgstr ""
 
 msgid "Full log"
-msgstr "Log Completi"
+msgstr "Vollständiges Protokoll"
 
 msgid "Go to VDRAdmin-AM"
-msgstr "Vai a VDRAdmin-AM"
+msgstr "Zu VDRAdmin-AM"
 
 msgid "Go to live"
-msgstr "Vai a live"
+msgstr ""
 
 msgid "Go to streamdev-server"
-msgstr "Vai a streamdev-server"
+msgstr "Zum streamdev-server"
 
 msgid "Info"
 msgstr "Info"
 
 msgid "Manage channels"
-msgstr "Gestione Canali"
+msgstr "Sender verwalten"
 
 msgid "Maximum filesize in GB"
-msgstr "Dimensione file massima in GB"
+msgstr "Maximale Dateigröße in GB"
 
 msgid "No update"
-msgstr "Nessun aggiornamento"
+msgstr "Kein Aktualisierung"
 
 msgid "Number of detected devices: "
-msgstr "Numero di dispositivi rilevati:"
+msgstr "Anzahl an erkannten Geräten: "
 
 msgid "Only Channel Names"
-msgstr "Solo nomi dei Canali"
+msgstr "Nur Sendernamen"
 
 msgid "Only Channel PIDs"
-msgstr "Solo PID dei Canali"
+msgstr "Nur Sender-PIDs"
 
 msgid "Port number"
-msgstr "Numero porta"
+msgstr "Portnummer"
 
 msgid "Recording directory"
-msgstr "Cartella registrazioni"
+msgstr "Aufnahmeverzeichnis"
 
 msgid "Save and scan"
-msgstr "Salva e scansiona"
+msgstr "Speichern und scannen"
 
 msgid "Saving ..."
-msgstr "Salvataggio ..."
+msgstr "Speichern ..."
 
 msgid "Scan"
-msgstr "Scansione"
+msgstr "Suchlauf"
 
 msgid "Scan settings"
-msgstr "Impostazioni scansione"
+msgstr "Suchlaufeinstellungen"
 
 msgid "Scan status"
-msgstr "Stato Scansione"
+msgstr "Suchlaufstatus"
 
 msgid "Scanning for channels ..."
-msgstr "Scansione Canali in corso ..."
+msgstr "Sendersuchlauf ..."
 
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Einstellungen"
 
 msgid "Subtitle language(s)"
-msgstr "Lingua/e sottotitoli"
+msgstr "Untertitelsprache(n)"
 
 msgid "The changes have been applied successfully."
-msgstr "I cambiamenti sono stati impostati correttamente."
+msgstr "Die Änderungen wurden erfolgreich angewendet."
 
 msgid "Use subtitles"
-msgstr "Utilizza Sottotitoli"
+msgstr "Untertitel verwenden"
 
 msgid "VDR"
 msgstr "VDR"
 
 msgid "VDR settings"
-msgstr "Impostazioni VDR"
+msgstr "VDR-Einstellungen"
 
 msgid "VDR-plugin-live"
 msgstr "VDR-plugin-live"
@@ -165,4 +165,4 @@ msgid "VDR-plugin-streamdev-server"
 msgstr "VDR-plugin-streamdev-server"
 
 msgid "VDRAdmin-AM settings"
-msgstr "Impostazioni VDRAdmin-AM"
+msgstr "VDRAdmin-AM-Einstellungen"
