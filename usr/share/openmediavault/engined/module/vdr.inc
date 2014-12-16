@@ -33,9 +33,9 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         return "org.openmediavault.services.vdr";
     }
 
-    private function getXPath()
+    private function getXpath()
     {
-        return "//services/vdr";
+        return "/config/services/vdr";
     }
 
     private function getSharedFolderEventMessagePath()
@@ -52,20 +52,20 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     {
         global $xmlConfig;
 
-        $object = $xmlConfig->get($this->getXPath());
+        $object = $xmlConfig->get($this->getXpath());
 
         if (is_null($object)) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getXPath()
+                $this->getXpath()
             );
         }
 
         $initd = new OMVSysVInitScript($this->getName());
 
         return array(
-            "name"    => $this->getName(),
-            "title"   => gettext("VDR"),
+            "name" => $this->getName(),
+            "title" => gettext("VDR"),
             "enabled" => boolval($object["vdr_enable"]),
             "running" => $initd->status() == 0
         );
@@ -73,7 +73,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
 
     public function applyConfig()
     {
-        $cmd = "omv-mkconf vdr 2>&1";
+        $cmd = "export LANG=C; omv-mkconf vdr 2>&1";
 
         if (0 !== $this->exec($cmd, $output)) {
             throw new OMVException(
@@ -88,12 +88,12 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     {
         global $xmlConfig;
 
-        $object = $xmlConfig->get($this->getXPath());
+        $object = $xmlConfig->get($this->getXpath());
 
         if (is_null($object)) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getXPath()
+                $this->getXpath()
             );
         }
 

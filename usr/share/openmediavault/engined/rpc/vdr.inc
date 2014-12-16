@@ -45,7 +45,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
     private function getXPath()
     {
-        return "//services/vdr";
+        return "/config/services/vdr";
     }
 
     private function getWscanXPath()
@@ -79,13 +79,18 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
 
         // Get the configuration object.
         $object = $xmlConfig->get($this->getXPath());
 
         if (is_null($object)) {
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $this->getXPath());
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
         }
 
         // Modify the result object
@@ -116,7 +121,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
 
         $this->validateMethodParams(
             $params,
@@ -450,7 +457,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
             // Redirect stderr to $bgOutputFilename because of w_scans nature
             $cmd = sprintf(
-                "%s > %s 2>%s",
+                "export LANG=C; %s > %s 2>%s",
                 $this->getWscanCommand(),
                 $this->tempChannelFileLocation,
                 $bgOutputFilename
@@ -460,7 +467,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                 // Append channel.conf data to real file
                 // and remove the temporary
                 $cmd = sprintf(
-                    "cat %1\$s > %2\$s; rm %1\$s",
+                    "export LANG=C; cat %1\$s > %2\$s; export LANG=C; rm %1\$s",
                     $this->tempChannelFileLocation,
                     $this->channelFileLocation
                 );
@@ -492,7 +499,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
 
-        $cmd = "pgrep -n w_scan 2>&1";
+        $cmd = "export LANG=C; pgrep -n w_scan 2>&1";
         $pgrepReturn = $this->exec($cmd, $output);
 
         if ($pgrepReturn === 0) {
@@ -517,7 +524,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      */
     public function getChannels($params, $context)
     {
-        $cmd = sprintf("cat %s", $this->channelFileLocation);
+        $cmd = sprintf("export LANG=C; cat %s", $this->channelFileLocation);
         if (0 !== $this->exec($cmd, $output)) {
             throw new OMVException(
                 OMVErrorMsg::E_EXEC_FAILED,
@@ -641,7 +648,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
     private function getWscanList($type)
     {
-        $cmd = sprintf("w_scan -%s? 2>&1", $type);
+        $cmd = sprintf("export LANG=C; w_scan -%s? 2>&1", $type);
 
         if (0 !== $this->exec($cmd, $output)) {
             throw new OMVException(
