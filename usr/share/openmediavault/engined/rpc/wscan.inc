@@ -19,8 +19,6 @@
 
 require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
-require_once "openmediavault/initscript.inc";
-require_once "openmediavault/notify.inc";
 require_once "openmediavault/object.inc";
 require_once "openmediavault/rpcservice.inc";
 require_once "openmediavault/util.inc";
@@ -92,13 +90,13 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
                     "include_tv_channels": { "type": "boolean" },
                     "include_other_services": { "type": "boolean" },
                     "include_encrypted_channels": { "type": "boolean" },
-                    "country": { "type": "string" }
+                    "country": { "type": "string" },
 
                     "atsc_type": { "type": "integer", "minimum": 1, "maximum": 3, "optional": true },
-                    "dvb_c_modulation": { "type": "integer", "minimum": 0, "maximum": 2, "optional": true },
-                    "dvb_c_symbol_rate": { "type": "integer", "minimum": 0, "maximum": 17, "optional": true},
+                    "dvb_c_modulation": { "type": "integer", "minimum": -1, "maximum": 2, "optional": true },
+                    "dvb_c_symbol_rate": { "type": "integer", "minimum": -1, "maximum": 17, "optional": true},
                     "dvb_c_extended_qam": { "type": "boolean", "optional": true },
-                    "dvb_s_satellite": { "type": "string", "optional": true },
+                    "dvb_s_satellite": { "type": "string", "optional": true }
                 }
             }'
         );
@@ -114,6 +112,7 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
 
         if ($pid > 0) {
             $this->initializeBgProcStatus($bgStatusFilename, $pid);
+
             return $bgStatusFilename;
         }
 
@@ -128,27 +127,31 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
 
             $optional = [];
 
-            if (!empty($params["atsc_type"])) {
+            if (isset($params["atsc_type"])) {
                 $optional["atscType"] = $params["atsc_type"];
             }
 
-            if (!empty($params["dvb_c_modulation"])) {
-                $optional["dvbcModulation"] = $params["dvb_c_modulation"];
+            if (isset($params["dvb_c_modulation"])) {
+                if ($params["dvb_c_modulation"] != -1) {
+                    $optional["dvbcModulation"] = $params["dvb_c_modulation"];
+                }
             }
 
-            if (!empty($params["dvb_c_symbol_rate"])) {
-                $optional["dvbcSymbolRate"] = $params["dvb_c_symbol_rate"];
+            if (isset($params["dvb_c_symbol_rate"])) {
+                if ($params["dvb_c_symbol_rate"] != -1) {
+                    $optional["dvbcSymbolRate"] = $params["dvb_c_symbol_rate"];
+                }
             }
 
-            if (!empty($params["dvb_c_extended_qam"])) {
+            if (isset($params["dvb_c_extended_qam"])) {
                 $optional["dvbcExtendedQam"] = $params["dvb_c_extended_qam"];
             }
 
-            if (!empty($params["dvb_s_satellite"])) {
+            if (isset($params["dvb_s_satellite"])) {
                 $optional["dvbsSatellite"] = $params["dvb_s_satellite"];
             }
 
-            $wscanCmd = $this->getWscanCommand(
+            $wscanCmd = $this->buildWscanCommand(
                 $params["frontend_type"],
                 $params["include_radio_channels"],
                 $params["include_tv_channels"],
@@ -158,6 +161,8 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
                 $optional
             );
 
+            throw new \Exception($wscanCmd);
+
             // Redirect stderr to $bgOutputFilename because of the behaviour
             // of w_scan.
             $cmd = sprintf(
@@ -166,6 +171,8 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
                 $this->tempChannelFileLocation,
                 $bgOutputFilename
             );
+
+            throw new \Exception($cmd);
 
             if (0 === $this->exec($cmd, $output)) {
                 // Append channel.conf data to real file
@@ -230,6 +237,8 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         $country,
         $optional = []
     ) {
+        $a = func_get_args();
+        throw new Exception(var_export($a, true));
         $args = [];
         $cmd = "";
 
@@ -263,15 +272,15 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         }
 
         if ($frontendType === self::WSCAN_CABLE) {
-            if (!empty($optional["dvbcModulation"])) {
+            if (isset($optional["dvbcModulation"])) {
                 $args["Q"] = $optional["dvbcModulation"];
             }
 
-            if (!empty($optional["dvbcSymbolRate"])) {
+            if (isset($optional["dvbcSymbolRate"])) {
                 $args["S"] = $optional["dvbcSymbolRate"];
             }
 
-            if (!emtpy($optional["dvbcExtendedQam"])) {
+            if (issety($optional["dvbcExtendedQam"])) {
                 $args["e"] = 2;
             }
         }
@@ -305,7 +314,7 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
 
         foreach ($output as $row) {
             $row = trim($row);
-            $data = preg_split("/\s+/", $row);
+            $data = preg_split("/\t+/", $row);
 
             $entry = [];
 

@@ -31,7 +31,7 @@ Ext.define("OMV.module.admin.service.vdr.stores.CountryCodeStore", {
         proxy: {
             type: "rpc",
             rpcData: {
-                service: "VDR",
+                service: "Wscan",
                 method: "enumerateCountries"
             },
             appendSortParams: false

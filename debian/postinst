@@ -12,6 +12,8 @@ case "$1" in
         SERVICE_XPATH_NAME="mysql"
         SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
+        initial_install=0
+
         if ! omv_config_exists "${SERVICE_XPATH}"; then
             initial_install=1
         fi
@@ -28,28 +30,6 @@ case "$1" in
             omv_config_add_element "${SERVICE_XPATH}" "vdr_subtitles"
             omv_config_add_element "${SERVICE_XPATH}" "vdr_subtitle_languages"
             omv_config_add_element "${SERVICE_XPATH}" "vdr_channelupdatemode" "1"
-
-            # W-scan
-            omv_config_add_element "${SERVICE_XPATH}" "w_scan"
-
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "transpondertype" "c"
-
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "atsc_country" " "
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "atsc_type" "3"
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "atsc_scan_encrypted" "0"
-
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_country"
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_qam" " "
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_symbolrate" " "
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_extended_qam" "0"
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_scan_encrypted" "0"
-
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_s_country"
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_s_satellite"
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_s_scan_encrypted" "0"
-
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_t_country"
-            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_t_scan_encrypted" "0"
 
             # Streamdev
             omv_config_add_element "${SERVICE_XPATH}" "vdr_streamdev_enable" "0"

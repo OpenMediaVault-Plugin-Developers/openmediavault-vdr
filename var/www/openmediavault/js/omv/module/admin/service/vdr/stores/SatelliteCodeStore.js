@@ -31,7 +31,7 @@ Ext.define("OMV.module.admin.service.vdr.stores.SatelliteCodeStore", {
         proxy: {
             type: "rpc",
             rpcData: {
-                service: "VDR",
+                service: "Wscan",
                 method: "enumerateSatellites"
             },
             appendSortParams: false
