@@ -91,7 +91,7 @@ Ext.define("OMV.module.admin.service.vdr.window.Scan", {
                 displayField: "country",
                 editable: true,
                 forceSelection: true,
-                mode: "local",
+                queryMode: "local",
                 triggerAction: "all",
                 value: "t",
                 valueField: "abbr"
@@ -210,7 +210,8 @@ Ext.define("OMV.module.admin.service.vdr.window.Scan", {
                 editable: true,
                 forceSelection: true,
                 hidden: true,
-                mode: "local",
+                queryMode: "local",
+                selectOnFocus: true,
                 triggerAction: "all",
                 valueField: "abbr"
             }]
@@ -238,6 +239,7 @@ Ext.define("OMV.module.admin.service.vdr.window.Scan", {
             return;
         }
 
+        this.close();
         this.doScan();
     },
 

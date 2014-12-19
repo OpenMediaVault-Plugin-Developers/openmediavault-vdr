@@ -35,6 +35,9 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         WSCAN_SATELLITE = "s",
         WSCAN_TERRESTIAL = "t";
 
+    private $channelFileLocation = "/var/lib/vdr/channels.conf";
+    private $tempChannelFileLocation = "/tmp/channels.conf";
+
     public function getName()
     {
         return "Wscan";
@@ -45,7 +48,7 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         $this->registerMethod("enumerateCountries");
         $this->registerMethod("enumerateSatellites");
         $this->registerMethod("scan");
-        $this->registerMethod("scanInProgress");
+        $this->registerMethod("scanning");
     }
 
     public function enumerateCountries($params, $context)
@@ -102,7 +105,7 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         );
 
         // Check if scan is active. If active or checking failed return.
-        if ($this->scanInProgress(array(), $context)) {
+        if ($this->callMethod("scanning", array(), $context)) {
             return;
         }
 
@@ -161,8 +164,6 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
                 $optional
             );
 
-            throw new \Exception($wscanCmd);
-
             // Redirect stderr to $bgOutputFilename because of the behaviour
             // of w_scan.
             $cmd = sprintf(
@@ -171,8 +172,6 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
                 $this->tempChannelFileLocation,
                 $bgOutputFilename
             );
-
-            throw new \Exception($cmd);
 
             if (0 === $this->exec($cmd, $output)) {
                 // Append channel.conf data to real file
@@ -201,11 +200,11 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
     }
 
     /**
-     * Check if w_scan in running.
+     * Check if a scan is in progress.
      *
      * @return boolean
      */
-    public function scanInProgress($params, $context)
+    public function scanning($params, $context)
     {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, array(
@@ -237,8 +236,6 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         $country,
         $optional = []
     ) {
-        $a = func_get_args();
-        throw new Exception(var_export($a, true));
         $args = [];
         $cmd = "";
 
@@ -248,21 +245,10 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         $args["f"] = $frontendType;
 
         // Set which services to include.
-        if ($includeRadioChannels) {
-            $args["R"] = $includeRadioChannels ? 1 : 0;
-        }
-
-        if ($includeTvChannels) {
-            $args["T"] = $includeTvChannels ? 1 : 0;
-        }
-
-        if ($includeOtherServices) {
-            $args["O"] = $includeOtherServices ? 1 : 0;
-        }
-
-        if ($includeEncryptedChannels) {
-            $args["E"] = $includeEncryptedChannels ? 1 : 0;
-        }
+        $args["R"] = $includeRadioChannels ? 1 : 0;
+        $args["T"] = $includeTvChannels ? 1 : 0;
+        $args["O"] = $includeOtherServices ? 1 : 0;
+        $args["E"] = $includeEncryptedChannels ? 1 : 0;
 
         $args["c"] = $country;
 
@@ -280,8 +266,10 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
                 $args["S"] = $optional["dvbcSymbolRate"];
             }
 
-            if (issety($optional["dvbcExtendedQam"])) {
-                $args["e"] = 2;
+            if (isset($optional["dvbcExtendedQam"])) {
+                if ($optional["dvbcExtendedQam"]) {
+                    $args["e"] = 2;
+                }
             }
         }
 
@@ -292,7 +280,7 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         $parameters = [];
 
         foreach ($args as $argumentKey => $argumentValue) {
-            $parameters[] = "$argumentKey $argumentValue";
+            $parameters[] = "-$argumentKey $argumentValue";
         }
 
         return sprintf("w_scan %s", implode(" ", $parameters));
