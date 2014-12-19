@@ -33,14 +33,15 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         return "org.openmediavault.services.vdr";
     }
 
-    private function getXpath()
-    {
-        return "/config/services/vdr";
-    }
 
     private function getSharedFolderEventMessagePath()
     {
         return "org.openmediavault.system.shares.sharedfolder";
+    }
+
+    private function getXpath()
+    {
+        return "/config/services/vdr";
     }
 
     public function getName()
@@ -73,7 +74,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
 
     public function applyConfig()
     {
-        $cmd = "export LANG=C; omv-mkconf vdr 2>&1";
+        $cmd = sprintf("export LANG=C; omv-mkconf %s 2>&1", $this->getName());
 
         if (0 !== $this->exec($cmd, $output)) {
             throw new OMVException(
@@ -116,6 +117,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     {
         $initd = new OMVSysVInitScript($this->getName());
         $initd->exec();
+        
         $initd = new OMVSysVInitScript($this->vdrAdminAmInitScript);
         $initd->exec();
     }
