@@ -22,207 +22,205 @@
 // require("js/omv/module/admin/service/vdr/stores/SatelliteCodeStore.js")
 
 Ext.define("OMV.module.admin.service.vdr.window.Scan", {
-    extend : "OMV.workspace.window.Form",
+    extend: "OMV.workspace.window.Form",
 
-    requires : [
+    requires: [
         "OMV.form.plugin.LinkedFields",
         "OMV.module.admin.service.vdr.stores.CountryCodeStore",
         "OMV.module.admin.service.vdr.stores.SatelliteCodeStore"
     ],
 
-    rpcService   : "VDR",
-    rpcGetMethod : "getScanSettings",
-    rpcSetMethod : "setScanSettings",
+    rpcService: "VDR",
+    rpcGetMethod: "getScanSettings",
+    rpcSetMethod: "setScanSettings",
 
-    hideResetButton : true,
-    title           : _("Scan"),
+    hideResetButton: true,
+    title: _("Scan"),
 
-    plugins : [{
-        ptype        : "linkedfields",
-        correlations : [{
-            conditions : [{
-                name  : "transpondertype",
-                value : "a"
+    plugins: [{
+        ptype: "linkedfields",
+        correlations: [{
+            conditions: [{
+                name: "transpondertype",
+                value: "a"
             }],
-            name       : [
+            name: [
                 "atsc_fieldset"
             ],
-            properties : "show"
-        },{
-            conditions : [{
-                name  : "transpondertype",
-                value : "t"
+            properties: "show"
+        }, {
+            conditions: [{
+                name: "transpondertype",
+                value: "t"
             }],
-            name       : [
+            name: [
                 "terrestial_fieldset"
             ],
-            properties : "show"
-        },{
-            conditions : [{
-                name  : "transpondertype",
-                value : "c"
+            properties: "show"
+        }, {
+            conditions: [{
+                name: "transpondertype",
+                value: "c"
             }],
-            name       : ["cable_fieldset"],
-            properties : "show"
-        },{
-            conditions : [{
-                name  : "transpondertype",
-                value : "s"
+            name: ["cable_fieldset"],
+            properties: "show"
+        }, {
+            conditions: [{
+                name: "transpondertype",
+                value: "s"
             }],
-            name       : [
+            name: [
                 "satellite_fieldset"
             ],
-            properties : "show"
+            properties: "show"
         }]
     }],
 
-    getFormItems : function() {
-        var me = this;
-
+    getFormItems: function() {
         return [{
-            xtype         : "fieldset",
-            title         : _("Scan settings"),
-            fieldDefaults : {
-                labelSeparator : ""
+            xtype: "fieldset",
+            title: _("Scan settings"),
+            fieldDefaults: {
+                labelSeparator: ""
             },
-            items : [{
-                xtype      : "combo",
-                name       : "transpondertype",
-                fieldLabel : "Transponder Type",
-                allowBlank : false,
-                editable   : false,
-                store : [
+            items: [{
+                xtype: "combo",
+                name: "transpondertype",
+                fieldLabel: "Transponder Type",
+                allowBlank: false,
+                editable: false,
+                store: [
                     ["a", "ATSC"],
                     ["t", "DVB-T (Terrestial)"],
                     ["c", "DVB-C (Cable)"],
                     ["s", "DVB-S (Satellite)"]
                 ],
-                mode          : "local",
-                triggerAction : "all",
-                selectOnFocus : true
-            },{
-                xtype         : "fieldset",
-                id            : "atsc_fieldset",
-                title         : _("ATSC Transponder settings"),
-                fieldDefaults : {
-                    labelSeparator : ""
+                mode: "local",
+                triggerAction: "all",
+                selectOnFocus: true
+            }, {
+                xtype: "fieldset",
+                id: "atsc_fieldset",
+                title: _("ATSC Transponder settings"),
+                fieldDefaults: {
+                    labelSeparator: ""
                 },
-                hidden : true,
-                items  : [{
-                    xtype      : "checkbox",
-                    name       : "atsc_scan_encrypted",
-                    fieldLabel : _("Encrypted Channels"),
-                    boxLabel   : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
-                    checked    : false
-                },{
-                    xtype          : "combo",
-                    name           : "atsc_country",
-                    fieldLabel     : "Country",
-                    allowBlank     : true,
-                    editable       : true,
-                    forceSelection : true,
-                    store          : Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
-                    displayField   : "country",
-                    valueField     : "abbr",
-                    queryMode      : "local",
-                    mode           : "local",
-                    triggerAction  : "all",
-                    selectOnFocus  : true
-                },{
-                    xtype      : "combo",
-                    name       : "atsc_type",
-                    fieldLabel : "Transponder Type",
-                    allowBlank : false,
-                    editable   : false,
-                    store      : [
+                hidden: true,
+                items: [{
+                    xtype: "checkbox",
+                    name: "atsc_scan_encrypted",
+                    fieldLabel: _("Encrypted Channels"),
+                    boxLabel: "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
+                    checked: false
+                }, {
+                    xtype: "combo",
+                    name: "atsc_country",
+                    fieldLabel: "Country",
+                    allowBlank: true,
+                    editable: true,
+                    forceSelection: true,
+                    store: Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
+                    displayField: "country",
+                    valueField: "abbr",
+                    queryMode: "local",
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true
+                }, {
+                    xtype: "combo",
+                    name: "atsc_type",
+                    fieldLabel: "Transponder Type",
+                    allowBlank: false,
+                    editable: false,
+                    store: [
                         ["1", "Terrestial"],
                         ["2", "Cable"],
                         ["3", "Terrestial and Cable"]
                     ],
-                    mode          : "local",
-                    triggerAction : "all",
-                    selectOnFocus : true,
-                    value         : "1"
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true,
+                    value: "1"
                 }]
-            },{
-                xtype         : "fieldset",
-                id            : "terrestial_fieldset",
-                title         : _("DVB-T Transponder settings"),
-                fieldDefaults : {
-                    labelSeparator : ""
+            }, {
+                xtype: "fieldset",
+                id: "terrestial_fieldset",
+                title: _("DVB-T Transponder settings"),
+                fieldDefaults: {
+                    labelSeparator: ""
                 },
-                hidden : true,
-                items  : [{
-                    xtype      : "checkbox",
-                    name       : "dvb_t_scan_encrypted",
-                    fieldLabel : _("Encrypted Channels"),
-                    boxLabel   : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
-                    checked    : false
-                },{
-                    xtype          : "combo",
-                    name           : "dvb_t_country",
-                    fieldLabel     : "Country",
-                    allowBlank     : true,
-                    editable       : true,
-                    forceSelection : true,
-                    store          : Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
-                    displayField   : "country",
-                    valueField     : "abbr",
-                    queryMode      : "local",
-                    mode           : "local",
-                    triggerAction  : "all",
-                    selectOnFocus  : true
+                hidden: true,
+                items: [{
+                    xtype: "checkbox",
+                    name: "dvb_t_scan_encrypted",
+                    fieldLabel: _("Encrypted Channels"),
+                    boxLabel: "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
+                    checked: false
+                }, {
+                    xtype: "combo",
+                    name: "dvb_t_country",
+                    fieldLabel: "Country",
+                    allowBlank: true,
+                    editable: true,
+                    forceSelection: true,
+                    store: Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
+                    displayField: "country",
+                    valueField: "abbr",
+                    queryMode: "local",
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true
                 }]
-            },{
-                xtype         : "fieldset",
-                id            : "cable_fieldset",
-                title         : _("DVB-C Transponder settings"),
-                fieldDefaults : {
-                    labelSeparator : ""
+            }, {
+                xtype: "fieldset",
+                id: "cable_fieldset",
+                title: _("DVB-C Transponder settings"),
+                fieldDefaults: {
+                    labelSeparator: ""
                 },
-                hidden : true,
-                items  : [{
-                    xtype      : "checkbox",
-                    name       : "dvb_c_scan_encrypted",
-                    fieldLabel : _("Encrypted Channels"),
-                    boxLabel   : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
-                    checked    : false
-                },{
-                    xtype          : "combo",
-                    name           : "dvb_c_country",
-                    fieldLabel     : "Country",
-                    allowBlank     : true,
-                    editable       : true,
-                    forceSelection : true,
-                    store          : Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
-                    displayField   : "country",
-                    valueField     : "abbr",
-                    queryMode      : "local",
-                    mode           : "local",
-                    triggerAction  : "all",
-                    selectOnFocus  : true
-                },{
-                    xtype         : "combo",
-                    name          : "dvb_c_qam",
-                    fieldLabel    : "Modulation",
-                    allowBlank    : true,
-                    editable      : false,
-                    store         : [
+                hidden: true,
+                items: [{
+                    xtype: "checkbox",
+                    name: "dvb_c_scan_encrypted",
+                    fieldLabel: _("Encrypted Channels"),
+                    boxLabel: "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
+                    checked: false
+                }, {
+                    xtype: "combo",
+                    name: "dvb_c_country",
+                    fieldLabel: "Country",
+                    allowBlank: true,
+                    editable: true,
+                    forceSelection: true,
+                    store: Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
+                    displayField: "country",
+                    valueField: "abbr",
+                    queryMode: "local",
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true
+                }, {
+                    xtype: "combo",
+                    name: "dvb_c_qam",
+                    fieldLabel: "Modulation",
+                    allowBlank: true,
+                    editable: false,
+                    store: [
                         [" ", "Not Used"],
                         ["0", "QAM64"],
                         ["1", "QAM256"],
                         ["2", "QAM128"]
                     ],
-                    mode          : "local",
-                    triggerAction : "all",
-                    selectOnFocus : true
-                },{
-                    xtype      : "combo",
-                    name       : "dvb_c_symbolrate",
-                    fieldLabel : "Symbol rate",
-                    allowBlank : true,
-                    editable   : false,
-                    store      : [
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true
+                }, {
+                    xtype: "combo",
+                    name: "dvb_c_symbolrate",
+                    fieldLabel: "Symbol rate",
+                    allowBlank: true,
+                    editable: false,
+                    store: [
                         [" ", "Not Used"],
                         ["0", "6900"],
                         ["1", "6875"],
@@ -240,115 +238,110 @@ Ext.define("OMV.module.admin.service.vdr.window.Scan", {
                         ["13", "5156"],
                         ["14", "4583"]
                     ],
-                    mode          : "local",
-                    triggerAction : "all",
-                    selectOnFocus : true
-                },{
-                    xtype      : "checkbox",
-                    name       : "dvb_c_extended_qam",
-                    fieldLabel : _("Extended QAM scan"),
-                    boxLabel   : "(Enable QAM128) recommended for Nethterlands and Finland",
-                    checked    : false
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true
+                }, {
+                    xtype: "checkbox",
+                    name: "dvb_c_extended_qam",
+                    fieldLabel: _("Extended QAM scan"),
+                    boxLabel: "(Enable QAM128) recommended for Nethterlands and Finland",
+                    checked: false
                 }]
-            },{
-                xtype         : "fieldset",
-                name          : "satellite_fieldset",
-                title         : _("DVB-S Transponder settings"),
-                fieldDefaults : {
-                    labelSeparator : ""
+            }, {
+                xtype: "fieldset",
+                name: "satellite_fieldset",
+                title: _("DVB-S Transponder settings"),
+                fieldDefaults: {
+                    labelSeparator: ""
                 },
-                hidden : true,
-                items  : [{
-                    xtype      : "checkbox",
-                    name       : "dvb_s_scan_encrypted",
-                    fieldLabel : _("Encrypted Channels"),
-                    boxLabel   : "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
-                    checked    : false
-                },{
-                    xtype          : "combo",
-                    name           : "dvb_s_country",
-                    fieldLabel     : "Country",
-                    allowBlank     : true,
-                    editable       : true,
-                    forceSelection : true,
-                    store          : Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
-                    displayField   : "country",
-                    valueField     : "abbr",
-                    queryMode      : "local",
-                    mode           : "local",
-                    triggerAction  : "all",
-                    selectOnFocus  : true
-                },{
-                    xtype          : "combo",
-                    name           : "dvb_s_satellite",
-                    fieldLabel     : "Satellite",
-                    allowBlank     : true,
-                    editable       : true,
-                    forceSelection : true,
-                    store          : Ext.create("OMV.module.admin.service.vdr.stores.SatelliteCodeStore"),
-                    displayField   : "satellite",
-                    valueField     : "abbr",
-                    queryMode      : "local",
-                    mode           : "local",
-                    triggerAction  : "all",
-                    selectOnFocus  : true
+                hidden: true,
+                items: [{
+                    xtype: "checkbox",
+                    name: "dvb_s_scan_encrypted",
+                    fieldLabel: _("Encrypted Channels"),
+                    boxLabel: "Check to scan for encrypted channels. If Syslog starts to fill up disable this.",
+                    checked: false
+                }, {
+                    xtype: "combo",
+                    name: "dvb_s_country",
+                    fieldLabel: "Country",
+                    allowBlank: true,
+                    editable: true,
+                    forceSelection: true,
+                    store: Ext.create("OMV.module.admin.service.vdr.stores.CountryCodeStore"),
+                    displayField: "country",
+                    valueField: "abbr",
+                    queryMode: "local",
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true
+                }, {
+                    xtype: "combo",
+                    name: "dvb_s_satellite",
+                    fieldLabel: "Satellite",
+                    allowBlank: true,
+                    editable: true,
+                    forceSelection: true,
+                    store: Ext.create("OMV.module.admin.service.vdr.stores.SatelliteCodeStore"),
+                    displayField: "satellite",
+                    valueField: "abbr",
+                    queryMode: "local",
+                    mode: "local",
+                    triggerAction: "all",
+                    selectOnFocus: true
                 }]
             }]
         }];
     },
 
-    getButtonItems : function(c) {
-        var me = this;
-        var items = me.callParent(arguments);
+    getButtonItems: function(c) {
+        var items = this.callParent(arguments);
 
         Ext.Array.insert(items, 0, [{
-            id      : me.getId() + "-scan",
-            xtype   : "button",
-            text    : _("Save and scan"),
-            handler : Ext.Function.bind(me.onScanButton, me, [ me ]),
-            scope   : me
+            id: this.getId() + "-scan",
+            xtype: "button",
+            text: _("Save and scan"),
+            handler: Ext.Function.bind(me.onScanButton, this),
+            scope: this
         }]);
 
         return items;
     },
 
-    onScanButton : function() {
-        var me = this;
-
-        if (!me.isValid()) {
-            me.markInvalid();
+    onScanButton: function() {
+        if (!this.isValid()) {
+            this.markInvalid();
         } else {
 
-            me.on("submit", me.doScan, me, {
-                single : true
+            this.on("submit", this.doScan, this, {
+                single: true
             });
 
-            me.on("exception", function() {
-                me.un("submit", me.doScan);
-            });
+            this.on("exception", function() {
+                this.un("submit", this.doScan);
+            }, this);
 
-            me.doSubmit();
+            this.doSubmit();
         }
     },
 
-    doScan : function() {
-        var me = this;
-
+    doScan: function() {
         var wnd = Ext.create("OMV.window.Execute", {
-            title           : _("Scanning for channels ..."),
-            rpcService      : "VDR",
-            rpcMethod       : "executeChannelScan",
-            rpcParams       : {},
-            rpcIgnoreErrors : false,
-            hideStartButton : true,
-            hideStopButton  : true,
-            listeners       : {
-                scope  : me,
-                finish : function(wnd, response) {
+            title: _("Scanning for channels ..."),
+            rpcService: "VDR",
+            rpcMethod: "executeChannelScan",
+            rpcParams: {},
+            rpcIgnoreErrors: false,
+            hideStartButton: true,
+            hideStopButton: true,
+            listeners: {
+                scope: this,
+                finish: function(wnd, response) {
                     wnd.appendValue(_("Done ..."));
                     wnd.setButtonDisabled("close", false);
                 },
-                exception : function(wnd, error) {
+                exception: function(wnd, error) {
                     OMV.MessageBox.error(null, error);
                     wnd.setButtonDisabled("close", false);
                 }

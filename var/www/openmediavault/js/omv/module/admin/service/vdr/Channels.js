@@ -22,13 +22,9 @@
 // require("js/omv/data/Model.js")
 // require("js/omv/module/admin/service/vdr/window/Scan.js")
 
-/**
- * @class OMV.module.admin.service.vdr.Settings
- * @derived OMV.workspace.grid.Panel
- */
 Ext.define("OMV.module.admin.service.vdr.Channels", {
-    extend   : "OMV.workspace.grid.Panel",
-    requires : [
+    extend: "OMV.workspace.grid.Panel",
+    requires: [
         "OMV.Rpc",
         "OMV.data.Store",
         "OMV.data.Model",
@@ -37,79 +33,79 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         "Ext.grid.column.RowNumberer",
         "OMV.module.admin.service.vdr.window.Scan"
     ],
-    uses : [
+    uses: [
         "OMV.window.MessageBox"
     ],
 
-    viewConfig : {
-        plugins : {
-            ptype : "gridviewdragdrop"
+    viewConfig: {
+        plugins: {
+            ptype: "gridviewdragdrop"
         },
-        listeners : {
-            drop : function (node, data) {
+        listeners: {
+            drop: function(node, data) {
                 data.view.refresh();
             }
         }
     },
 
-    hideAddButton       : true,
-    hideEditButton      : true,
-    hideUpButton        : false,
-    hideDownButton      : false,
-    hideApplyButton     : false,
-    hideRefreshButton   : false,
-    mode                : "local",
+    hideAddButton: true,
+    hideEditButton: true,
+    hideUpButton: false,
+    hideDownButton: false,
+    hideApplyButton: false,
+    hideRefreshButton: false,
+    mode: "local",
 
-    columns         : [{
+    columns: [{
         xtype: "rownumberer"
-    },{
-        text      : _("Channel Name"),
-        sortable  : false,
-        dataIndex : "channelName"
-    },{
-        text      : _("Channel Company"),
-        sortable  : false,
-        dataIndex : "channelCompany"
-    },{
-        text      : _("Encrypted"),
-        sortable  : false,
-        dataIndex : "channelEncrypted",
-        renderer  : function(value) {
+    }, {
+        text: _("Channel Name"),
+        sortable: false,
+        dataIndex: "channelName"
+    }, {
+        text: _("Channel Company"),
+        sortable: false,
+        dataIndex: "channelCompany"
+    }, {
+        text: _("Encrypted"),
+        sortable: false,
+        dataIndex: "channelEncrypted",
+        renderer: function(value) {
             return value ? "Yes" : "No";
         }
     }],
 
-    initComponent : function () {
+    initComponent: function() {
         var me = this;
 
         Ext.apply(me, {
-            store : Ext.create("OMV.data.Store", {
-                autoLoad : true,
-                model    : OMV.data.Model.createImplicit({
-                    idProperty : "channel",
-                    fields     : [{
-                        name : "channel",
-                        type : "string"
-                    },{
-                        name : "channelGroup",
-                        type : "string"
-                    },{
-                        name : "channelName",
-                        type : "string"
-                    },{
-                        name : "channelCompany",
-                        type : "string"
-                    },{
-                        name : "channelEncrypted",
-                        type : "boolean"
+            store: Ext.create("OMV.data.Store", {
+                autoLoad: true,
+                model: OMV.data.Model.createImplicit({
+                    idProperty: "channel",
+                    fields: [{
+                        name: "channel",
+                        type: "string"
+                    }, {
+                        name: "channelGroup",
+                        type: "string"
+                    }, {
+                        name: "channelName",
+                        type: "string"
+                    }, {
+                        name: "channelCompany",
+                        type: "string"
+                    }, {
+                        name: "channelEncrypted",
+                        type: "boolean"
                     }]
 
                 }),
-                proxy    : {
-                    type    : "rpc",
-                    rpcData : {
-                        service : "VDR",
-                        method  : "getChannels"
+                proxy: {
+                    type: "rpc",
+                    rpcData: {
+                        service: "VDR",
+                        method: "getChannels"
                     }
                 }
             })
@@ -118,34 +114,34 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         me.callParent(arguments);
     },
 
-    getTopToolbarItems : function() {
+    getTopToolbarItems: function() {
         var me = this;
         var items = me.callParent(arguments);
 
         Ext.Array.push(items, [{
             xtype: "tbseparator"
-        },{
-            id      : me.getId() + "-scan",
-            xtype   : "button",
-            text    : _("Scan"),
-            icon    : "images/search.png",
-            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler : Ext.Function.bind(me.onScanButton, me, [ me ]),
-            scope   : me
-        },{
-            id      : me.getId() + "-scan-status",
-            xtype   : "button",
-            text    : _("Scan status"),
-            icon    : "images/info.png",
-            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler : Ext.Function.bind(me.onScanStatusButton, me, [ me ]),
-            scope   : me
+        }, {
+            id: me.getId() + "-scan",
+            xtype: "button",
+            text: _("Scan"),
+            icon: "images/search.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler: Ext.Function.bind(me.onScanButton, me, [me]),
+            scope: me
+        }, {
+            id: me.getId() + "-scan-status",
+            xtype: "button",
+            text: _("Scan status"),
+            icon: "images/info.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler: Ext.Function.bind(me.onScanStatusButton, me, [me]),
+            scope: me
         }]);
 
         return items;
     },
 
-    afterMoveRows : function(records, index) {
+    afterMoveRows: function(records, index) {
         var me = this;
         var sm = me.getSelectionModel();
 
@@ -153,21 +149,21 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         me.view.refresh();
     },
 
-    doReload : function() {
+    doReload: function() {
         var me = this;
 
         me.store.reload();
     },
 
-    onApplyButton : function() {
+    onApplyButton: function() {
         var me = this;
         var msg = "Do you really want to apply the configuration? Note: VDR will be restarted to apply the configuration. Active recordings will be temporarily paused.";
 
         OMV.MessageBox.show({
-            title   : _("Confirmation"),
-            msg     : msg,
-            buttons : Ext.Msg.YESNO,
-            fn      : function(answer) {
+            title: _("Confirmation"),
+            msg: msg,
+            buttons: Ext.Msg.YESNO,
+            fn: function(answer) {
                 if (answer == "no") {
                     me.doReload();
                     return;
@@ -175,12 +171,12 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
                 me.startApply();
             },
-            scope : me,
-            icon  : Ext.Msg.QUESTION
+            scope: me,
+            icon: Ext.Msg.QUESTION
         });
     },
 
-    startApply : function() {
+    startApply: function() {
         var me = this;
         var rpcData = [];
         var records = me.store.getRange();
@@ -190,14 +186,14 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         }
 
         var rpcOptions = {
-            scope       : me,
-            callback    : me.onApply,
-            relayErrors : true,
-            rpcData     : {
-                service : "VDR",
-                method  : "setChannels",
-                params  : {
-                    channels : rpcData
+            scope: me,
+            callback: me.onApply,
+            relayErrors: true,
+            rpcData: {
+                service: "VDR",
+                method: "setChannels",
+                params: {
+                    channels: rpcData
                 }
             }
         };
@@ -223,20 +219,20 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         }
     },
 
-    onScanButton : function() {
+    onScanButton: function() {
         var me = this;
 
         OMV.Rpc.request({
-            scope    : me,
-            callback : me.onScan,
-            rpcData  : {
-                service : "VDR",
-                method  : "vdrIsRunning"
+            scope: me,
+            callback: me.onScan,
+            rpcData: {
+                service: "VDR",
+                method: "vdrIsRunning"
             }
         });
     },
 
-    onScan : function(id, success, response) {
+    onScan: function(id, success, response) {
         if (!response && success) {
             Ext.create("OMV.module.admin.service.vdr.window.Scan").show();
         } else {
@@ -244,27 +240,26 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         }
     },
 
-    onScanStatusButton : function() {
+    onScanStatusButton: function() {
         var me = this;
 
         OMV.Rpc.request({
-            scope    : me,
-            callback : me.onScanStatus,
-            rpcData  : {
-                service : "VDR",
-                method  : "scanInProgress"
+            scope: me,
+            callback: me.onScanStatus,
+            rpcData: {
+                service: "VDR",
+                method: "scanInProgress"
             }
         });
     },
 
-    onScanStatus : function(id, success, response) {
+    onScanStatus: function(id, success, response) {
         var me = this;
 
         if (!success) {
             OMV.MessageBox.error(null, response);
         } else {
-            var msg = response ? "Channel scan is still running."
-                : "Channel Scan is not active.";
+            var msg = response ? "Channel scan is still running." : "Channel Scan is not active.";
 
             OMV.MessageBox.info(null, msg);
         }
@@ -273,9 +268,9 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
 
 OMV.WorkspaceManager.registerPanel({
-    id        : "channels",
-    path      : "/service/vdr",
-    text      : _("Manage channels"),
-    position  : 20,
-    className : "OMV.module.admin.service.vdr.Channels"
+    id: "channels",
+    path: "/service/vdr",
+    text: _("Manage channels"),
+    position: 20,
+    className: "OMV.module.admin.service.vdr.Channels"
 });
