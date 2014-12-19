@@ -9,160 +9,63 @@ VDR_DEFAULT_CONFIG="/etc/default/vdr"
 
 case "$1" in
     configure)
-        if ! omv_config_exists "/config/services/vdr"; then
-            echo "Initialize VDR plugin configuration"
+        SERVICE_XPATH_NAME="mysql"
+        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
-            # VDR
-            VDR_INIT=true
-            VDR_ENABLE="0"
-            VDR_LOGGING_ON="0"
-            VDR_RECORDINGDIR=""
-            VDR_MAXFILESIZE_GB="5"
-            VDR_EPGLANGUAGE=""
-            VDR_SUBTITLES=""
-            VDR_SUBTITLE_LANGUAGES=""
-            VDR_CHANNELUPDATEMODE="1"
-
-            # W-scan
-            WSCAN_TRANSPONDERTYPE="c"
-            WSCAN_ATSC_COUNTRY=" "
-            WSCAN_ATSC_TYPE="3"
-            WSCAN_ATSC_SCAN_ENCRYPTED="0"
-            WSCAN_DVB_T_COUNTRY=" "
-            WSCAN_DVB_T_SCAN_ENCRYPTED="0"
-            WSCAN_DVB_C_COUNTRY=" "
-            WSCAN_DVB_C_QAM=" "
-            WSCAN_DVB_C_SYMBOLRATE=" "
-            WSCAN_DVB_C_EXTENDED_QAM="0"
-            WSCAN_DVB_C_SCAN_ENCRYPTED="0"
-            WSCAN_DVB_S_COUNTRY=" "
-            WSCAN_DVB_S_SATELLITE=" "
-            WSCAN_DVB_S_SCAN_ENCRYPTED="0"
-
-            # Streamdev
-            VDR_STREAMDEV_ENABLE="0"
-            VDR_STREAMDEV_PORT="3000"
-            VDR_STREAMDEV_HOSTS="192.168.1.0/24"
-
-            # Live
-            VDR_LIVE_ENABLE="0"
-            VDR_LIVE_PORT="8008"
-
-            # Vdradmin-AM
-            VDRADMINAM_ENABLE="0"
-            VDRADMINAM_PORT="8001"
-        else
-            echo "Importing previous configuration"
-
-            VDR_INIT=false
-
-            # VDR
-            VDR_ENABLE="$(omv_config_get "/config/services/vdr/vdr_enable")"
-            VDR_LOGGING_ON="$(omv_config_get "/config/services/vdr/vdr_logging_on")"
-            VDR_RECORDINGDIR="$(omv_config_get "/config/services/vdr/vdr_recordingdir")"
-            VDR_MAXFILESIZE_GB="$(omv_config_get "/config/services/vdr/vdr_maxfilesize_gb")"
-            VDR_EPGLANGUAGE="$(omv_config_get "/config/services/vdr/vdr_epglanguage")"
-            VDR_SUBTITLES="$(omv_config_get "/config/services/vdr/vdr_subtitles")"
-            VDR_SUBTITLE_LANGUAGES="$(omv_config_get "/config/services/vdr/vdr_subtitle_languages")"
-            VDR_CHANNELUPDATEMODE="$(omv_config_get "/config/services/vdr/vdr_channelupdatemode")"
-
-            # W-scan
-            WSCAN_TRANSPONDERTYPE="$(omv_config_get "/config/services/vdr/w_scan/transpondertype")"
-            WSCAN_ATSC_COUNTRY="$(omv_config_get "/config/services/vdr/w_scan/atsc_country")"
-            WSCAN_ATSC_TYPE="$(omv_config_get "/config/services/vdr/w_scan/atsc_type")"
-            WSCAN_ATSC_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/w_scan/atsc_scan_encrypted")"
-            WSCAN_DVB_T_COUNTRY="$(omv_config_get "/config/services/vdr/w_scan/dvb_t_country")"
-            WSCAN_DVB_T_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/w_scan/dvb_t_scan_encrypted")"
-            WSCAN_DVB_C_COUNTRY="$(omv_config_get "/config/services/vdr/w_scan/dvb_c_country")"
-            WSCAN_DVB_C_QAM="$(omv_config_get "/config/services/vdr/w_scan/dvb_c_qam")"
-            WSCAN_DVB_C_SYMBOLRATE="$(omv_config_get "/config/services/vdr/w_scan/dvb_c_symbolrate")"
-            WSCAN_DVB_C_EXTENDED_QAM="$(omv_config_get "/config/services/vdr/w_scan/dvb_c_extended_qam")"
-            WSCAN_DVB_C_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/w_scan/dvb_c_scan_encrypted")"
-            WSCAN_DVB_S_COUNTRY="$(omv_config_get "/config/services/vdr/w_scan/dvb_s_country")"
-            WSCAN_DVB_S_SATELLITE="$(omv_config_get "/config/services/vdr/w_scan/dvb_s_satellite")"
-            WSCAN_DVB_S_SCAN_ENCRYPTED="$(omv_config_get "/config/services/vdr/w_scan/dvb_s_scan_encrypted")"
-
-            if ! omv_config_exists "/config/services/vdr/vdr_streamdev_enable"; then
-                VDR_STREAMDEV_ENABLE="0"
-            else
-                VDR_STREAMDEV_ENABLE="$(omv_config_get "/config/services/vdr/vdr_streamdev_enable")"
-            fi
-
-            if ! omv_config_exists "/config/services/vdr/vdr_streamdev_port"; then
-                VDR_STREAMDEV_PORT="3000"
-            else
-                VDR_STREAMDEV_PORT="$(omv_config_get "/config/services/vdr/vdr_streamdev_port")"
-            fi
-
-            if ! omv_config_exists "/config/services/vdr/vdr_streamdev_hosts"; then
-                VDR_STREAMDEV_HOSTS="192.168.1.0/24"
-            else
-                VDR_STREAMDEV_HOSTS="$(omv_config_get "/config/services/vdr/vdr_streamdev_hosts")"
-            fi
-
-            if ! omv_config_exists "/config/services/vdr/vdr_live_enable"; then
-                VDR_LIVE_ENABLE="0"
-            else
-                VDR_LIVE_ENABLE="$(omv_config_get "/config/services/vdr/vdr_live_enable")"
-            fi
-
-            if ! omv_config_exists "/config/services/vdr/vdr_live_port"; then
-                VDR_LIVE_PORT="8008"
-            else
-                VDR_LIVE_PORT="$(omv_config_get "/config/services/vdr/vdr_live_port")"
-            fi
-
-            VDRADMINAM_ENABLE="$(omv_config_get "/config/services/vdr/vdradminam_enable")"
-            VDRADMINAM_PORT="$(omv_config_get "/config/services/vdr/vdradminam_port")"
-
+        if ! omv_config_exists "${SERVICE_XPATH}"; then
+            initial_install=1
         fi
 
-        omv_config_delete "/config/services/vdr"
+        if ! omv_config_exists "${SERVICE_XPATH}"; then
+            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
 
-        # VDR
-        object="<vdr_enable>${VDR_ENABLE}</vdr_enable>"
-        object="${object}<vdr_logging_on>${VDR_LOGGING_ON}</vdr_logging_on>"
-        object="${object}<vdr_recordingdir>${VDR_RECORDINGDIR}</vdr_recordingdir>"
-        object="${object}<vdr_maxfilesize_gb>${VDR_MAXFILESIZE_GB}</vdr_maxfilesize_gb>"
-        object="${object}<vdr_epglanguage>${VDR_EPGLANGUAGE}</vdr_epglanguage>"
-        object="${object}<vdr_subtitles>${VDR_SUBTITLES}</vdr_subtitles>"
-        object="${object}<vdr_subtitle_languages>${VDR_SUBTITLE_LANGUAGES}</vdr_subtitle_languages>"
-        object="${object}<vdr_channelupdatemode>${VDR_CHANNELUPDATEMODE}</vdr_channelupdatemode>"
+            # VDR
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_logging_on" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_recordingdir"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_maxfilesize_gb" "5"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_epglanguage"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_subtitles"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_subtitle_languages"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_channelupdatemode" "1"
 
-        # W-scan
-        object="${object}<w_scan>"
-        object="${object}<transpondertype>${WSCAN_TRANSPONDERTYPE}</transpondertype>"
-        object="${object}<atsc_country>${WSCAN_ATSC_COUNTRY}</atsc_country>"
-        object="${object}<atsc_type>${WSCAN_ATSC_TYPE}</atsc_type>"
-        object="${object}<atsc_scan_encrypted>${WSCAN_ATSC_SCAN_ENCRYPTED}</atsc_scan_encrypted>"
-        object="${object}<dvb_t_country>${WSCAN_DVB_T_COUNTRY}</dvb_t_country>"
-        object="${object}<dvb_t_scan_encrypted>${WSCAN_DVB_T_SCAN_ENCRYPTED}</dvb_t_scan_encrypted>"
-        object="${object}<dvb_c_country>${WSCAN_DVB_C_COUNTRY}</dvb_c_country>"
-        object="${object}<dvb_c_qam>${WSCAN_DVB_C_QAM}</dvb_c_qam>"
-        object="${object}<dvb_c_symbolrate>${WSCAN_DVB_C_SYMBOLRATE}</dvb_c_symbolrate>"
-        object="${object}<dvb_c_extended_qam>${WSCAN_DVB_C_EXTENDED_QAM}</dvb_c_extended_qam>"
-        object="${object}<dvb_c_scan_encrypted>${WSCAN_DVB_C_SCAN_ENCRYPTED}</dvb_c_scan_encrypted>"
-        object="${object}<dvb_s_country>${WSCAN_DVB_S_COUNTRY}</dvb_s_country>"
-        object="${object}<dvb_s_satellite>${WSCAN_DVB_S_SATELLITE}</dvb_s_satellite>"
-        object="${object}<dvb_s_scan_encrypted>${WSCAN_DVB_S_SCAN_ENCRYPTED}</dvb_s_scan_encrypted>"
-        object="${object}</w_scan>"
+            # W-scan
+            omv_config_add_element "${SERVICE_XPATH}" "w_scan"
 
-        # Streamdev
-        object="${object}<vdr_streamdev_enable>${VDR_STREAMDEV_ENABLE}</vdr_streamdev_enable>"
-        object="${object}<vdr_streamdev_port>${VDR_STREAMDEV_PORT}</vdr_streamdev_port>"
-        object="${object}<vdr_streamdev_hosts>${VDR_STREAMDEV_HOSTS}</vdr_streamdev_hosts>"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "transpondertype" "c"
 
-        # Live
-        object="${object}<vdr_live_enable>${VDR_LIVE_ENABLE}</vdr_live_enable>"
-        object="${object}<vdr_live_port>${VDR_LIVE_PORT}</vdr_live_port>"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "atsc_country" " "
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "atsc_type" "3"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "atsc_scan_encrypted" "0"
 
-        # Vdradmin-AM
-        object="${object}<vdradminam_enable>${VDRADMINAM_ENABLE}</vdradminam_enable>"
-        object="${object}<vdradminam_port>${VDRADMINAM_PORT}</vdradminam_port>"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_country"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_qam" " "
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_symbolrate" " "
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_extended_qam" "0"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_c_scan_encrypted" "0"
 
-        omv_config_add_element "/config/services" "vdr" "${object}" true
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_s_country"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_s_satellite"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_s_scan_encrypted" "0"
 
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_t_country"
+            omv_config_add_element "${SERVICE_XPATH}/w_scan" "dvb_t_scan_encrypted" "0"
 
+            # Streamdev
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_streamdev_enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_streamdev_port" "3000"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_streamdev_hosts" "192.168.1.0/24"
+
+            # Live
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_live_enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "vdr_live_port" "8008"
+
+            # Vdradmin-AM
+            omv_config_add_element "${SERVICE_XPATH}" "vdradminam_enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "vdradminam_port" "8001"
+        fi
+
+        # TODO: Remove the need for this.
         # New version of VDR does not provide channels.conf automatically but the plugin requires it.
         if [ ! -f /var/lib/vdr/channels.conf ]; then
             touch /var/lib/vdr/channels.conf
@@ -170,7 +73,8 @@ case "$1" in
             chmod 644 /var/lib/vdr/channels.conf
         fi
 
-        if $VDR_INIT; then
+        # TODO: We shouldn't need to do this. Fix it!
+        if [ $initial_install -eq 1 ]; then
             # Start and stop VDR inorder to generate the original configuration files
             /bin/sed -i '/ENABLED=/c\ENABLED=1' ${VDR_DEFAULT_CONFIG}
             invoke-rc.d vdr start

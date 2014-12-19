@@ -5,18 +5,9 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-CONFIG="/config/services/vdr"
-
 case "$1" in
     purge|remove|abort-install|disappear)
-    	if omv_config_exists $CONFIG; then
-            echo "Deleting Configuration"
-            omv_config_delete $CONFIG;
-        fi
-
-    	if ! omv_config_exists $CONFIG; then
-            echo "Configuration Deleted"
-    	fi
+        omv_config_delete "/config/services/vdr"
     ;;
 
     upgrade|failed-upgrade|abort-upgrade)
