@@ -26,13 +26,10 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     OMVINotifyListener,
     OMVIModuleServiceStatus
 {
-    private $vdrAdminAmInitScript = "vdradmin-am";
-
     private function getEventMessagePath()
     {
         return "org.openmediavault.services.vdr";
     }
-
 
     private function getSharedFolderEventMessagePath()
     {
@@ -67,7 +64,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         return array(
             "name" => $this->getName(),
             "title" => gettext("VDR"),
-            "enabled" => boolval($object["vdr_enable"]),
+            "enabled" => boolval($object["enable"]),
             "running" => $initd->status() == 0
         );
     }
@@ -98,27 +95,17 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
             );
         }
 
-        if (!boolval($object["vdr_enable"])) {
+        if (!boolval($object["enable"])) {
             return;
         }
 
         $initd = new OMVSysVInitScript($this->getName(), true);
-        $initd->exec();
-
-        if (!boolval($object["vdradminam_enable"])) {
-            return;
-        }
-
-        $initd = new OMVSysVInitScript($this->vdrAdminAmInitScript, true);
         $initd->exec();
     }
 
     public function stopService()
     {
         $initd = new OMVSysVInitScript($this->getName());
-        $initd->exec();
-        
-        $initd = new OMVSysVInitScript($this->vdrAdminAmInitScript);
         $initd->exec();
     }
 

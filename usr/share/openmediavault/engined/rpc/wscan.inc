@@ -23,6 +23,8 @@ require_once "openmediavault/object.inc";
 require_once "openmediavault/rpcservice.inc";
 require_once "openmediavault/util.inc";
 
+use SplFileObject as FileObject;
+
 class OMVRpcServiceWscan extends OMVRpcServiceAbstract
 {
     const
@@ -35,8 +37,8 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         WSCAN_SATELLITE = "s",
         WSCAN_TERRESTIAL = "t";
 
-    private $channelFileLocation = "/var/lib/vdr/channels.conf";
-    private $tempChannelFileLocation = "/tmp/channels.conf";
+    private $channelsFileLocation = "/etc/vdr/channels.conf";
+    private $tempChannelsFileLocation = "/tmp/channels.conf";
 
     public function getName()
     {
@@ -169,26 +171,27 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
             $cmd = sprintf(
                 "export LANG=C; %s > %s 2>%s",
                 $wscanCmd,
-                $this->tempChannelFileLocation,
+                $this->tempChannelsFileLocation,
                 $bgOutputFilename
             );
 
+            // Append channel.conf data to real file and remove the
+            // temporary if the scan succeded.
             if (0 === $this->exec($cmd, $output)) {
-                // Append channel.conf data to real file
-                // and remove the temporary.
-                $cmd = sprintf(
-                    "export LANG=C; cat %1\$s > %2\$s; rm %1\$s",
-                    $this->tempChannelFileLocation,
-                    $this->channelFileLocation
+                $tempChannelsFile = new FileObject(
+                    $this->tempChannelsFileLocation
                 );
 
-                if (0 !== $this->exec($cmd, $output)) {
-                    throw new OMVException(
-                        OMVErrorMsg::E_EXEC_FAILED,
-                        $cmd,
-                        implode("\n", $output)
-                    );
-                }
+                $channelsFile = new FileObject(
+                    $this->channelsFileLocation,
+                    "w+"
+                );
+
+                $channelsFile->fwrite($tempChannelsFile->fread(
+                    $tempChannelsFile->getSize()
+                ));
+
+                unlink($tempChannelsFile->getRealPath());
             }
 
             $this->finalizeBgProcStatus($bgStatusFilename, $output);

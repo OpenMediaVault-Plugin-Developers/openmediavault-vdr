@@ -16,6 +16,7 @@ install:
 	dh_installdirs
 	dh_install
 	chmod +x $(CURDIR)/debian/openmediavault-${PLUGIN_NAME}/usr/share/openmediavault/mkconf/${PLUGIN_NAME}
+	chmod +x $(CURDIR)/debian/openmediavault-${PLUGIN_NAME}/usr/share/openmediavault/mkconf/${PLUGIN_NAME}.d/10-${PLUGIN_NAME}
 
 binary-indep: install omv_clean_scm
 	dh_testdir

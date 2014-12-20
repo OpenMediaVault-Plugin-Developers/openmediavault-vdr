@@ -30,105 +30,85 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
         "OMV.data.Model"
     ],
 
-    rpcService: "VDR",
+    rpcService: "Vdr",
     rpcGetMethod: "getSettings",
     rpcSetMethod: "setSettings",
-
-    plugins: [{
-        ptype: "linkedfields",
-        correlations: [{
-            conditions: [{
-                name: "vdr_streamdev_enable",
-                value: true
-            }],
-            name: [
-                "vdr_streamdev_linkbutton"
-            ],
-            properties: "enabled"
-        }, {
-            conditions: [{
-                name: "vdr_live_enable",
-                value: true
-            }],
-            name: [
-                "vdr_live_linkbutton"
-            ],
-            properties: "enabled"
-        }, {
-            conditions: [{
-                name: "vdradminam_enable",
-                value: true
-            }],
-            name: [
-                "vdradminam_linkbutton"
-            ],
-            properties: "enabled"
-        }]
-    }],
 
     getFormItems: function() {
         return [{
             xtype: "fieldset",
-            title: _("VDR settings"),
+            title: _("General settings"),
             fieldDefaults: {
                 labelSeparator: ""
             },
             items: [{
                 xtype: "checkbox",
-                name: "vdr_enable",
+                name: "enable",
                 fieldLabel: _("Enable"),
                 checked: false
             }, {
-                xtype: "checkbox",
-                name: "vdr_logging_on",
-                fieldLabel: _("Full log"),
-                checked: false,
-                boxLabel: _("Enable logging of all VDR actions to syslog.")
-            }, {
-                xtype: "sharedfoldercombo",
-                name: "vdr_recordingdir",
-                fieldLabel: _("Recording directory"),
-                allowBlank: true
+                xtype: "combo",
+                name: "log_level",
+                fieldLabel: _("Log level"),
+                store: [
+                    [0, _("No logging")],
+                    [1, _("Errors only")],
+                    [2, _("Errors and info")],
+                    [3, _("Errors, info and debug")]
+                ],
+                allowBlank: false,
+                editable: false,
+                triggerAction: "all",
+                value: 1
             }, {
                 xtype: "numberfield",
-                name: "vdr_maxfilesize_gb",
-                fieldLabel: _("Maximum filesize in GB"),
-                minValue: 1,
+                name: "max_video_file_size",
+                fieldLabel: _("Maximum filesize (MB)"),
+                allowBlank: false,
                 allowDecimals: false,
-                allowBlank: false
+                minValue: 0,
+                value: 2000
+            }, {
+                xtype: "sharedfoldercombo",
+                name: "video.sharedfolderref",
+                fieldLabel: _("Recording directory"),
+                allowBlank: true,
+                allowNone: true
+            }, {
+                xtype: "textfield",
+                name: "audio_languages",
+                fieldLabel: _("Audio languages")
+            }, {
+                xtype: "textfield",
+                name: "epg_languages",
+                fieldLabel: _("EPG languages")
             }, {
                 xtype: "checkbox",
-                name: "vdr_subtitles",
-                fieldLabel: _("Use subtitles"),
+                name: "subtitle_enable",
+                fieldLabel: _("Enable subtitles"),
                 checked: false
             }, {
                 xtype: "textfield",
-                name: "vdr_subtitle_languages",
-                fieldLabel: _("Subtitle language(s)")
-            }, {
-                xtype: "textfield",
-                name: "vdr_epglanguage",
-                fieldLabel: _("EPG language")
+                name: "subtitle_languages",
+                fieldLabel: _("Subtitle languages")
             }, {
                 xtype: "combo",
-                name: "vdr_channelupdatemode",
-                fieldLabel: _("Channel update mode"),
+                name: "update_channels",
+                fieldLabel: _("Update channels"),
+                store: [
+                    [0, _("No update")],
+                    [1, _("Only Channel Names")],
+                    [2, _("Only Channel PIDs")],
+                    [3, _("Channel Names and PIDs")],
+                    [4, _("All updates and add newly found channels")],
+                    [5, _("All updates, new channels and add new transponders")]
+                ],
                 allowBlank: false,
                 editable: false,
-                store: [
-                    ["0", _("No update")],
-                    ["1", _("Only Channel Names")],
-                    ["2", _("Only Channel PIDs")],
-                    ["3", _("Channel Names and PIDs")],
-                    ["4", _("All updates and add newly found channels")],
-                    ["5", _("All updates, new channels and add new transponders")]
-                ],
-                mode: "local",
                 triggerAction: "all",
-                selectOnFocus: true
+                value: 4
             }, {
                 xtype: "button",
-                name: "vdr_checkdevicesbutton",
                 text: _("Check for connected devices"),
                 handler: Ext.Function.bind(this.onCheckDevicesButton, this),
                 scope: this,
@@ -138,100 +118,13 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 }
             }]
         }, {
-            /* VDR-plugin-streamdev-server */
-            xtype: "fieldset",
-            title: _("VDR-plugin-streamdev-server"),
-            fieldDefaults: {
-                labelSeparator: ""
-            },
-            items: [{
-                xtype: "button",
-                name: "vdr_streamdev_linkbutton",
-                text: _("Go to streamdev-server"),
-                handler: Ext.Function.bind(this.onVdrStreamdevButton, this),
-                scope: this,
-                style: {
-                    marginTop: "10px",
-                    marginBottom: "10px"
-                }
-            }, {
-                xtype: "checkbox",
-                name: "vdr_streamdev_enable",
-                fieldLabel: _("Enable"),
-                checked: false
-            }, {
-                xtype: "numberfield",
-                name: "vdr_streamdev_port",
-                fieldLabel: _("Port number"),
-                minValue: 0,
-                allowDecimals: false,
-                allowBlank: true,
-                value: 3000
-            }, {
-                xtype: "textfield",
-                name: "vdr_streamdev_hosts",
-                fieldLabel: _("Allowed hosts")
-            }]
-        }, {
-            /* VDR-plugin-live */
-            xtype: "fieldset",
-            title: _("VDR-plugin-live"),
-            fieldDefaults: {
-                labelSeparator: ""
-            },
-            items: [{
-                xtype: "button",
-                name: "vdr_live_linkbutton",
-                text: _("Go to live"),
-                handler: Ext.Function.bind(this.onVdrLiveButton, this),
-                scope: this,
-                style: {
-                    marginTop: "10px",
-                    marginBottom: "10px"
-                }
-            }, {
-                xtype: "checkbox",
-                name: "vdr_live_enable",
-                fieldLabel: _("Enable"),
-                checked: false
-            }, {
-                xtype: "numberfield",
-                name: "vdr_live_port",
-                fieldLabel: _("Port number"),
-                minValue: 0,
-                allowDecimals: false,
-                allowBlank: true,
-                value: 8008
-            }]
-        }, {
-            /* VDRAdmin-AM */
-            xtype: "fieldset",
-            title: _("VDRAdmin-AM settings"),
-            fieldDefaults: {
-                labelSeparator: ""
-            },
-            items: [{
-                xtype: "button",
-                name: "vdradminam_linkbutton",
-                text: _("Go to VDRAdmin-AM"),
-                handler: Ext.Function.bind(this.onVdradminamButton, this),
-                scope: this,
-                style: {
-                    marginTop: "10px",
-                    marginBottom: "10px"
-                }
-            }, {
-                xtype: "checkbox",
-                name: "vdradminam_enable",
-                fieldLabel: _("Enable"),
-                checked: false
-            }, {
-                xtype: "numberfield",
-                name: "vdradminam_port",
-                fieldLabel: _("Port number"),
-                minValue: 0,
-                allowDecimals: false,
-                allowBlank: true
+            xtype : "fieldset",
+            title : _("Extra options"),
+            items : [{
+                xtype : "textarea",
+                name : "extra_options",
+                minHeight : 150,
+                allowBlank : true
             }]
         }];
     },
@@ -241,7 +134,7 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
             scope: this,
             callback: this.onCheckDevices,
             rpcData: {
-                service: "VDR",
+                service: "Vdr",
                 method: "checkDevices"
             }
         });
@@ -254,18 +147,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
             var msg = _("Number of detected devices: ") + response;
             OMV.MessageBox.info(null, msg);
         }
-    },
-
-    onVdrStreamdevButton: function() {
-        window.open("http://" + window.location.hostname + ":" + this.getForm().findField("vdr_streamdev_port").getValue(), "_blank");
-    },
-
-    onVdrLiveButton: function() {
-        window.open("http://" + window.location.hostname + ":" + this.getForm().findField("vdr_live_port").getValue(), "_blank");
-    },
-
-    onVdradminamButton: function() {
-        window.open("http://" + window.location.hostname + ":" + this.getForm().findField("vdradminam_port").getValue(), "_blank");
     }
 });
 

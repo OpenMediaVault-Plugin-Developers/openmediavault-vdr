@@ -9,59 +9,21 @@ VDR_DEFAULT_CONFIG="/etc/default/vdr"
 
 case "$1" in
     configure)
-        SERVICE_XPATH_NAME="mysql"
+        SERVICE_XPATH_NAME="vdr"
         SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
-
-        initial_install=0
-
-        if ! omv_config_exists "${SERVICE_XPATH}"; then
-            initial_install=1
-        fi
 
         if ! omv_config_exists "${SERVICE_XPATH}"; then
             omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
-
-            # VDR
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_enable" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_logging_on" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_recordingdir"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_maxfilesize_gb" "5"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_epglanguage"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_subtitles"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_subtitle_languages"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_channelupdatemode" "1"
-
-            # Streamdev
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_streamdev_enable" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_streamdev_port" "3000"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_streamdev_hosts" "192.168.1.0/24"
-
-            # Live
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_live_enable" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "vdr_live_port" "8008"
-
-            # Vdradmin-AM
-            omv_config_add_element "${SERVICE_XPATH}" "vdradminam_enable" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "vdradminam_port" "8001"
-        fi
-
-        # TODO: Remove the need for this.
-        # New version of VDR does not provide channels.conf automatically but the plugin requires it.
-        if [ ! -f /var/lib/vdr/channels.conf ]; then
-            touch /var/lib/vdr/channels.conf
-            chown vdr:vdr /var/lib/vdr/channels.conf
-            chmod 644 /var/lib/vdr/channels.conf
-        fi
-
-        # TODO: We shouldn't need to do this. Fix it!
-        if [ $initial_install -eq 1 ]; then
-            # Start and stop VDR inorder to generate the original configuration files
-            /bin/sed -i '/ENABLED=/c\ENABLED=1' ${VDR_DEFAULT_CONFIG}
-            invoke-rc.d vdr start
-            sleep 2
-            invoke-rc.d vdr stop
-            invoke-rc.d vdradmin-am stop
-            /bin/sed -i '/ENABLED=/c\ENABLED=0' ${VDR_DEFAULT_CONFIG}
+            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "log_level" "1"
+            omv_config_add_element "${SERVICE_XPATH}" "max_video_file_size" "2000"
+            omv_config_add_element "${SERVICE_XPATH}" "video.sharedfolderref"
+            omv_config_add_element "${SERVICE_XPATH}" "audio_languages"
+            omv_config_add_element "${SERVICE_XPATH}" "epg_languages"
+            omv_config_add_element "${SERVICE_XPATH}" "subtitle_enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "subtitle_languages"
+            omv_config_add_element "${SERVICE_XPATH}" "update_channels" "4"
+            omv_config_add_element "${SERVICE_XPATH}" "extra_options"
         fi
 
         # Activate package triggers. These triggers are only set during the

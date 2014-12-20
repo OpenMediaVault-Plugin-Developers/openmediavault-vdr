@@ -239,7 +239,6 @@ Ext.define("OMV.module.admin.service.vdr.window.Scan", {
             return;
         }
 
-        this.close();
         this.doScan();
     },
 
