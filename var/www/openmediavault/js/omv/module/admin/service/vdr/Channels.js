@@ -123,14 +123,6 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
             iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
             handler: Ext.Function.bind(this.onScanButton, this),
             scope: this
-        }, {
-            id: this.getId() + "-scan-status",
-            xtype: "button",
-            text: _("Scan status"),
-            icon: "images/info.png",
-            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler: Ext.Function.bind(this.onScanStatusButton, this),
-            scope: this
         }]);
 
         return items;
@@ -178,43 +170,7 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
     },
 
     onScanButton: function() {
-        OMV.Rpc.request({
-            scope: this,
-            callback: this.onScan,
-            rpcData: {
-                service: "Vdr",
-                method: "isRunning"
-            }
-        });
-    },
-
-    onScan: function(id, success, response) {
-        if (!response && success) {
-            Ext.create("OMV.module.admin.service.vdr.window.Scan").show();
-        } else {
-            OMV.MessageBox.error(null, _("Can't perform a channel scan while VDR is still running, disable VDR andr try again."));
-        }
-    },
-
-    onScanStatusButton: function() {
-        OMV.Rpc.request({
-            scope: this,
-            callback: this.onScanStatus,
-            rpcData: {
-                service: "Wscan",
-                method: "scanning"
-            }
-        });
-    },
-
-    onScanStatus: function(id, success, response) {
-        if (!success) {
-            OMV.MessageBox.error(null, response);
-        } else {
-            var msg = response ? "Channel scan is still running." : "Channel Scan is not active.";
-
-            OMV.MessageBox.info(null, msg);
-        }
+        Ext.create("OMV.module.admin.service.vdr.window.Scan").show();
     },
 
     getRpcSetParams: function() {

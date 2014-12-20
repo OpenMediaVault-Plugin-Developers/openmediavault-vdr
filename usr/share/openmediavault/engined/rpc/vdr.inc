@@ -56,7 +56,6 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $this->registerMethod("getChannels");
         $this->registerMethod("setChannels");
         $this->registerMethod("checkDevices");
-        $this->registerMethod("isRunning");
     }
 
     /**
@@ -298,24 +297,6 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         }
 
         return count($output);
-    }
-
-    /**
-     * Check if Vdr is running.
-     *
-     * @return boolean
-     */
-    public function isRunning($params, $context)
-    {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            "role" => OMV_ROLE_ADMINISTRATOR
-        ]);
-
-        $cmd = "export LANG=C; pgrep -n vdr 2>&1";
-        $result = $this->exec($cmd, $output);
-
-        return $result === 0;
     }
 }
 
