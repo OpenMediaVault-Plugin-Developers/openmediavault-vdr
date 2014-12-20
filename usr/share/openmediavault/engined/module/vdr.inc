@@ -126,15 +126,15 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
 
     public function saveChannels($params)
     {
-        $channelsData = "";
+        $rows= [];
 
         foreach ($params["channels"] as $channel) {
             // Add group delimiter if it exists
             if (!empty($channel["group"])) {
-                $channelsData .= $channel["group"] . PHP_EOL;
+                $rows[] = $channel["group"];
             }
 
-            $channelsData .= $channel["channel"] . PHP_EOL;
+            $rows[] = $channel["channel"];
         }
 
         $file = new FileInfo($params["file"]);
@@ -144,7 +144,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         }
 
         $fileObject = $file->openFile("w");
-        $fileObject->fwrite($channelsData);
+        $fileObject->fwrite(implode(PHP_EOL, $rows));
     }
 
     public function bindListeners(OMVNotifyDispatcher $dispatcher)
