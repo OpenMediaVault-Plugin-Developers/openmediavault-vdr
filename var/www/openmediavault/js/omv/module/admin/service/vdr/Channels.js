@@ -165,7 +165,7 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         };
 
         this.mask(_("Saving ..."));
-        
+
         OMV.Rpc.request(rpcOptions);
     },
 
@@ -174,8 +174,6 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
         if (!success) {
             OMV.MessageBox.error(null, response);
-        } else {
-            this.doReload();
         }
     },
 
