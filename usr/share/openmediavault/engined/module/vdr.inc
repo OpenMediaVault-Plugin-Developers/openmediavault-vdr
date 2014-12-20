@@ -22,6 +22,7 @@ require_once "openmediavault/error.inc";
 require_once "openmediavault/initscript.inc";
 require_once "openmediavault/module.inc";
 
+use Exception;
 use SplFileInfo as FileInfo;
 
 class OMVModuleVdr extends OMVModuleServiceAbstract implements
