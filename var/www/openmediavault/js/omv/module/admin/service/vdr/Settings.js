@@ -118,13 +118,13 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 }
             }]
         }, {
-            xtype : "fieldset",
-            title : _("Extra options"),
-            items : [{
-                xtype : "textarea",
-                name : "extra_options",
-                minHeight : 150,
-                allowBlank : true
+            xtype: "fieldset",
+            title: _("Extra options"),
+            items: [{
+                xtype: "textarea",
+                name: "extra_options",
+                minHeight: 150,
+                allowBlank: true
             }]
         }];
     },

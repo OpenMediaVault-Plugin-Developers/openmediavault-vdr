@@ -62,11 +62,11 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         text: _("Encrypted"),
         sortable: false,
         dataIndex: "encrypted",
-        align : "center",
-        width : 60,
-        resizable : false,
-        trueIcon : "switch_on.png",
-        falseIcon : "switch_off.png"
+        align: "center",
+        width: 60,
+        resizable: false,
+        trueIcon: "switch_on.png",
+        falseIcon: "switch_off.png"
     }],
 
     viewConfig: {
