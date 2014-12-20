@@ -80,42 +80,35 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         }
     },
 
-    initComponent: function() {
-        Ext.apply(this, {
-            store: Ext.create("OMV.data.Store", {
-                autoLoad: true,
-                model: OMV.data.Model.createImplicit({
-                    idProperty: "channel",
-                    fields: [{
-                        name: "channel",
-                        type: "string"
-                    }, {
-                        name: "group",
-                        type: "string"
-                    }, {
-                        name: "name",
-                        type: "string"
-                    }, {
-                        name: "company",
-                        type: "string"
-                    }, {
-                        name: "encrypted",
-                        type: "boolean"
-                    }]
-
-                }),
-                proxy: {
-                    type: "rpc",
-                    rpcData: {
-                        service: "Vdr",
-                        method: "getChannels"
-                    }
-                }
-            })
-        });
-
-        this.callParent(arguments);
-    },
+    store: Ext.create("OMV.data.Store", {
+        autoLoad: true,
+        model: OMV.data.Model.createImplicit({
+            idProperty: "channel",
+            fields: [{
+                name: "channel",
+                type: "string"
+            }, {
+                name: "group",
+                type: "string"
+            }, {
+                name: "name",
+                type: "string"
+            }, {
+                name: "company",
+                type: "string"
+            }, {
+                name: "encrypted",
+                type: "boolean"
+            }]
+        }),
+        proxy: {
+            type: "rpc",
+            rpcData: {
+                service: "Vdr",
+                method: "getChannels"
+            }
+        }
+    }),
 
     getTopToolbarItems: function() {
         var items = this.callParent(arguments);
@@ -150,66 +143,38 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
         this.view.refresh();
     },
 
+    // Override to make it work as it does in remote mode.
     doReload: function() {
         this.store.reload();
     },
 
     onApplyButton: function() {
-        var msg = "Do you really want to apply the configuration? Note: VDR will be restarted to apply the configuration. Active recordings will be temporarily paused.";
-
-        OMV.MessageBox.show({
-            title: _("Confirmation"),
-            msg: msg,
-            buttons: Ext.Msg.YESNO,
-            fn: function(answer) {
-                if (answer == "no") {
-                    this.doReload();
-                    return;
-                }
-
-                this.startApply();
-            },
-            scope: this,
-            icon: Ext.Msg.QUESTION
-        });
+        this.doSubmit();
     },
 
-    startApply: function() {
-        var rpcData = [];
-        var records = this.store.getRange();
-
-        for (var i = 0; i < records.length; i++) {
-            rpcData.push(records[i].data);
-        }
-
+    doSubmit: function() {
         var rpcOptions = {
             scope: this,
-            callback: this.onApply,
+            callback: this.onSubmit,
             relayErrors: true,
             rpcData: {
                 service: "Vdr",
                 method: "setChannels",
-                params: {
-                    channels: rpcData
-                }
+                params: this.getRpcSetParams()
             }
         };
 
-        // Display waiting dialog.
-        OMV.MessageBox.wait(null, _("Saving ..."));
-
-        // Execute RPC.
+        this.mask(_("Saving ..."));
+        
         OMV.Rpc.request(rpcOptions);
     },
 
-    onApply: function(id, success, response) {
-        OMV.MessageBox.updateProgress(1);
-        OMV.MessageBox.hide();
+    onSubmit: function(id, success, response) {
+        this.unmask();
 
         if (!success) {
             OMV.MessageBox.error(null, response);
         } else {
-            OMV.MessageBox.success(null, _("The changes have been applied successfully."));
             this.doReload();
         }
     },
@@ -252,6 +217,19 @@ Ext.define("OMV.module.admin.service.vdr.Channels", {
 
             OMV.MessageBox.info(null, msg);
         }
+    },
+
+    getRpcSetParams: function() {
+        var channels = [];
+        var records = this.store.getRange();
+
+        for (var i = 0; i < records.length; i++) {
+            channels.push(records[i].data);
+        }
+
+        return {
+            channels: channels
+        };
     }
 });
 

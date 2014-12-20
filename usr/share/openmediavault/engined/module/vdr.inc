@@ -22,6 +22,8 @@ require_once "openmediavault/error.inc";
 require_once "openmediavault/initscript.inc";
 require_once "openmediavault/module.inc";
 
+use SplFileInfo as FileInfo;
+
 class OMVModuleVdr extends OMVModuleServiceAbstract implements
     OMVINotifyListener,
     OMVIModuleServiceStatus
@@ -29,6 +31,11 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     private function getEventMessagePath()
     {
         return "org.openmediavault.services.vdr";
+    }
+
+    private function getChannelsEventMessagePath()
+    {
+        return "org.openmediavault.services.vdr.channels";
     }
 
     private function getSharedFolderEventMessagePath()
@@ -61,12 +68,12 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
 
         $initd = new OMVSysVInitScript($this->getName());
 
-        return array(
+        return [
             "name" => $this->getName(),
             "title" => gettext("VDR"),
             "enabled" => boolval($object["enable"]),
             "running" => $initd->status() == 0
-        );
+        ];
     }
 
     public function applyConfig()
@@ -80,6 +87,8 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
                 implode("\n", $output)
             );
         }
+
+        $this->execTasks("channels");
     }
 
     public function startService()
@@ -109,18 +118,58 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         $initd->exec();
     }
 
+    public function onChannelsSave($type, $path, $object)
+    {
+        $this->addTask("channels", "saveChannels", $object);
+    }
+
+    public function saveChannels($params)
+    {
+        $channelsData = "";
+
+        foreach ($params["channels"] as $channel) {
+            // Add group delimiter if it exists
+            if (!empty($channel["group"])) {
+                $channelsData .= $channel["group"] . PHP_EOL;
+            }
+
+            $channelsData .= $channel["channel"] . PHP_EOL;
+        }
+
+        $file = new FileInfo($params["file"]);
+
+        if (!$file->isWritable()) {
+            throw new Exception("The channels.conf file is not writeable.");
+        }
+
+        $fileObject = $file->openFile("w");
+        $fileObject->fwrite($channelsData);
+    }
+
     public function bindListeners(OMVNotifyDispatcher $dispatcher)
     {
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
             $this->getEventMessagePath(),
-            array($this, "setDirty")
+            [$this, "setDirty"]
         );
 
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
             $this->getSharedFolderEventMessagePath(),
-            array($this, "setDirty")
+            [$this, "setDirty"]
+        );
+
+        $dispatcher->addListener(
+            OMV_NOTIFY_MODIFY,
+            $this->getChannelsEventMessagePath(),
+            [$this, "setDirty"]
+        );
+
+        $dispatcher->addListener(
+            OMV_NOTIFY_MODIFY,
+            $this->getChannelsEventMessagePath(),
+            [$this, "onChannelsSave"]
         );
     }
 }

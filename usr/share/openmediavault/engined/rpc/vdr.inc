@@ -19,11 +19,8 @@
 
 require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
-require_once "openmediavault/initscript.inc";
 require_once "openmediavault/notify.inc";
-require_once "openmediavault/object.inc";
 require_once "openmediavault/rpcservice.inc";
-require_once "openmediavault/util.inc";
 
 use Exception;
 use SplFileInfo as FileInfo;
@@ -35,6 +32,11 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     private function getEventMessagePath()
     {
         return "org.openmediavault.services.vdr";
+    }
+
+    private function getChannelsEventMessagePath()
+    {
+        return "org.openmediavault.services.vdr.channels";
     }
 
     private function getXpath()
@@ -57,14 +59,19 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $this->registerMethod("isRunning");
     }
 
+    /**
+     * Get general settings.
+     *
+     * @return array
+     */
     public function getSettings($params, $context)
     {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
+        $this->validateMethodContext($context, [
             "role" => OMV_ROLE_ADMINISTRATOR
-        ));
+        ]);
 
         // Get the configuration object.
         $object = $xmlConfig->get($this->getXpath());
@@ -85,14 +92,19 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         return $object;
     }
 
+    /**
+     * Set general settings.
+     *
+     * @return array
+     */
     public function setSettings($params, $context)
     {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
+        $this->validateMethodContext($context, [
             "role" => OMV_ROLE_ADMINISTRATOR
-        ));
+        ]);
 
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams(
@@ -114,7 +126,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             }'
         );
 
-        $object = array(
+        $object = [
             "enable" => boolval($params["enable"]),
             "log_level" => intval($params["log_level"]),
             "max_video_file_size" => intval($params["max_video_file_size"]),
@@ -125,7 +137,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             "subtitle_languages" => $params["subtitle_languages"],
             "update_channels" => intval($params["update_channels"]),
             "extra_options" => $params["extra_options"],
-        );
+        ];
 
         if ($xmlConfig->replace($this->getXpath(), $object) === false) {
             throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
@@ -149,8 +161,27 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      */
     public function getChannels($params, $context)
     {
-        $channels = array();
-        $groupStack = array();
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, [
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ]);
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams(
+            $params,
+            '{
+                "type": "object",
+                "properties": {
+                    "start": { "type": "integer" },
+                    "limit": {' . $GLOBALS["OMV_JSONSCHEMA_COUNTFIELD"] . '},
+                    "sortfield": {' . $GLOBALS["OMV_JSONSCHEMA_SORTFIELD"] . '},
+                    "sortdir": {' . $GLOBALS["OMV_JSONSCHEMA_SORTDIR"] . '}
+                }
+            }'
+        );
+
+        $channels = [];
+        $groupStack = [];
         $file = new FileInfo($this->channelsFileLocation);
         $targetFile = new FileInfo($file->getLinkTarget());
 
@@ -181,13 +212,13 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
                 $channelEncrypted = $channelPortions[8] != "0";
 
-                $channels[] = array(
+                $channels[] = [
                     "channel" => $channelString,
                     "group" => $channelGroup,
                     "name" => $channelNameCompany[0],
                     "company" => $channelNameCompany[1],
                     "encrypted" => $channelEncrypted
-                );
+                ];
             }
         }
 
@@ -196,48 +227,64 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
     /**
      * Save channels to channels.conf.
+     *
+     * @return void
      */
     public function setChannels($params, $context)
     {
-        $config = $this->callMethod("getSettings", array(), $context);
-        $enable = $config["enable"];
-        $channelsConf = "";
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, [
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ]);
 
-        $init = new OMVSysVInitScript("vdr");
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams(
+            $params,
+            '{
+                "type": "object",
+                "properties": {
+                    "channels": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "channel": { "type": "string" },
+                                "company": { "type": "string", "optional": true },
+                                "encrypted": { "type": "boolean", "optional": true },
+                                "group": { "type": "string", "optional": true },
+                                "name": { "type": "string", "optional": true }
+                            }
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                    }
+                }
+            }'
+        );
 
-        foreach ($params["channels"] as $channel) {
-            // Add group delimiter if it exists
-            if (!empty($channel["group"])) {
-                $channelConf .= $channel["group"] . PHP_EOL;
-            }
-
-            $channelsConf .= $channel["channel"] . PHP_EOL;
-        }
-
-        $init->stop();
-
-        $file = new FileInfo($this->channelsFileLocation);
-
-        if (!$file->isWritable()) {
-            throw new Exception("The channels.conf file is not writeable.");
-        }
-
-        $fileObject = $file->openFile("w");
-        $fileObject->fwrite($channelsConf);
-
-        // Only start services again if enabled
-        if ($enable) {
-            $init->start();
-        }
+        // Notify configuration changes.
+        $dispatcher = &OMVNotifyDispatcher::getInstance();
+        $dispatcher->notify(
+            OMV_NOTIFY_MODIFY,
+            $this->getChannelsEventMessagePath(),
+            [
+                "file" => $this->channelsFileLocation,
+                "channels" => $params["channels"],
+            ]
+        );
     }
 
+    /**
+     * Check the number of dvb devices detected.
+     *
+     * @return integer
+     */
     public function checkDevices($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext(
-            $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
-        );
+        $this->validateMethodContext($context, [
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ]);
 
         $cmd = "export LANG=C; if [ -d /dev/dvb ]; then ls /dev/dvb; fi";
 
@@ -253,10 +300,17 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         return count($output);
     }
 
+    /**
+     * Check if Vdr is running.
+     *
+     * @return boolean
+     */
     public function isRunning($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array("role" => OMV_ROLE_ADMINISTRATOR));
+        $this->validateMethodContext($context, [
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ]);
 
         $cmd = "export LANG=C; pgrep -n vdr 2>&1";
         $result = $this->exec($cmd, $output);
