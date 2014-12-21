@@ -117,10 +117,10 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                     "video.sharedfolderref": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_NONE"] . '},
                     "audio_languages": { "type": "string" },
                     "epg_languages": { "type": "string" },
-                    "subtitle_enable": { "type" : "boolean" },
-                    "subtitle_languages": { "type" : "string" },
+                    "subtitle_enable": { "type": "boolean" },
+                    "subtitle_languages": { "type": "string" },
                     "update_channels": { "type": "integer", "minimum": 0, "maximum": 6 },
-                    "extra_options": { "type" : "string", "optional": true }
+                    "extra_options": { "type": "string", "optional": true }
                 }
             }'
         );
