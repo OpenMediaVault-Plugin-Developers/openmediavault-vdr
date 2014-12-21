@@ -6,12 +6,14 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 case "$1" in
-    purge|remove|abort-install|disappear)
+    purge)
         omv_config_delete "/config/services/vdr"
     ;;
 
-    upgrade|failed-upgrade|abort-upgrade)
-        echo "Configuration left untouched"
+    remove)
+    ;;
+
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
 
     *)
