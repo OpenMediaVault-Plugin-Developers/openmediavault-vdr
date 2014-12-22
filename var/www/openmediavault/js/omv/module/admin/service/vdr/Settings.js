@@ -107,15 +107,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 editable: false,
                 triggerAction: "all",
                 value: 4
-            }, {
-                xtype: "button",
-                text: _("Check for connected devices"),
-                handler: Ext.Function.bind(this.onCheckDevicesButton, this),
-                scope: this,
-                style: {
-                    marginTop: "10px",
-                    marginBottom: "10px"
-                }
             }]
         }, {
             xtype: "fieldset",
@@ -127,26 +118,6 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 allowBlank: true
             }]
         }];
-    },
-
-    onCheckDevicesButton: function() {
-        OMV.Rpc.request({
-            scope: this,
-            callback: this.onCheckDevices,
-            rpcData: {
-                service: "Vdr",
-                method: "checkDevices"
-            }
-        });
-    },
-
-    onCheckDevices: function(id, success, response) {
-        if (!success) {
-            OMV.MessageBox.error(null, response);
-        } else {
-            var msg = _("Number of detected devices: ") + response;
-            OMV.MessageBox.info(null, msg);
-        }
     }
 });
 

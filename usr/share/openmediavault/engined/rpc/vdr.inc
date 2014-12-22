@@ -55,7 +55,6 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $this->registerMethod("setSettings");
         $this->registerMethod("getChannels");
         $this->registerMethod("setChannels");
-        $this->registerMethod("checkDevices");
     }
 
     /**
@@ -271,32 +270,6 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                 "channels" => $params["channels"],
             ]
         );
-    }
-
-    /**
-     * Check the number of dvb devices detected.
-     *
-     * @return integer
-     */
-    public function checkDevices($params, $context)
-    {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            "role" => OMV_ROLE_ADMINISTRATOR
-        ]);
-
-        $cmd = "export LANG=C; if [ -d /dev/dvb ]; then ls /dev/dvb; fi";
-
-        // If script fails to execute then create an error
-        if (0 !== $this->exec($cmd, $output)) {
-            throw new OMVException(
-                OMVErrorMsg::E_EXEC_FAILED,
-                $cmd,
-                implode("\n", $output)
-            );
-        }
-
-        return count($output);
     }
 }
 
