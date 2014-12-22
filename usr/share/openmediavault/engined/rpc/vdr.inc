@@ -118,7 +118,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                     "epg_languages": { "type": "string" },
                     "subtitle_enable": { "type": "boolean" },
                     "subtitle_languages": { "type": "string" },
-                    "update_channels": { "type": "integer", "minimum": 0, "maximum": 6 },
+                    "update_channels": { "type": "integer", "minimum": 0, "maximum": 4 },
                     "extra_options": { "type": "string", "optional": true }
                 }
             }'

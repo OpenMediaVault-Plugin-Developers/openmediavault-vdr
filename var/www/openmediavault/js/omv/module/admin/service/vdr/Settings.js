@@ -97,11 +97,10 @@ Ext.define("OMV.module.admin.service.vdr.Settings", {
                 fieldLabel: _("Update channels"),
                 store: [
                     [0, _("No update")],
-                    [1, _("Only Channel Names")],
-                    [2, _("Only Channel PIDs")],
-                    [3, _("Channel Names and PIDs")],
-                    [4, _("All updates and add newly found channels")],
-                    [5, _("All updates, new channels and add new transponders")]
+                    [1, _("Only channel names")],
+                    [2, _("Channel names and PIDs")],
+                    [3, _("All updates and add newly found channels")],
+                    [4, _("All updates, newly found channels and add newly found transponders")]
                 ],
                 allowBlank: false,
                 editable: false,
