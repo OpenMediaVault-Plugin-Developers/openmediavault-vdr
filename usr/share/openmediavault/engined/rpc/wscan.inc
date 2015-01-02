@@ -187,9 +187,15 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
                     "w+"
                 );
 
-                $channelsFile->fwrite($tempChannelsFile->fread(
-                    $tempChannelsFile->getSize()
-                ));
+                $content = "";
+
+                // TODO: Use FileObject->fread instead when available with
+                // PHP version.
+                while (!$tempChannelsFile->eof()) {
+                    $content .= $tempChannelsFile->fgets();
+                }
+
+                $channelsFile->fwrite($content);
 
                 unlink($tempChannelsFile->getRealPath());
             }
