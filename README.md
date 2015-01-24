@@ -1,4 +1,4 @@
 openmediavault-vdr
 ==================
 
-OpenMediaVault plugin for VDR and vdradmin-am from e-tobi.net repositories
+VDR plugin for OpenMediaVault utilizing the e-tobi.net repositories.
