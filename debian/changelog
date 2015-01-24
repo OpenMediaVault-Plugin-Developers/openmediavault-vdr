@@ -1,5 +1,11 @@
+openmediavault-vdr (1.2) UNRELEASED; urgency=low
+
+  * Update copyright years. 
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 24 Jan 2015 14:56:56 +0100
+
 openmediavault-vdr (1.1) stable; urgency=low
 
   * Rewritten release.
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 04 Dec 2013 21:36:08 +0200
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 21 Jan 2015 14:10:41 +0100
