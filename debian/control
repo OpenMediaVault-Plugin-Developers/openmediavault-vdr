@@ -1,12 +1,13 @@
 Source: openmediavault-vdr
 Section: net
-XB-Plugin-Section: multimedia
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Build-Depends: debhelper (>= 9.0.0)
-Standards-Version: 3.9.3
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.6
+XB-Plugin-Section: multimedia
 
 Package: openmediavault-vdr
 Architecture: all
 Depends: openmediavault (>= 1.0.1), vdr, w-scan, ${misc:Depends}
 Description: VDR plugin for OpenMediaVault.
+ Manage VDR (The Video Disk Recorder) from OpenmMediaVault.
