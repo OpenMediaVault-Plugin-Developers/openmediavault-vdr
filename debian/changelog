@@ -1,4 +1,10 @@
-openmediavault-vdr (1.2) UNRELEASED; urgency=low
+openmediavault-vdr (3.0) stable; urgency=low
+
+  * OMV 3.0 release.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 30 Dec 2015 17:00:05 +0100
+
+openmediavault-vdr (1.2) stable; urgency=low
 
   * Update copyright years. 
 
