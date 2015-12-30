@@ -7,6 +7,14 @@ set -e
 
 case "$1" in
     configure)
+        # Set the default settings of the service package to those expected by
+        # OpenMediaVault.
+        if [ -z "$2" ]; then
+            echo "Updating init script links and actions."
+            systemctl stop vdr.service
+            systemctl disable vdr.service
+        fi
+
         SERVICE_XPATH_NAME="vdr"
         SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 

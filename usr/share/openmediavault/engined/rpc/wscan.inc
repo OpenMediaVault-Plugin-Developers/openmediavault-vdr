@@ -17,13 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
-require_once "openmediavault/object.inc";
+require_once "openmediavault/notify.inc";
 require_once "openmediavault/rpcservice.inc";
-require_once "openmediavault/util.inc";
 
-use SplFileObject as FileObject;
+use SplFileObject;
 
 class OMVRpcServiceWscan extends OMVRpcServiceAbstract
 {
@@ -40,11 +38,21 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
     private $channelsFileLocation = "/etc/vdr/channels.conf";
     private $tempChannelsFileLocation = "/tmp/channels.conf";
 
+    /**
+     * Get the name of the RPC service.
+     *
+     * @return string
+     */
     public function getName()
     {
         return "Wscan";
     }
 
+    /**
+     * Initialize the RPC service.
+     *
+     * @return void
+     */
     public function initialize()
     {
         $this->registerMethod("enumerateCountries");
@@ -53,22 +61,36 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         $this->registerMethod("scanning");
     }
 
+    /**
+     * Enumerate available countries.
+     *
+     * @param array $params The method paramaters.
+     * @param array $context The context of the caller.
+     * @return array
+     */
     public function enumerateCountries($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
+        $this->validateMethodContext($context, [
             "role" => OMV_ROLE_ADMINISTRATOR
-        ));
+        ]);
 
         return $this->getWscanList(self::COUNTRY_LIST);
     }
 
+    /**
+     * Enumerate available satellites.
+     *
+     * @param array $params The method paramaters.
+     * @param array $context The context of the caller.
+     * @return array
+     */
     public function enumerateSatellites($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
+        $this->validateMethodContext($context, [
             "role" => OMV_ROLE_ADMINISTRATOR
-        ));
+        ]);
 
         return $this->getWscanList(self::SATELLITE_LIST);
     }
@@ -76,14 +98,16 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
     /**
      * Perform a channel scan.
      *
+     * @param array $params The method paramaters.
+     * @param array $context The context of the caller.
      * @return void
      */
     public function scan($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
+        $this->validateMethodContext($context, [
             "role" => OMV_ROLE_ADMINISTRATOR
-        ));
+        ]);
 
         $this->validateMethodParams(
             $params,
@@ -107,7 +131,7 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
         );
 
         // Check if scan is active. If active or checking failed return.
-        if ($this->callMethod("scanning", array(), $context)) {
+        if ($this->callMethod("scanning", [], $context)) {
             return;
         }
 
@@ -178,25 +202,16 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
             // Append channel.conf data to real file and remove the
             // temporary if the scan succeded.
             if (0 === $this->exec($cmd, $output)) {
-                $tempChannelsFile = new FileObject(
+                $tempChannelsFile = new SplFileObject(
                     $this->tempChannelsFileLocation
                 );
 
-                $channelsFile = new FileObject(
+                $channelsFile = new SplFileObject(
                     $this->channelsFileLocation,
                     "w+"
                 );
 
-                $content = "";
-
-                // TODO: Use FileObject->fread instead when available with
-                // PHP version.
-                while (!$tempChannelsFile->eof()) {
-                    $content .= $tempChannelsFile->fgets();
-                }
-
-                $channelsFile->fwrite($content);
-
+                $channelsFile->fwrite($tempChannelsFile->fread());
                 unlink($tempChannelsFile->getRealPath());
             }
 
@@ -216,9 +231,9 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
     public function scanning($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
+        $this->validateMethodContext($context, [
             "role" => OMV_ROLE_ADMINISTRATOR
-        ));
+        ]);
 
         $cmd = "export LANG=C; pgrep -n w_scan 2>&1";
         $pgrepReturn = $this->exec($cmd, $output);
@@ -231,7 +246,7 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
             throw new OMVException(
                 OMVErrorMsg::E_EXEC_FAILED,
                 $cmd,
-                implode("\n", $output)
+                implode(PHP_EOL, $output)
             );
         }
     }
@@ -303,11 +318,11 @@ class OMVRpcServiceWscan extends OMVRpcServiceAbstract
             throw new OMVException(
                 OMVErrorMsg::E_EXEC_FAILED,
                 $cmd,
-                implode("\n", $output)
+                implode(PHP_EOL, $output)
             );
         }
 
-        $list = array();
+        $list = [];
 
         foreach ($output as $row) {
             $row = trim($row);

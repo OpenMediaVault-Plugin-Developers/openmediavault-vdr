@@ -8,6 +8,9 @@ XB-Plugin-Section: multimedia
 
 Package: openmediavault-vdr
 Architecture: all
-Depends: openmediavault (>= 1.0.1), vdr, w-scan, ${misc:Depends}
+Depends: openmediavault (>= 3.0),
+         vdr,
+         w-scan,
+         ${misc:Depends}
 Description: VDR plugin for OpenMediaVault.
  Manage VDR (The Video Disk Recorder) from OpenmMediaVault.

@@ -19,11 +19,12 @@
 
 require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
-require_once "openmediavault/initscript.inc";
 require_once "openmediavault/module.inc";
+require_once "openmediavault/notify.inc";
+require_once "openmediavault/systemctl.inc";
 
 use Exception;
-use SplFileInfo as FileInfo;
+use SplFileInfo;
 
 class OMVModuleVdr extends OMVModuleServiceAbstract implements
     OMVINotifyListener,
@@ -44,16 +45,33 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         return "org.openmediavault.system.shares.sharedfolder";
     }
 
+    /**
+     * Get the service configuration XPath.
+     *
+     * @return string
+     */
     private function getXpath()
     {
         return "/config/services/vdr";
     }
 
+    /**
+     * Get the module name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return "vdr";
     }
 
+    /**
+     * Get the status of the service.
+     *
+     * @return array
+     *
+     * @throws OMVException
+     */
     public function getStatus()
     {
         global $xmlConfig;
@@ -67,16 +85,23 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
             );
         }
 
-        $initd = new OMVSysVInitScript($this->getName());
+        $systemCtl = new OMVSystemCtl($this->getName());
 
         return [
             "name" => $this->getName(),
             "title" => gettext("VDR"),
             "enabled" => boolval($object["enable"]),
-            "running" => $initd->status() == 0
+            "running" => $systemCtl->isActive()
         ];
     }
 
+    /**
+     * Create and update the configuration.
+     *
+     * @return void
+     *
+     * @throws OMVException
+     */
     public function applyConfig()
     {
         $cmd = sprintf("export LANG=C; omv-mkconf %s 2>&1", $this->getName());
@@ -85,13 +110,20 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
             throw new OMVException(
                 OMVErrorMsg::E_EXEC_FAILED,
                 $cmd,
-                implode("\n", $output)
+                implode(PHP_EOL, $output)
             );
         }
 
         $this->execTasks("channels");
     }
 
+    /**
+     * Start the managed service.
+     *
+     * @return void
+     *
+     * @throws OMVException
+     */
     public function startService()
     {
         global $xmlConfig;
@@ -109,14 +141,19 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
             return;
         }
 
-        $initd = new OMVSysVInitScript($this->getName(), true);
-        $initd->exec();
+        $systemCtl = new OMVSystemCtl($this->getName());
+        $systemCtl->enable(true);
     }
 
+    /**
+     * Stop the managed service.
+     *
+     * @return void
+     */
     public function stopService()
     {
-        $initd = new OMVSysVInitScript($this->getName());
-        $initd->exec();
+        $systemCtl = new OMVSystemCtl($this->getName());
+        $systemCtl->disable(true);
     }
 
     public function onChannelsSave($type, $path, $object)
@@ -129,7 +166,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         $rows= [];
 
         foreach ($params["channels"] as $channel) {
-            // Add group delimiter if it exists
+            // Add group delimiter if it exists.
             if (!empty($channel["group"])) {
                 $rows[] = $channel["group"];
             }
@@ -137,16 +174,22 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
             $rows[] = $channel["channel"];
         }
 
-        $file = new FileInfo($params["file"]);
+        $file = new SplFileInfo($params["file"]);
 
         if (!$file->isWritable()) {
-            throw new Exception("The channels.conf file is not writeable.");
+            throw new Exception("The file 'channels.conf' is not writeable.");
         }
 
         $fileObject = $file->openFile("w");
         $fileObject->fwrite(implode(PHP_EOL, $rows));
     }
 
+    /**
+     * Bind listeners.
+     *
+     * @param OMVNotifyDispatcher $dispatcher
+     * @return void
+     */
     public function bindListeners(OMVNotifyDispatcher $dispatcher)
     {
         $dispatcher->addListener(
@@ -175,6 +218,6 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     }
 }
 
-// Register the Module
+// Register the module.
 $moduleMgr = &OMVModuleMgr::getInstance();
 $moduleMgr->registerModule(new OMVModuleVdr());

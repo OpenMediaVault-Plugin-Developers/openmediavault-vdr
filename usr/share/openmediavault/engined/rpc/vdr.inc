@@ -23,7 +23,8 @@ require_once "openmediavault/notify.inc";
 require_once "openmediavault/rpcservice.inc";
 
 use Exception;
-use SplFileInfo as FileInfo;
+use SplFileInfo;
+use SplStack;
 
 class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 {
@@ -39,16 +40,31 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         return "org.openmediavault.services.vdr.channels";
     }
 
+    /**
+     * Get the service configuration XPath.
+     *
+     * @return string
+     */
     private function getXpath()
     {
         return "/config/services/vdr";
     }
 
+    /**
+     * Get the name of the RPC service.
+     *
+     * @return string
+     */
     public function getName()
     {
         return "Vdr";
     }
 
+    /**
+     * Initialize the RPC service.
+     *
+     * @return void
+     */
     public function initialize()
     {
         $this->registerMethod("getSettings");
@@ -58,9 +74,13 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     }
 
     /**
-     * Get general settings.
+     * Get the settings of the service.
      *
+     * @param array $params The method paramaters.
+     * @param array $context The context of the caller.
      * @return array
+     *
+     * @throws OMVException
      */
     public function getSettings($params, $context)
     {
@@ -91,9 +111,13 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
     }
 
     /**
-     * Set general settings.
+     * Set the settings of the service.
      *
+     * @param array $params The method paramaters.
+     * @param array $context The context of the caller.
      * @return array
+     *
+     * @throws OMVException
      */
     public function setSettings($params, $context)
     {
@@ -179,9 +203,9 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         );
 
         $channels = [];
-        $groupStack = [];
-        $file = new FileInfo($this->channelsFileLocation);
-        $targetFile = new FileInfo($file->getLinkTarget());
+        $groupStack = new SplStack();
+        $file = new SplFileInfo($this->channelsFileLocation);
+        $targetFile = new SplFileInfo($file->getLinkTarget());
 
         // The target file doesn't exist yet so no channels can be loaded.
         // Exit early.
@@ -195,15 +219,15 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
             $channelString = trim($fileObject->fgets());
 
             if (!empty($channelString)) {
+                // If the line begins with ':' it's a group. Save it in the stack
+                // and use it with the next line.
                 if (substr($channelString, 0, 1) === ":") {
-                    // Push to stack (emulated stack behaviour)
-                    $groupStack[] = $channelString;
-
+                    $groupStack->push($channelString);
                     continue;
                 }
 
                 // Pop from stack (emulated stack behaviour)
-                $channelGroup = array_pop($groupStack);
+                $channelGroup = $groupStack->pop();
 
                 $channelPortions = explode(":", $channelString);
                 $channelNameCompany = explode(";", $channelPortions[0]);
