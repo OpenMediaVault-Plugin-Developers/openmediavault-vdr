@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Copyright (C) 2013-2015 OpenMediaVault Plugin Developers
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+OMV_VDR_PLUGIN_XPATH="/config/services/vdr"
+OMV_VDR_SETUP_CONF="/etc/vdr/setup.conf"
+
+audio_languages="$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/audio_languages")"
+epg_languages="$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/epg_languages")"
+max_video_file_size=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/max_video_file_size")
+subtitle_enable=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/subtitle_enable")
+subtitle_languages="$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/subtitle_languages")"
+update_channels=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/update_channels")
+
+cat <<EOF > ${OMV_VDR_SETUP_CONF}
+AudioLanguages = ${audio_languages}
+DisplaySubtitles = ${subtitle_enable}
+EPGLanguages = ${epg_languages}
+MaxVideoFileSize = ${max_video_file_size}
+MinUserInactivity = 0
+SubtitleLanguages = ${subtitle_languages}
+UpdateChannels = ${update_channels}
+UseSubtitle = ${subtitle_enable}
+EOF
+
+# Add extra options.
+xmlstarlet sel -t -m "${OMV_VDR_PLUGIN_XPATH}" \
+    -i "string-length(extra_options) > 0" \
+        -v extra_options -n \
+    -b \
+    ${OMV_CONFIG_FILE} | xmlstarlet unesc >> ${OMV_VDR_SETUP_CONF}

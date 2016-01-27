@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+# Copyright (C) 2013-2015 OpenMediaVault Plugin Developers
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+OMV_VDR_PLUGIN_XPATH="/config/services/vdr"
+OMV_VDR_DEFAULT="/etc/vdr/vdr.default"
+
+enable=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/enable")
+log_level=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/log_level")
+
+sharedfolderref=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/video.sharedfolderref")
+video_directory=$(omv_get_sharedfolder_path "${sharedfolderref}")
+
+options="-w 60"
+
+if [ -n "${sharedfolderref}" ]; then
+    options="$options --video=\"${video_directory}\""
+fi
+
+options="$options --log=${log_level}"
+
+cat <<EOF > ${OMV_VDR_DEFAULT}
+# /etc/default/vdr
+#
+# See also /usr/share/doc/vdr/README.Debian.gz
+#
+
+# Change to 1 to enable vdr's init-script
+ENABLED=${enable}
+
+# Change this to 1 if you want vdr to be able to shutdown the
+# computer
+ENABLE_SHUTDOWN=0
+
+# Options that will be passed to vdr's commandline
+# for example: OPTIONS="-w 15"
+OPTIONS="${options}"
+EOF
