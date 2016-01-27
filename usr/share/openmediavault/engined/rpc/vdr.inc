@@ -22,10 +22,6 @@ require_once "openmediavault/error.inc";
 require_once "openmediavault/notify.inc";
 require_once "openmediavault/rpcservice.inc";
 
-use Exception;
-use SplFileInfo;
-use SplStack;
-
 class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 {
     private $channelsFileLocation = "/etc/vdr/channels.conf";

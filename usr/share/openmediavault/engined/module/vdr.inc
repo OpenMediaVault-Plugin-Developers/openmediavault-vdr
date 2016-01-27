@@ -23,9 +23,6 @@ require_once "openmediavault/module.inc";
 require_once "openmediavault/notify.inc";
 require_once "openmediavault/systemctl.inc";
 
-use Exception;
-use SplFileInfo;
-
 class OMVModuleVdr extends OMVModuleServiceAbstract implements
     OMVINotifyListener,
     OMVIModuleServiceStatus

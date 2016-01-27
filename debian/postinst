@@ -11,8 +11,8 @@ case "$1" in
         # OpenMediaVault.
         if [ -z "$2" ]; then
             echo "Updating init script links and actions."
-            systemctl stop vdr.service
-            systemctl disable vdr.service
+            deb-systemd-helper disable vdr.service >/dev/null || true
+            deb-systemd-invoke stop vdr.service >/dev/null || true
         fi
 
         SERVICE_XPATH_NAME="vdr"

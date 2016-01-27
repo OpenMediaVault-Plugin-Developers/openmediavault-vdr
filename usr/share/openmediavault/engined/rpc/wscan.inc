@@ -21,8 +21,6 @@ require_once "openmediavault/error.inc";
 require_once "openmediavault/notify.inc";
 require_once "openmediavault/rpcservice.inc";
 
-use SplFileObject;
-
 class OMVRpcServiceWscan extends OMVRpcServiceAbstract
 {
     const
