@@ -1,3 +1,9 @@
+openmediavault-vdr (3.0.1) stable; urgency=medium
+
+  * Split mkconf script.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 27 Jan 2016 01:19:30 +0100
+
 openmediavault-vdr (3.0) stable; urgency=low
 
   * OMV 3.0 release.
