@@ -202,7 +202,7 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
         $groupStack = new SplStack();
         $file = new SplFileInfo($this->channelsFileLocation);
         $targetFile = new SplFileInfo($file->getLinkTarget());
-
+        
         // The target file doesn't exist yet so no channels can be loaded.
         // Exit early.
         if (!$targetFile->isFile()) {
@@ -222,8 +222,10 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                     continue;
                 }
 
-                // Pop from stack (emulated stack behaviour)
-                $channelGroup = $groupStack->pop();
+                // Set a generic group, then pop from stack is value exists (emulated stack behaviour)
+                $channelGroup = ":UnGrouped";
+                if (!$groupStack->isEmpty())
+					$channelGroup = $groupStack->pop();
 
                 $channelPortions = explode(":", $channelString);
                 $channelNameCompany = explode(";", $channelPortions[0]);
