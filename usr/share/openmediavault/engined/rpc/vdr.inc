@@ -222,8 +222,13 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
                     continue;
                 }
 
-                // Pop from stack (emulated stack behaviour)
-                $channelGroup = $groupStack->pop();
+                // Since the group is optional, set it to null by default.
+                $channelGroup = null;
+
+                // Pop the group from the stack if it exists.
+                if (!$groupStack->isEmpty()) {
+                    $channelGroup = $groupStack->pop();
+                }
 
                 $channelPortions = explode(":", $channelString);
                 $channelNameCompany = explode(";", $channelPortions[0]);
