@@ -15,24 +15,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Ext.define("OMV.module.admin.service.vdr.stores.SatelliteCodeStore", {
-    extend: "OMV.data.Store",
+Ext.define('OMV.module.admin.service.vdr.stores.SatelliteCodeStore', {
+    extend: 'OMV.data.Store',
     autoLoad: true,
 
     model: OMV.data.Model.createImplicit({
-        idProperty: "name",
+        idProperty: 'name',
         fields: [{
-            name: "abbr",
-            type: "string"
+            name: 'abbr',
+            type: 'string'
         }, {
-            name: "satellite",
-            type: "string"
+            name: 'satellite',
+            type: 'string'
         }],
         proxy: {
-            type: "rpc",
+            type: 'rpc',
             rpcData: {
-                service: "Wscan",
-                method: "enumerateSatellites"
+                service: 'Wscan',
+                method: 'enumerateSatellites'
             },
             appendSortParams: false
         }

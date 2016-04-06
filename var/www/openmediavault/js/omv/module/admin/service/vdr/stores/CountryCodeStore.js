@@ -15,24 +15,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Ext.define("OMV.module.admin.service.vdr.stores.CountryCodeStore", {
-    extend: "OMV.data.Store",
+Ext.define('OMV.module.admin.service.vdr.stores.CountryCodeStore', {
+    extend: 'OMV.data.Store',
     autoLoad: true,
 
     model: OMV.data.Model.createImplicit({
-        idProperty: "name",
+        idProperty: 'name',
         fields: [{
-            name: "abbr",
-            type: "string"
+            name: 'abbr',
+            type: 'string'
         }, {
-            name: "country",
-            type: "string"
+            name: 'country',
+            type: 'string'
         }],
         proxy: {
-            type: "rpc",
+            type: 'rpc',
             rpcData: {
-                service: "Wscan",
-                method: "enumerateCountries"
+                service: 'Wscan',
+                method: 'enumerateCountries'
             },
             appendSortParams: false
         }

@@ -18,9 +18,9 @@
 // require("js/omv/WorkspaceManager.js")
 
 OMV.WorkspaceManager.registerNode({
-    id: "vdr",
-    path: "/service",
-    text: _("VDR"),
-    icon16: "images/play.png",
-    iconSvg: "images/play.svg"
+    id: 'vdr',
+    path: '/service',
+    text: _('VDR'),
+    icon16: 'images/play.png',
+    iconSvg: 'images/play.svg'
 });
