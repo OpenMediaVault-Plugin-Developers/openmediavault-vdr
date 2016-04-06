@@ -17,39 +17,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'openmediavault/config.inc';
-require_once 'openmediavault/error.inc';
-require_once 'openmediavault/module.inc';
-require_once 'openmediavault/notify.inc';
-require_once 'openmediavault/systemctl.inc';
+namespace OMV\Engined\Module;
 
-class OMVModuleVdr extends OMVModuleServiceAbstract implements
-    OMVINotifyListener,
-    OMVIModuleServiceStatus
+use SplFileInfo;
+
+use OMV\Config\Database;
+use OMV\Exception;
+use OMV\Engine\Module\IServiceStatus;
+use OMV\Engine\Module\ServiceAbstract;
+use OMV\Engine\Notify\Dispatcher;
+use OMV\Engine\Notify\IListener;
+use OMV\System\Process;
+use OMV\System\SystemCtl;
+
+class Vdr extends ServiceAbstract implements
+    IListener,
+    IServiceStatus
 {
-    private function getEventMessagePath()
-    {
-        return 'org.openmediavault.services.vdr';
-    }
+    /** @var string */
+    private $channelsEventMessagePath = 'org.openmediavault.services.vdr.channels';
 
-    private function getChannelsEventMessagePath()
-    {
-        return 'org.openmediavault.services.vdr.channels';
-    }
+    /** @var Database */
+    private $database;
 
-    private function getSharedFolderEventMessagePath()
-    {
-        return 'org.openmediavault.system.shares.sharedfolder';
-    }
+    /** @var string */
+    private $dataModelPath = 'conf.service.vdr';
 
-    /**
-     * Get the service configuration XPath.
-     *
-     * @return string
-     */
-    private function getXpath()
+    /** @var string */
+    private $eventMessagePath = 'org.openmediavault.services.vdr';
+
+    /** @var string */
+    private $serviceName = 'vdr.service';
+
+    /** @var string */
+    private $sharedFolderEventMessagePath = 'org.openmediavault.system.shares.sharedfolder';
+
+    public function __construct(Database $database = null)
     {
-        return '/config/services/vdr';
+        $this->database = $database ? $database : Database::getInstance();
     }
 
     /**
@@ -63,31 +68,19 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     }
 
     /**
-     * Get the status of the service.
+     * Get the module status.
      *
      * @return array
-     *
-     * @throws OMVException
      */
     public function getStatus()
     {
-        global $xmlConfig;
-
-        $object = $xmlConfig->get($this->getXpath());
-
-        if (is_null($object)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getXpath()
-            );
-        }
-
-        $systemCtl = new OMVSystemCtl($this->getName());
+        $object = $this->database->get($this->dataModelPath);
+        $systemCtl = new SystemCtl($this->serviceName);
 
         return [
             'name' => $this->getName(),
             'title' => gettext('VDR'),
-            'enabled' => boolval($object['enable']),
+            'enabled' => $object->get('enable'),
             'running' => $systemCtl->isActive(),
         ];
     }
@@ -95,20 +88,13 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     /**
      * Create and update the configuration.
      *
-     *
-     * @throws OMVException
+     * @return void
      */
     public function applyConfig()
     {
-        $cmd = sprintf('export LANG=C; omv-mkconf %s 2>&1', $this->getName());
-
-        if (0 !== $this->exec($cmd, $output)) {
-            throw new OMVException(
-                OMVErrorMsg::E_EXEC_FAILED,
-                $cmd,
-                implode(PHP_EOL, $output)
-            );
-        }
+        $cmd = new Process('omv-mkconf', $this->getName());
+        $cmd->setRedirect2to1();
+        $cmd->execute();
 
         $this->execTasks('channels');
     }
@@ -116,36 +102,26 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     /**
      * Start the managed service.
      *
-     *
-     * @throws OMVException
+     * @return void
      */
     public function startService()
     {
-        global $xmlConfig;
+        $object = $this->database->get($this->dataModelPath);
 
-        $object = $xmlConfig->get($this->getXpath());
-
-        if (is_null($object)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getXpath()
-            );
+        if ($object->get('enable')) {
+            $systemCtl = new SystemCtl($this->serviceName);
+            $systemCtl->enable(true);
         }
-
-        if (!boolval($object['enable'])) {
-            return;
-        }
-
-        $systemCtl = new OMVSystemCtl($this->getName());
-        $systemCtl->enable(true);
     }
 
     /**
      * Stop the managed service.
+     *
+     * @return void
      */
     public function stopService()
     {
-        $systemCtl = new OMVSystemCtl($this->getName());
+        $systemCtl = new SystemCtl($this->serviceName);
         $systemCtl->disable(true);
     }
 
@@ -170,7 +146,7 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
         $file = new SplFileInfo($params['file']);
 
         if (!$file->isWritable()) {
-            throw new Exception("The file 'channels.conf' is not writeable.");
+            throw new Exception('The file \'channels.conf\' is not writeable.');
         }
 
         $fileObject = $file->openFile('w');
@@ -180,36 +156,33 @@ class OMVModuleVdr extends OMVModuleServiceAbstract implements
     /**
      * Bind listeners.
      *
-     * @param OMVNotifyDispatcher $dispatcher
+     * @param Dispatcher $dispatcher
+     * @return void
      */
-    public function bindListeners(OMVNotifyDispatcher $dispatcher)
+    public function bindListeners(Dispatcher $dispatcher)
     {
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            $this->getEventMessagePath(),
+            $this->eventMessagePath,
             [$this, 'setDirty']
         );
 
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            $this->getSharedFolderEventMessagePath(),
+            $this->sharedFolderEventMessagePath,
             [$this, 'setDirty']
         );
 
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            $this->getChannelsEventMessagePath(),
+            $this->channelsEventMessagePath,
             [$this, 'setDirty']
         );
 
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            $this->getChannelsEventMessagePath(),
+            $this->channelsEventMessagePath,
             [$this, 'onChannelsSave']
         );
     }
 }
-
-// Register the module.
-$moduleMgr = &OMVModuleMgr::getInstance();
-$moduleMgr->registerModule(new OMVModuleVdr());

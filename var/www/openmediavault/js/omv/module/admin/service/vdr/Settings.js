@@ -70,7 +70,7 @@ Ext.define('OMV.module.admin.service.vdr.Settings', {
                 value: 2000
             }, {
                 xtype: 'sharedfoldercombo',
-                name: 'video.sharedfolderref',
+                name: 'video_sharedfolderref',
                 fieldLabel: _('Recording directory'),
                 allowBlank: true,
                 allowNone: true

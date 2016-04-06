@@ -26,7 +26,7 @@ OMV_VDR_DEFAULT="/etc/vdr/vdr.default"
 enable=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/enable")
 log_level=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/log_level")
 
-sharedfolderref=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/video.sharedfolderref")
+sharedfolderref=$(omv_config_get "${OMV_VDR_PLUGIN_XPATH}/video_sharedfolderref")
 video_directory=$(omv_get_sharedfolder_path "${sharedfolderref}")
 
 options="-w 60"

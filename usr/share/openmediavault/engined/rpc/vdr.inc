@@ -16,33 +16,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'openmediavault/config.inc';
-require_once 'openmediavault/error.inc';
-require_once 'openmediavault/notify.inc';
-require_once 'openmediavault/rpcservice.inc';
 
-class OMVRpcServiceVdr extends OMVRpcServiceAbstract
+namespace OMV\Engined\Rpc;
+
+use SplFileInfo;
+use SplStack;
+
+use OMV\Config\Database;
+use OMV\Engine\Notify\Dispatcher;
+use OMV\Rpc\ServiceAbstract;
+
+class Vdr extends ServiceAbstract
 {
+    /** @var string */
     private $channelsFileLocation = '/etc/vdr/channels.conf';
 
-    private function getEventMessagePath()
-    {
-        return 'org.openmediavault.services.vdr';
-    }
+    /** @var string */
+    private $channelsEventMessagePath = 'org.openmediavault.services.vdr.channels';
 
-    private function getChannelsEventMessagePath()
-    {
-        return 'org.openmediavault.services.vdr.channels';
-    }
+    /** @var Database */
+    private $database;
 
-    /**
-     * Get the service configuration XPath.
-     *
-     * @return string
-     */
-    private function getXpath()
+    /** @var string */
+    private $dataModelPath = 'conf.service.vdr';
+
+    /** @var Dispatcher */
+    private $dispatcher;
+
+    /** @var string */
+    private $eventMessagePath = 'org.openmediavault.services.vdr';
+
+    public function __construct(Database $database = null, Dispatcher $dispatcher = null)
     {
-        return '/config/services/vdr';
+        $this->database = $database ? $database : Database::getInstance();
+        $this->dispatcher = $dispatcher ? $dispatcher : Dispatcher::getInstance();
     }
 
     /**
@@ -57,6 +64,8 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
     /**
      * Initialize the RPC service.
+     *
+     * @return void
      */
     public function initialize()
     {
@@ -71,37 +80,15 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      *
      * @param array $params  The method paramaters.
      * @param array $context The context of the caller.
-     *
      * @return array
-     *
-     * @throws OMVException
      */
     public function getSettings($params, $context)
     {
-        global $xmlConfig;
+        $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
 
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            'role' => OMV_ROLE_ADMINISTRATOR,
-        ]);
+        $object = $this->database->get($this->dataModelPath);
 
-        // Get the configuration object.
-        $object = $xmlConfig->get($this->getXpath());
-
-        if (is_null($object)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getXpath()
-            );
-        }
-
-        $object['enable'] = boolval($object['enable']);
-        $object['log_level'] = intval($object['log_level']);
-        $object['max_video_file_size'] = intval($object['max_video_file_size']);
-        $object['subtitle_enable'] = boolval($object['subtitle_enable']);
-        $object['update_channels'] = intval($object['update_channels']);
-
-        return $object;
+        return $object->getAssoc();
     }
 
     /**
@@ -109,66 +96,20 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      *
      * @param array $params  The method paramaters.
      * @param array $context The context of the caller.
-     *
      * @return array
-     *
-     * @throws OMVException
      */
     public function setSettings($params, $context)
     {
-        global $xmlConfig;
+        $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
+        $this->validateMethodParams($params, 'rpc.vdr.setsettings');
 
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            'role' => OMV_ROLE_ADMINISTRATOR,
-        ]);
+        $object = $this->database->get($this->dataModelPath);
+        $object->setAssoc($params);
 
-        // Validate the parameters of the RPC service method.
-        $this->validateMethodParams(
-            $params,
-            '{
-                "type": "object",
-                "properties": {
-                    "enable": { "type": "boolean" },
-                    "log_level": { "type": "integer", "minimum": 0, "maximum": 3 },
-                    "max_video_file_size": { "type": "integer", "minimum": 1 },
-                    "video.sharedfolderref": {'.$GLOBALS['OMV_JSONSCHEMA_UUID_NONE'].'},
-                    "audio_languages": { "type": "string" },
-                    "epg_languages": { "type": "string" },
-                    "subtitle_enable": { "type": "boolean" },
-                    "subtitle_languages": { "type": "string" },
-                    "update_channels": { "type": "integer", "minimum": 0, "maximum": 4 },
-                    "extra_options": { "type": "string", "optional": true }
-                }
-            }'
-        );
+        $this->database->set($object);
+        $this->dispatcher->notify(OMV_NOTIFY_MODIFY, $this->eventMessagePath, $object);
 
-        $object = [
-            'enable' => boolval($params['enable']),
-            'log_level' => intval($params['log_level']),
-            'max_video_file_size' => intval($params['max_video_file_size']),
-            'video.sharedfolderref' => $params['video.sharedfolderref'],
-            'audio_languages' => $params['audio_languages'],
-            'epg_languages' => $params['epg_languages'],
-            'subtitle_enable' => boolval($params['subtitle_enable']),
-            'subtitle_languages' => $params['subtitle_languages'],
-            'update_channels' => intval($params['update_channels']),
-            'extra_options' => $params['extra_options'],
-        ];
-
-        if ($xmlConfig->replace($this->getXpath(), $object) === false) {
-            throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
-        }
-
-        // Notify configuration changes.
-        $dispatcher = &OMVNotifyDispatcher::getInstance();
-        $dispatcher->notify(
-            OMV_NOTIFY_MODIFY,
-            $this->getEventMessagePath(),
-            $object
-        );
-
-        return $object;
+        return $object->getAssoc();
     }
 
     /**
@@ -178,24 +119,8 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
      */
     public function getChannels($params, $context)
     {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            'role' => OMV_ROLE_ADMINISTRATOR,
-        ]);
-
-        // Validate the parameters of the RPC service method.
-        $this->validateMethodParams(
-            $params,
-            '{
-                "type": "object",
-                "properties": {
-                    "start": { "type": "integer" },
-                    "limit": {'.$GLOBALS['OMV_JSONSCHEMA_COUNTFIELD'].'},
-                    "sortfield": {'.$GLOBALS['OMV_JSONSCHEMA_SORTFIELD'].'},
-                    "sortdir": {'.$GLOBALS['OMV_JSONSCHEMA_SORTDIR'].'}
-                }
-            }'
-        );
+        $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
+        $this->validateMethodParams($params, 'rpc.common.getlist');
 
         $channels = [];
         $groupStack = new SplStack();
@@ -249,52 +174,17 @@ class OMVRpcServiceVdr extends OMVRpcServiceAbstract
 
     /**
      * Save channels to channels.conf.
+     *
+     * @return void
      */
     public function setChannels($params, $context)
     {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            'role' => OMV_ROLE_ADMINISTRATOR,
+        $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
+        $this->validateMethodParams($params, 'rpc.vdr.setchannels');
+
+        $this->dispatcher->notify(OMV_NOTIFY_MODIFY, $this->channelsEventMessagePath, [
+            'file' => $this->channelsFileLocation,
+            'channels' => $params['channels'],
         ]);
-
-        // Validate the parameters of the RPC service method.
-        $this->validateMethodParams(
-            $params,
-            '{
-                "type": "object",
-                "properties": {
-                    "channels": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "channel": { "type": "string" },
-                                "company": { "type": "string", "optional": true },
-                                "encrypted": { "type": "boolean", "optional": true },
-                                "group": { "type": "string", "optional": true },
-                                "name": { "type": "string", "optional": true }
-                            }
-                        },
-                        "minItems": 1,
-                        "uniqueItems": true
-                    }
-                }
-            }'
-        );
-
-        // Notify configuration changes.
-        $dispatcher = &OMVNotifyDispatcher::getInstance();
-        $dispatcher->notify(
-            OMV_NOTIFY_MODIFY,
-            $this->getChannelsEventMessagePath(),
-            [
-                'file' => $this->channelsFileLocation,
-                'channels' => $params['channels'],
-            ]
-        );
     }
 }
-
-// Register the RPC service.
-$rpcServiceMgr = &OMVRpcServiceMgr::getInstance();
-$rpcServiceMgr->registerService(new OMVRpcServiceVdr());

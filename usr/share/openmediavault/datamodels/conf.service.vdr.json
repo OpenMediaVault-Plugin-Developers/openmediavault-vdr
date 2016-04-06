@@ -1,0 +1,57 @@
+{
+    "type": "config",
+    "id": "conf.service.vdr",
+    "title": "VDR",
+    "queryinfo": {
+        "xpath": "/config/services/vdr",
+        "iterable": false
+    },
+    "properties": {
+        "enable": {
+            "type": "boolean",
+            "default": false
+        },
+        "log_level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3,
+            "default": 1
+        },
+        "max_video_file_size": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 2000
+        },
+        "video_sharedfolderref": {
+            "type": "string",
+            "format": "uuidv4",
+            "default": ""
+        },
+        "audio_languages": {
+            "type": "string",
+            "default": ""
+        },
+        "epg_languages": {
+            "type": "string",
+            "default": ""
+        },
+        "subtitle_enable": {
+            "type": "boolean",
+            "default": false
+        },
+        "subtitle_languages": {
+            "type": "string",
+            "default": ""
+        },
+        "update_channels": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4,
+            "default": 4
+        },
+        "extra_options": {
+            "type": "string",
+            "default": ""
+        }
+    }
+}

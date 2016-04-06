@@ -23,7 +23,9 @@ case "$1" in
             omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
             omv_config_add_element "${SERVICE_XPATH}" "log_level" "1"
             omv_config_add_element "${SERVICE_XPATH}" "max_video_file_size" "2000"
-            omv_config_add_element "${SERVICE_XPATH}" "video.sharedfolderref"
+            # FIXME: Fix the naming of this setting. Changed from:
+            # video.sharedfolderref => video_sharedfolderref
+            omv_config_add_element "${SERVICE_XPATH}" "video_sharedfolderref"
             omv_config_add_element "${SERVICE_XPATH}" "audio_languages"
             omv_config_add_element "${SERVICE_XPATH}" "epg_languages"
             omv_config_add_element "${SERVICE_XPATH}" "subtitle_enable" "0"

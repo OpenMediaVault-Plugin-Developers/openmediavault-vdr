@@ -1,0 +1,92 @@
+[{
+    "type": "rpc",
+    "id": "rpc.vdr.setsettings",
+    "params": {
+        "type": "object",
+        "properties": {
+            "enable": {
+                "type": "boolean",
+                "required": true
+            },
+            "log_level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3,
+                "required": true
+            },
+            "max_video_file_size": {
+                "type": "integer",
+                "minimum": 1,
+                "required": true
+            },
+            "video_sharedfolderref": {
+                "type": "string",
+                "format": "uuidv4",
+                "required": true
+            },
+            "audio_languages": {
+                "type": "string",
+                "required": true
+            },
+            "epg_languages": {
+                "type": "string",
+                "required": true
+            },
+            "subtitle_enable": {
+                "type": "boolean",
+                "required": true
+            },
+            "subtitle_languages": {
+                "type": "string",
+                "required": true
+            },
+            "update_channels": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4,
+                "required": true
+            },
+            "extra_options": {
+                "type": "string",
+                "required": false
+            }
+        }
+    }
+}, {
+    "type": "rpc",
+    "id": "rpc.vdr.setchannels",
+    "params": {
+        "type": "object",
+        "properties": {
+            "channels": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "channel": {
+                            "type": "string"
+                        },
+                        "company": {
+                            "type": "string",
+                            "required": false
+                        },
+                        "encrypted": {
+                            "type": "boolean",
+                            "required": false
+                        },
+                        "group": {
+                            "type": "string",
+                            "required": false
+                        },
+                        "name": {
+                            "type": "string",
+                            "required": false
+                        }
+                    }
+                },
+                "minItems": 1,
+                "uniqueItems": true
+            }
+        }
+    }
+}]

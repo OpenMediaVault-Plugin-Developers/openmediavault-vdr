@@ -1,0 +1,60 @@
+[{
+    "type": "rpc",
+    "id": "rpc.wscan.scan",
+    "params": {
+        "type": "object",
+        "properties": {
+            "frontend_type": {
+                "type": "string",
+                "enum": ["a", "c", "s", "t"],
+                "required": true
+            },
+            "include_radio_channels": {
+                "type": "boolean",
+                "required": true
+            },
+            "include_tv_channels": {
+                "type": "boolean",
+                "required": true
+            },
+            "include_other_services": {
+                "type": "boolean",
+                "required": true
+            },
+            "include_encrypted_channels": {
+                "type": "boolean",
+                "required": true
+            },
+            "country": {
+                "type": "string",
+                "required": true
+            },
+            "atsc_type": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3,
+                "required": false
+            },
+            "dvb_c_modulation": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 2,
+                "required": false
+            },
+            "dvb_c_symbol_rate": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 17,
+                "required": false
+            },
+            "dvb_c_extended_qam": {
+                "type": "boolean",
+                "required": false
+            },
+            "dvb_s_satellite": {
+                "type": "string",
+                "required": false
+            }
+        }
+    }
+}]
