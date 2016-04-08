@@ -19,9 +19,15 @@
                 "minimum": 1,
                 "required": true
             },
-            "video_sharedfolderref": {
+            "sharedfolderref": {
                 "type": "string",
-                "format": "uuidv4",
+                "oneOf": [{
+                    "type": "string",
+                    "format": "uuidv4"
+                }, {
+                    "type": "string",
+                    "maxLength": 0
+                }],
                 "required": true
             },
             "audio_languages": {

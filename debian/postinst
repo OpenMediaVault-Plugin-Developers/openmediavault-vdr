@@ -23,15 +23,18 @@ case "$1" in
             omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
             omv_config_add_element "${SERVICE_XPATH}" "log_level" "1"
             omv_config_add_element "${SERVICE_XPATH}" "max_video_file_size" "2000"
-            # FIXME: Fix the naming of this setting. Changed from:
-            # video.sharedfolderref => video_sharedfolderref
-            omv_config_add_element "${SERVICE_XPATH}" "video_sharedfolderref"
+            omv_config_add_element "${SERVICE_XPATH}" "sharedfolderref"
             omv_config_add_element "${SERVICE_XPATH}" "audio_languages"
             omv_config_add_element "${SERVICE_XPATH}" "epg_languages"
             omv_config_add_element "${SERVICE_XPATH}" "subtitle_enable" "0"
             omv_config_add_element "${SERVICE_XPATH}" "subtitle_languages"
             omv_config_add_element "${SERVICE_XPATH}" "update_channels" "4"
             omv_config_add_element "${SERVICE_XPATH}" "extra_options"
+        fi
+
+        # Migrations.
+        if dpkg --compare-versions "$2" lt-nl "3.0.3"; then
+            omv_config_rename "${SERVICE_XPATH}/video.sharedfolderref" "sharedfolderref"
         fi
 
         # Activate package triggers. These triggers are only set during the
