@@ -48,8 +48,8 @@ class Vdr extends ServiceAbstract
 
     public function __construct(Database $database = null, Dispatcher $dispatcher = null)
     {
-        $this->database = $database ? $database : Database::getInstance();
-        $this->dispatcher = $dispatcher ? $dispatcher : Dispatcher::getInstance();
+        $this->database = $database ?: Database::getInstance();
+        $this->dispatcher = $dispatcher ?: Dispatcher::getInstance();
     }
 
     /**
