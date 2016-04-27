@@ -19,12 +19,11 @@
 
 namespace OMV\Engined\Rpc;
 
-use SplFileInfo;
-use SplStack;
-
 use OMV\Config\Database;
 use OMV\Engine\Notify\Dispatcher;
 use OMV\Rpc\ServiceAbstract;
+use SplFileInfo;
+use SplStack;
 
 class Vdr extends ServiceAbstract
 {
@@ -80,6 +79,7 @@ class Vdr extends ServiceAbstract
      *
      * @param array $params  The method paramaters.
      * @param array $context The context of the caller.
+     *
      * @return array
      */
     public function getSettings($params, $context)
@@ -96,6 +96,7 @@ class Vdr extends ServiceAbstract
      *
      * @param array $params  The method paramaters.
      * @param array $context The context of the caller.
+     *
      * @return array
      */
     public function setSettings($params, $context)

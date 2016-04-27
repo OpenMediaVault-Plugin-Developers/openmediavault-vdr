@@ -20,11 +20,10 @@
 namespace OMV\Engined\Rpc;
 
 use Exception;
-use SplFileObject;
-
 use OMV\ExecException;
 use OMV\Rpc\ServiceAbstract;
 use OMV\System\Process;
+use SplFileObject;
 
 class Wscan extends ServiceAbstract
 {
@@ -73,6 +72,7 @@ class Wscan extends ServiceAbstract
      *
      * @param array $params  The method paramaters.
      * @param array $context The context of the caller.
+     *
      * @return array
      */
     public function enumerateCountries($params, $context)
@@ -87,6 +87,7 @@ class Wscan extends ServiceAbstract
      *
      * @param array $params  The method paramaters.
      * @param array $context The context of the caller.
+     *
      * @return array
      */
     public function enumerateSatellites($params, $context)
@@ -101,6 +102,7 @@ class Wscan extends ServiceAbstract
      *
      * @param array $params  The method paramaters.
      * @param array $context The context of the caller.
+     *
      * @return string
      */
     public function scan($params, $context)

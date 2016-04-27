@@ -19,16 +19,15 @@
 
 namespace OMV\Engined\Module;
 
-use SplFileInfo;
-
 use OMV\Config\Database;
-use OMV\Exception;
 use OMV\Engine\Module\IServiceStatus;
 use OMV\Engine\Module\ServiceAbstract;
 use OMV\Engine\Notify\Dispatcher;
 use OMV\Engine\Notify\IListener;
+use OMV\Exception;
 use OMV\System\Process;
 use OMV\System\SystemCtl;
+use SplFileInfo;
 
 class Vdr extends ServiceAbstract implements
     IListener,
@@ -157,6 +156,7 @@ class Vdr extends ServiceAbstract implements
      * Bind listeners.
      *
      * @param Dispatcher $dispatcher
+     *
      * @return void
      */
     public function bindListeners(Dispatcher $dispatcher)
