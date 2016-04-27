@@ -32,7 +32,7 @@ class Vdr extends ServiceAbstract
     private $channelsFileLocation = '/etc/vdr/channels.conf';
 
     /** @var string */
-    private $channelsEventMessagePath = 'org.openmediavault.services.vdr.channels';
+    private $channelsEventMessagePath = 'org.openmediavault.conf.service.vdr.channels';
 
     /** @var Database */
     private $database;
@@ -44,7 +44,7 @@ class Vdr extends ServiceAbstract
     private $dispatcher;
 
     /** @var string */
-    private $eventMessagePath = 'org.openmediavault.services.vdr';
+    private $eventMessagePath = 'org.openmediavault.conf.service.vdr';
 
     public function __construct(Database $database = null, Dispatcher $dispatcher = null)
     {

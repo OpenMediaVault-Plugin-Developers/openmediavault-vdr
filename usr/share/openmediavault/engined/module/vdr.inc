@@ -35,7 +35,7 @@ class Vdr extends ServiceAbstract implements
     IServiceStatus
 {
     /** @var string */
-    private $channelsEventMessagePath = 'org.openmediavault.services.vdr.channels';
+    private $channelsEventMessagePath = 'org.openmediavault.conf.service.vdr.channels';
 
     /** @var Database */
     private $database;
@@ -44,13 +44,13 @@ class Vdr extends ServiceAbstract implements
     private $dataModelPath = 'conf.service.vdr';
 
     /** @var string */
-    private $eventMessagePath = 'org.openmediavault.services.vdr';
+    private $eventMessagePath = 'org.openmediavault.conf.service.vdr';
 
     /** @var string */
     private $serviceName = 'vdr.service';
 
     /** @var string */
-    private $sharedFolderEventMessagePath = 'org.openmediavault.system.shares.sharedfolder';
+    private $sharedFolderEventMessagePath = 'org.openmediavault.conf.system.sharedfolder';
 
     public function __construct(Database $database = null)
     {
