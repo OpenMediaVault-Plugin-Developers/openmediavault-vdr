@@ -42,9 +42,6 @@ class Vdr extends ServiceAbstract
     /** @var Dispatcher */
     private $dispatcher;
 
-    /** @var string */
-    private $eventMessagePath = 'org.openmediavault.conf.service.vdr';
-
     public function __construct(Database $database = null, Dispatcher $dispatcher = null)
     {
         $this->database = $database ?: Database::getInstance();
@@ -108,7 +105,6 @@ class Vdr extends ServiceAbstract
         $object->setAssoc($params);
 
         $this->database->set($object);
-        $this->dispatcher->notify(OMV_NOTIFY_MODIFY, $this->eventMessagePath, $object);
 
         return $object->getAssoc();
     }
