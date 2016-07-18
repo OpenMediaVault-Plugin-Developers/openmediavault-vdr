@@ -1,6 +1,12 @@
+openmediavault-vdr (3.0.5) stable; urgency=medium
+
+  * Warn for missing permissions on the recording directory.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 18 Jul 2016 15:14:58 +0200
+
 openmediavault-vdr (3.0.4) stable; urgency=medium
 
-  * OMV 3.0.21 compatiblity.
+  * OMV 3.0.21 compatibility.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 04 Jun 2016 18:42:41 +0200
 
