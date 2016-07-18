@@ -21,6 +21,7 @@
 // require("js/omv/data/Store.js")
 // require("js/omv/data/Model.js")
 // require("js/omv/form/field/SharedFolderComboBox.js")
+// require("js/omvextras/form/field/plugin/PermissionsInfo.js")
 
 Ext.define('OMV.module.admin.service.vdr.Settings', {
     extend: 'OMV.workspace.form.Panel',
@@ -73,7 +74,14 @@ Ext.define('OMV.module.admin.service.vdr.Settings', {
                 name: 'sharedfolderref',
                 fieldLabel: _('Recording directory'),
                 allowBlank: true,
-                allowNone: true
+                allowNone: true,
+                plugins: [{
+                    ptype: 'permissionsinfo',
+                    username: 'vdr',
+                    execute: true,
+                    read: true,
+                    write: true
+                }]
             }, {
                 xtype: 'textfield',
                 name: 'audio_languages',
