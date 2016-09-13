@@ -1,3 +1,9 @@
+openmediavault-vdr (3.0.6) stable; urgency=medium
+
+  * Improve the channel scan function.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 13 Sep 2016 17:42:55 +0200
+
 openmediavault-vdr (3.0.5) stable; urgency=medium
 
   * Warn for missing permissions on the recording directory.
