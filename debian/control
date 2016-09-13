@@ -9,7 +9,7 @@ XB-Plugin-Section: multimedia
 Package: openmediavault-vdr
 Architecture: all
 Depends: omvextras-common,
-         openmediavault (>= 3.0.21),
+         openmediavault (>= 3.0.35),
          vdr,
          w-scan,
          ${misc:Depends}

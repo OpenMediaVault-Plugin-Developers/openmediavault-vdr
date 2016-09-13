@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace OMV\Engined\Rpc;
 
-use Exception;
 use OMV\ExecException;
 use OMV\Rpc\ServiceAbstract;
 use OMV\System\Process;
@@ -37,12 +35,10 @@ class Wscan extends ServiceAbstract
         WSCAN_SATELLITE = 's',
         WSCAN_TERRESTIAL = 't';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $channelsFileLocation = '/etc/vdr/channels.conf';
-
-    // FIXME: For security reasons the temporary file should not have a static name.
-    /** @var string */
-    private $tempChannelsFileLocation = '/tmp/channels.conf';
 
     /**
      * Get the name of the RPC service.
@@ -115,22 +111,15 @@ class Wscan extends ServiceAbstract
             return;
         }
 
+        $channelsFileLocation = $this->channelsFileLocation;
+
         // Create a background process.
-        $bgStatusFilename = $this->createBgProcStatus();
-        $pid = $this->fork();
-
-        if ($pid > 0) {
-            $this->initializeBgProcStatus($bgStatusFilename, $pid);
-
-            return $bgStatusFilename;
-        }
-
-        try {
-            $bgOutputFilename = $this->createBgProcOutput();
-            $this->updateBgProcStatus($bgStatusFilename, 'outputfilename', $bgOutputFilename);
-
+        return $this->execBgProc(function ($bgStatusFilename, $bgOutputFilename) use ($params, $channelsFileLocation) {
             $optional = [];
+            $output = null;
+            $tempChannelsFileLocation = tempnam(sys_get_temp_dir(), 'wscan');
 
+            // Gather all the optional arguments.
             if (isset($params['atsc_type'])) {
                 $optional['atscType'] = $params['atsc_type'];
             }
@@ -155,35 +144,49 @@ class Wscan extends ServiceAbstract
                 $optional['dvbsSatellite'] = $params['dvb_s_satellite'];
             }
 
-            $cmd = $this->buildWscanCommand(
+            $arguments = $this->gatherWscanArguments(
                 $params['frontend_type'],
                 $params['include_radio_channels'],
                 $params['include_tv_channels'],
                 $params['include_other_services'],
                 $params['include_encrypted_channels'],
                 $params['country'],
-                $this->tempChannelsFileLocation,
-                $bgOutputFilename,
                 $optional
             );
 
             try {
-                $cmd->execute($output);
+                $cmd = new Process('w_scan ', ...$arguments);
 
-                $tempChannelsFile = new SplFileObject($this->tempChannelsFileLocation);
-                $channelsFile = new SplFileObject($this->channelsFileLocation, 'w+');
+                // Make sure we don't throw an exception if the command fails.
+                // This is necessary if we want the output of w_scan describing
+                // the error to be displayed.
+                $cmd->setQuiet();
+
+                // Capture channel data.
+                $cmd->setRedirect1toFile($tempChannelsFileLocation);
+
+                // Capture output to display in the web interface.
+                $cmd->setRedirect2toFile($bgOutputFilename);
+
+                // Start the scan.
+                $cmd->execute($output, $exitStatus);
+
+                // If an error occur, return the current output.
+                if ($exitStatus !== 0) {
+                    return $output;
+                }
+
+                // Transfer the new channel data to the correct file.
+                $tempChannelsFile = new SplFileObject($tempChannelsFileLocation);
+                $channelsFile = new SplFileObject($channelsFileLocation, 'w+');
                 $channelsFile->fwrite($tempChannelsFile->fread($tempChannelsFile->getSize()));
             } finally {
                 // Always remove the temporary channels.conf.
-                unlink($this->tempChannelsFileLocation);
+                unlink($tempChannelsFileLocation);
             }
 
-            $this->finalizeBgProcStatus($bgStatusFilename, $output);
-            exit(0);
-        } catch (Exception $e) {
-            $this->finalizeBgProcStatus($bgStatusFilename, '', $e);
-            exit(1);
-        }
+            return $output;
+        });
     }
 
     /**
@@ -212,23 +215,23 @@ class Wscan extends ServiceAbstract
     }
 
     /**
-     * Build the w_scan command.
+     * Gather all the w_scan parameters used when scanning.
      *
-     * @return Process
+     * @return array
      */
-    private function buildWscanCommand(
+    private function gatherWscanArguments(
         $frontendType,
         $includeRadioChannels,
         $includeTvChannels,
         $includeOtherServices,
         $includeEncryptedChannels,
         $country,
-        $channelsFile,
-        $stdErrFile,
         $optional = []
     ) {
         $args = [];
 
+        $args['-C'] = 'UTF-8';
+        $args['-c'] = $country;
         $args['-f'] = $frontendType;
 
         // Set which services to include.
@@ -237,48 +240,41 @@ class Wscan extends ServiceAbstract
         $args['-O'] = $includeOtherServices ? 1 : 0;
         $args['-E'] = $includeEncryptedChannels ? 1 : 0;
 
-        $args['-c'] = $country;
-
         // Frontend specific options.
-        if ($frontendType === self::WSCAN_ATSC) {
-            $args['-A'] = $optional['atscType'];
-        }
+        switch ($frontendType) {
+            case self::WSCAN_ATSC:
+                $args['-A'] = $optional['atscType'];
+                break;
 
-        if ($frontendType === self::WSCAN_CABLE) {
-            if (isset($optional['dvbcModulation'])) {
-                $args['-Q'] = $optional['dvbcModulation'];
-            }
-
-            if (isset($optional['dvbcSymbolRate'])) {
-                $args['-S'] = $optional['dvbcSymbolRate'];
-            }
-
-            if (isset($optional['dvbcExtendedQam'])) {
-                if ($optional['dvbcExtendedQam']) {
-                    $args['-e'] = 2;
+            case self::WSCAN_CABLE:
+                if (isset($optional['dvbcModulation'])) {
+                    $args['-Q'] = $optional['dvbcModulation'];
                 }
-            }
-        }
 
-        if ($frontendType === self::WSCAN_SATELLITE) {
-            $args['-s'] = $optional['dvbsSatellite'];
+                if (isset($optional['dvbcSymbolRate'])) {
+                    $args['-S'] = $optional['dvbcSymbolRate'];
+                }
+
+                if (isset($optional['dvbcExtendedQam'])) {
+                    if ($optional['dvbcExtendedQam']) {
+                        $args['-e'] = 2;
+                    }
+                }
+                break;
+
+            case self::WSCAN_SATELLITE:
+                $args['-s'] = $optional['dvbsSatellite'];
+                break;
         }
 
         $parameters = [];
 
         foreach ($args as $argumentKey => $argumentValue) {
             $parameters[] = $argumentKey;
-            $parameters[] = $argumentValue;
+            $parameters[] = escapeshellarg($argumentValue);
         }
 
-        // Save main stdout as channels.conf file.
-        $parameters[] = '>';
-        $parameters[] = $channelsFile;
-
-        // Capture stderr output to display scan progress.
-        $parameters[] = '2>' . $stdErrFile;
-
-        return new Process('w_scan ', ...$parameters);
+        return $parameters;
     }
 
     private function getWscanList($type)
@@ -291,18 +287,20 @@ class Wscan extends ServiceAbstract
 
         foreach ($output as $row) {
             $row = trim($row);
-            $data = preg_split("/\t+/", $row);
+            $data = preg_split('/\t+/', $row);
 
             $entry = [];
 
             $entry['abbr'] = $data[0];
 
-            if (self::COUNTRY_LIST === $type) {
-                $entry['country'] = $data[1];
-            }
+            switch ($type) {
+                case self::COUNTRY_LIST:
+                    $entry['country'] = $data[1];
+                    break;
 
-            if (self::SATELLITE_LIST === $type) {
-                $entry['satellite'] = $data[1];
+                case self::SATELLITE_LIST:
+                    $entry['satellite'] = $data[1];
+                    break;
             }
 
             $list[] = $entry;
