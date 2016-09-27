@@ -19,17 +19,17 @@ case "$1" in
         SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
         if ! omv_config_exists "${SERVICE_XPATH}"; then
-            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
-            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "log_level" "1"
-            omv_config_add_element "${SERVICE_XPATH}" "max_video_file_size" "2000"
-            omv_config_add_element "${SERVICE_XPATH}" "sharedfolderref"
-            omv_config_add_element "${SERVICE_XPATH}" "audio_languages"
-            omv_config_add_element "${SERVICE_XPATH}" "epg_languages"
-            omv_config_add_element "${SERVICE_XPATH}" "subtitle_enable" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "subtitle_languages"
-            omv_config_add_element "${SERVICE_XPATH}" "update_channels" "4"
-            omv_config_add_element "${SERVICE_XPATH}" "extra_options"
+            omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
+            omv_config_add_key "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_key "${SERVICE_XPATH}" "log_level" "1"
+            omv_config_add_key "${SERVICE_XPATH}" "max_video_file_size" "2000"
+            omv_config_add_key "${SERVICE_XPATH}" "sharedfolderref"
+            omv_config_add_key "${SERVICE_XPATH}" "audio_languages"
+            omv_config_add_key "${SERVICE_XPATH}" "epg_languages"
+            omv_config_add_key "${SERVICE_XPATH}" "subtitle_enable" "0"
+            omv_config_add_key "${SERVICE_XPATH}" "subtitle_languages"
+            omv_config_add_key "${SERVICE_XPATH}" "update_channels" "4"
+            omv_config_add_key "${SERVICE_XPATH}" "extra_options"
         fi
 
         # Migrations.
